@@ -1,0 +1,38 @@
+<core:View controllerName="sap.ui.demo.myFiori.view.bevetMaster"
+	xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Page showNavButton="true" navButtonPress="handleNavButtonPress"
+		title="Bevételezés">
+
+		<List id="list" select="handleListSelect" items="{/deliverySheet}">
+			<ObjectListItem type="Active" press="handleListItemPress"
+				>
+		 		<firstStatus>
+					<ObjectStatus
+						text="{
+							path: 'status',
+							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusText'
+						}"
+						state="{
+							path: 'status',
+							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
+						}"
+						icon="{path: 'Icon'}" />
+
+				</firstStatus> 
+				<attributes>
+					<ObjectAttribute text="Azonosító: {id}" />
+					<ObjectAttribute text="Érvényes: {validity}"/>
+	
+				</attributes>
+
+			</ObjectListItem>
+		</List>
+		<footer>
+			<Bar>
+				<contentRight>
+					<Button type="Emphasized" text="Scan" press="scan" />
+				</contentRight>
+			</Bar>
+		</footer>
+	</Page>
+</core:View>
