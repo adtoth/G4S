@@ -1,14 +1,14 @@
 <core:View controllerName="sap.ui.demo.myFiori.view.Master" xmlns="sap.m"
 	xmlns:core="sap.ui.core">
 	<Page title="G4S Futár">
-		 <List     >
+	<!-- 	 <List     >
     <ActionListItem text="Bevételezés" press="handleBevetelezesPress" />
     <ActionListItem text="Szállítási lista" press="handleSzallitasiPress"/>
     <ActionListItem text="Aktuális szállítás" press="handleListItemPress"/>
     <ActionListItem text="Utánvét" press="handleListItemPress"/>
-  </List>     
+  </List>  -->    
      
-      <!-- <StandardTile
+       <StandardTile
         icon="sap-icon://database"
         title="Bevételezés"
         press="handleBevetelezesPress"
@@ -27,7 +27,7 @@
         icon="sap-icon://payment-approval"
         title="Utánvét"
         press=""
-        /> -->
+        /> 
   
 		<footer>
 			<Bar>

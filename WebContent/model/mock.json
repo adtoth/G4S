@@ -14,7 +14,7 @@
             "DelStatus": "P",
             "Icon": "sap-icon://accept",
             "PicType": "U",
-            "IconPic": "sap-icon://toaster-up",
+            "IconPic": "up",
             "Items": [
                 {
                 	"UoM": "DB",
@@ -76,7 +76,7 @@
             "DelStatus": "M",
             "Icon": "sap-icon://warning",
             "PicType": "D",
-            "IconPic": "sap-icon://toaster-down",
+            "IconPic": "down",
             "Items": [
                 {
                 	"UoM": "DB",

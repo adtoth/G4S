@@ -8,7 +8,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
 	},
 	
 	onSelect: function(evt){
-		alert(this.getView().byId("01").getSelected() + "---" + this.getView().byId("02").getSelected());
+		//alert(this.getView().byId("01").getSelected() + "---" + this.getView().byId("02").getSelected());
 		//var b = evt.getParameter("id");
 		//alert(b);
 		//var a = this.getSelectedIndex();

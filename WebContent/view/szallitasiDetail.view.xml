@@ -30,7 +30,7 @@
 						</form:SimpleForm>
 				</IconTabFilter>
 				<IconTabFilter icon="sap-icon://database" text="Csomag">
-					<Table headerText="Tételek" items="{Items}">
+					<Table headerText="Tételek" items="{/Item}">
 			<columns>
 				<Column>
 					<header>
@@ -46,10 +46,10 @@
 			</columns>
 			<ColumnListItem>
 				<cells>
-					<ObjectIdentifier title="{ProductID}" />
+					<ObjectIdentifier title="{ProductId}" />
 					<ObjectNumber
-						number="{path: 'Pick up status', formatter:'sap.ui.demo.myFiori.util.Formatter.statusText' }"
-						state="{path: 'Pick up status', formatter:'sap.ui.demo.myFiori.util.Formatter.statusState' }" />
+						number="{path: 'PickupStatus', formatter:'sap.ui.demo.myFiori.util.Formatter.statusText' }"
+						state="{path: 'PickupStatus', formatter:'sap.ui.demo.myFiori.util.Formatter.statusState' }" />
 				</cells>
 			</ColumnListItem>
 		</Table>

@@ -2,10 +2,10 @@
 	xmlns="sap.m" xmlns:core="sap.ui.core">
 	<Page showNavButton="true" navButtonPress="handleNavButtonPress"
 		title="Szállítási Lista">
-		<List id="list" select="handleListSelect" items="{/deliverySheet}">
+		<List id="list" select="handleListSelect" items="{/Address}">
 			<ObjectListItem type="Active" press="handleListItemPress"
 			
-				title="{From}" icon="{path: 'IconPic'}" number="{path: 'PicType',
+				title="{From}" icon="sap-icon://toaster-{IconPic}" number="{path: 'PicType',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusText'}">
 				
 				<attributes>
@@ -25,7 +25,7 @@
 							path: 'SzallitasStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
 						}"
-						icon="{path: 'Icon'}" />
+						icon="sap-icon://{Icon}" />
 
 				</firstStatus>
 

@@ -11,7 +11,10 @@ sap.ui.core.UIComponent.extend("sap.ui.demo.myFiori.Component", {
 			type : "JS",
 			viewData : { component : this }
 		});
-
+		  var headers ={};
+	       headers.Authorization = "Access-Control-Allow-Origin: *";
+	       headers.setHeader = "X-Requested-With: JSONHttpRequest";
+	       headers.setHeader = "Content-type: application/x-www-form-urlencoded";
 		// set i18n model
 		var i18nModel = new sap.ui.model.resource.ResourceModel({
 			bundleUrl : "i18n/messageBundle.properties"
@@ -21,14 +24,14 @@ sap.ui.core.UIComponent.extend("sap.ui.demo.myFiori.Component", {
 		
 //		// Using OData model to connect against a real service
 //		var url = "/proxy/http/<server>:<port>/sap/opu/odata/sap/ZGWSAMPLE_SRV/";
-		var url = "proxy/http/office.netlife.hu:8181/futarfioriodataprovider/courierdata.svc/";
+		var url = "http://office.netlife.hu:8181/futarfioriodataprovider/courierdata.svc/";
 		var oModel = new sap.ui.model.odata.ODataModel(url, false);
-		oView.setModel(oModel);
-
+		//oView.setModel(oModel);
+		
 		// Using a local model for offline development
 		//var oModel = new sap.ui.model.json.JSONModel("model/mock.json");
-		//oView.setModel(oModel);
-
+		oView.setModel(oModel);
+		sap.ui.getCore().setModel(oModel);
 		// set device model
 		var deviceModel = new sap.ui.model.json.JSONModel({
 			isPhone : jQuery.device.is.phone,

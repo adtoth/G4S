@@ -6,24 +6,25 @@
 		<firstStatus>
 					<ObjectStatus
 						text="{
-							path: 'status',
+							path: 'SzallitasStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusText'
 						}"
 						state="{
-							path: 'status',
+							path: 'SzallitasStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
 						}"
 						icon="{path: 'Icon'}" />
 
 				</firstStatus>
-			<attributes>
-				<ObjectAttribute text="Azonosító: {id}" />
-				<ObjectAttribute text="Érvényesség: {validity}" />
-			</attributes>
+				<attributes>
+					<ObjectAttribute text="Feladó: {From}, {FPostalCode}, {FCity}, {FStreet}" />
+					<ObjectAttribute text="Címzett: {To}, {TPostalCode}, {TCity}, {TStreet}"/>
+	
+				</attributes>
 
 		</ObjectHeader>
 
-		<Table headerText="Tételek" items="{/deliveryItem}">
+		<Table headerText="Tételek" items="{/Item}">
 			<columns>
 				<Column>
 					<header>
@@ -39,10 +40,10 @@
 			</columns>
 			<ColumnListItem>
 				<cells>
-					<ObjectIdentifier title="{ProductID}" />
+					<ObjectIdentifier title="{ProductId}" />
 					<ObjectNumber
-						number="{path: 'Pick up status', formatter:'sap.ui.demo.myFiori.util.Formatter.statusText' }"
-						state="{path: 'Pick up status', formatter:'sap.ui.demo.myFiori.util.Formatter.statusState' }" />
+						number="{path: 'PickupStatus', formatter:'sap.ui.demo.myFiori.util.Formatter.statusText' }"
+						state="{path: 'PickupStatus', formatter:'sap.ui.demo.myFiori.util.Formatter.statusState' }" />
 				</cells>
 			</ColumnListItem>
 		</Table>
@@ -52,12 +53,13 @@
 			<Bar>
 				<contentRight>
 
-					<Button type="Emphasized" text="Scan" press="scan" />
+					<Button type="Emphasized" text="Scan" press="scan_debug"
+					 width="150px" icon="sap-icon://camera" />
 				</contentRight>
 
 				<contentLeft>
-
-					<Button type="Emphasized" text="Lezár" press="send" />
+					<Button type="Emphasized" text="Lezár" press="send"
+						width="150px" icon="sap-icon://sys-cancel" />
 				</contentLeft>
 			</Bar>
 		</footer>
