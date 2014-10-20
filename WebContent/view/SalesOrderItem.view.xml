@@ -1,0 +1,89 @@
+<core:View controllerName="BP_Fiori.view.SalesOrderItem"
+	xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Page id="page" title=" {i18n>SalesOrderTitle}" showNavButton="true"
+		navButtonPress="handleNavBack">
+		<content>
+		
+			<ObjectHeader title="{SalesOrderID}"  number="{Netto Amount}" numberUnit="{CurrencyCode}" icon="sap-icon://list">
+			 <statuses>
+      <ObjectStatus text="{path: 'Status', formatter:'BP_Fiori.util.Formatter.statusText' }" state="{
+      path: 'Status',
+      formatter: 'BP_Fiori.util.Formatter.statusState'}" />
+   			 </statuses>
+			
+				
+			</ObjectHeader>
+			
+		</content>
+		
+		<Table headerText="{i18n>ItemDetailsTitleHeader}" items="{Items}">
+		<columns>
+			<Column>
+				<header>
+					<Label text="Product ID" />
+				</header>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+				<header>
+					<Label text="Position" />
+				</header>
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+				<header>
+					<Label text="Quantity" />
+				</header>
+			</Column>
+			<Column hAlgin="Right">
+				<header>
+					<Label text="Currency" />
+				</header>
+			</Column>
+			<Column hAlign="Right">
+				<header>
+					<Label text="Delivery Date" />
+				</header>
+			</Column>
+						<Column hAlign="Right">
+				<header>
+					<Label text="Product Name" />
+				</header>
+			</Column>
+		</columns>
+		<ColumnListItem>
+			<cells>
+				<ObjectIdentifier title="{ProductID}" />
+				<ObjectNumber number="{Position}" />
+				<ObjectNumber number="{Quantity}" numberUnit="{QuantityUnit}" />
+				<ObjectNumber number="{Tax}" numberUnit="{CurrencyCode}" />
+				<ObjectNumber number="{path: 'DeliveryDate' , formatter:'BP_Fiori.util.Formatter.date'}" />
+				<ObjectNumber number="{ProductName}" />
+				<ObjectNumber number="{ItemStatus}" />
+			</cells>
+		</ColumnListItem>
+	</Table>  
+	<footer>
+			<Bar>
+				<contentRight>
+					<Button 
+						text="{i18n>ApproveButtonText}"
+						type="Accept"	
+						icon="sap-icon://accept"
+						press="handleApprove"
+						visible="{visibility}"
+						 />
+						 <Button
+						visible="{visibility}" 
+						text="{i18n>DeclineButtonText}"
+						type="Reject"	
+						icon="sap-icon://decline"
+						press="handleDecline"
+						 />
+						 <Button 
+						 text="Scan"
+						 press="scan"
+						 />
+				</contentRight>
+			</Bar>
+		</footer>
+	</Page>
+</core:View> 

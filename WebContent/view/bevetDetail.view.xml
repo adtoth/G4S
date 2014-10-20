@@ -24,7 +24,7 @@
 
 		</ObjectHeader>
 
-		<Table headerText="Tételek" items="{/Item}">
+		<Table headerText="Tételek" items="{Items}">
 			<columns>
 				<Column>
 					<header>
@@ -58,7 +58,7 @@
 				</contentRight>
 
 				<contentLeft>
-					<Button type="Emphasized" text="Lezár" press="send"
+					<Button type="Emphasized" text="Lezár" press="close"
 						width="150px" icon="sap-icon://sys-cancel" />
 				</contentLeft>
 			</Bar>

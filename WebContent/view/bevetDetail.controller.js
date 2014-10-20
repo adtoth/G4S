@@ -10,18 +10,18 @@ sap.ui
 						this.nav.back("bevetMaster");
 					},
 
-					scan : function(evt) {
+					/*scan : function(evt) {
 
 						
 						var foundItems = 0;
 						console.log('scanning');
 
-						var scanner = cordova
-								.require("cordova/plugin/BarcodeScanner");
+						var scanner = cordova.require("cordova/plugin/BarcodeScanner");
 
 						scanner.scan(function(result) {
-
-							var data = oModel.getProperty(a.sPath + "/Item");
+							var a = evt.getSource().getBindingContext();
+							var data = sap.ui.getCore().getModel().getProperty(a.sPath + "/Item");
+							alert(data.length);
 							for ( var i = 0; i < data.length; i++) {
 								if (oModel.getProperty(a.sPath + "/Item" + "/"
 										+ i + "/ProductID") === result.text) {
@@ -39,12 +39,19 @@ sap.ui
 							console.log("Scanning failed: ", error);
 						});
 
-					},
+					},*/
 					
 					scan_debug : function(evt) {
 							var a = evt.getSource().getBindingContext();
-							var data = sap.ui.getCore().getModel().getProperty(a.sPath + "/DelStatus");
+							var data = sap.ui.getCore().getModel().getProperty(a.sPath + "/Items",a,false);
 							alert(data);
+						
+							//sap.ui.getCore().getModel().setProperty(a.sPath + "/To","Updatelt Cim2");
+							//sap.ui.getCore().getModel().submitChanges();
+							//sap.ui.getCore().getModel().updateBindings(true);
+							//sap.ui.getCore().getModel().forceNoCache(true);
+							//data = sap.ui.getCore().getModel().getProperty(a.sPath + "/To");
+							//alert(data);
 							//var data = sap.ui.getCore().getModel();
 							//alert(data);
 							/*for ( var i = 0; i < data.length; i++) {
@@ -64,23 +71,17 @@ sap.ui
 					
 					close : function(evt) {
 						var a = evt.getSource().getBindingContext();
-						var bundle = this.getView().getModel("i18n")
-								.getResourceBundle();
-						var data = oModel.getProperty(a.sPath);
-						oModel.setProperty(a.sPath + "/DelStatus", 'C');
-						sap.m.MessageToast.show("Lezárva");
-					},
-
-					send : function(evt) {
-						//header_xcsrf_token = response.headers['x-csrf-token']; 
-						OData
-								.request({
-									requestUri : "proxy/http/office.netlife.hu:8181/futarfioriodataprovider/courierdata.svc/deliverySheet",
-									method : "POST",
-									data : {
-										status : "2"
-									}
-								});
+						var data = sap.ui.getCore().getModel().getProperty(a.sPath);
+						if(data == 'R'){
+							sap.m.MessageToast.show("Már le van zárva!");
+						}
+						else {
+							sap.ui.getCore().getModel().setProperty(a.sPath + "/SzallitasStatus", 'R');
+							sap.ui.getCore().getModel().submitChanges();
+							sap.ui.getCore().getModel().updateBindings(true);
+							sap.ui.getCore().getModel().forceNoCache(true);
+							sap.m.MessageToast.show("Lezárva");
+						}
 					}
 
 				});

@@ -47,6 +47,37 @@ sap.ui.controller("sap.ui.demo.myFiori.view.bevetMaster", {
 				var list = this.getView().byId("list");
 				var oBinding = list.getBinding("items");
 				oBinding.sort(sorters);
-			}
+			},
+			
+							scan : function(evt) {
+
+			
+			var foundItems = 0;
+			console.log('scanning');
+
+			var scanner = cordova
+					.require("cordova/plugin/BarcodeScanner");
+
+			scanner.scan(function(result) {
+
+				var data = oModel.getProperty(a.sPath + "/Item");
+				for ( var i = 0; i < data.length; i++) {
+					if (oModel.getProperty(a.sPath + "/Item" + "/"
+							+ i + "/ProductID") === result.text) {
+						sap.m.MessageToast.show("Confirmed");
+						oModel.setProperty(a.sPath + "/Items" + "/"
+								+ i + "/Pick up status", 'K');
+						foundItems++;
+					}
+
+					else
+						sap.m.MessageToast.show("Not Confirmed");
+				}
+
+			}, function(error) {
+				console.log("Scanning failed: ", error);
+			});
+
+		},
 
 });
