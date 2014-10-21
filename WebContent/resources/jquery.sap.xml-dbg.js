@@ -1,13 +1,14 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 // Provides xml parsing and error checking functionality.
-sap.ui.define(['jquery.sap.global', 'sap/ui/Device'],
-	function(jQuery, Device) {
-	"use strict";
+jQuery.sap.declare("jquery.sap.xml", false);
+jQuery.sap.require("sap.ui.Device");
+
+(function() {
 
 	/**
 	 * Parses the specified XML formatted string text using native parsing
@@ -122,13 +123,13 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device'],
 		};
 
 		// IE
-		if (!!Device.browser.internet_explorer && oDocument && oDocument.parseError
+		if (!!sap.ui.Device.browser.internet_explorer && oDocument && oDocument.parseError
 				&& oDocument.parseError.errorCode != 0) {
 			return oDocument.parseError;
 		}
 
 		// Firefox
-		if (!!Device.browser.firefox && oDocument && oDocument.documentElement
+		if (!!sap.ui.Device.browser.firefox && oDocument && oDocument.documentElement
 				&& oDocument.documentElement.tagName == "parsererror") {
 
 			var sErrorText = oDocument.documentElement.firstChild.nodeValue, rParserError = /XML Parsing Error: (.*)\nLocation: (.*)\nLine Number (\d+), Column (\d+):(.*)/;
@@ -145,7 +146,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device'],
 		}
 
 		// Safari
-		if (!!Device.browser.webkit && oDocument && oDocument.documentElement
+		if (!!sap.ui.Device.browser.webkit && oDocument && oDocument.documentElement
 				&& oDocument.documentElement.tagName == "html"
 				&& oDocument.getElementsByTagName("parsererror").length > 0) {
 
@@ -171,6 +172,4 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device'],
 			};
 	};
 
-	return jQuery;
-
-}, /* bExport= */ false);
+}());

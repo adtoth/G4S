@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.ObjectStatusRenderer");
@@ -21,11 +21,7 @@ sap.m.ObjectStatusRenderer = {
  * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
  */
 sap.m.ObjectStatusRenderer.render = function(oRm, oObjStatus){
-	// Return immediately if control is invisible
-	if (!oObjStatus.getVisible()) {
-		return;
-	}
-
+	
 	if(!oObjStatus._isEmpty()) {
 		oRm.write("<div");
 		oRm.writeControlData(oObjStatus);
@@ -34,21 +30,12 @@ sap.m.ObjectStatusRenderer.render = function(oRm, oObjStatus){
 		if (sTooltip) {
 			oRm.writeAttributeEscaped("title", sTooltip);
 		}
-
+		
 		oRm.addClass("sapMObjStatus"); 
 		oRm.addClass("sapMObjStatus" + oObjStatus.getState());
 		oRm.writeClasses();
 		oRm.write(">");
-
-		if (oObjStatus.getTitle()) {
-			oRm.write("<span");
-			oRm.addClass("sapMObjStatusTitle");
-			oRm.writeClasses();
-			oRm.write(">");
-			oRm.writeEscaped(oObjStatus.getTitle() + ":");
-			oRm.write("</span>");
-		}
-
+				
 		if (oObjStatus.getIcon()) {
 			oRm.write("<span");
 			oRm.addClass("sapMObjStatusIcon");
@@ -66,7 +53,6 @@ sap.m.ObjectStatusRenderer.render = function(oRm, oObjStatus){
 			oRm.writeEscaped(oObjStatus.getText());
 			oRm.write("</span>");
 		}
-
-		oRm.write("</div>");
+		oRm.write("</div>");			
 	}
 };

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @extends sap.m.ListItemBase
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -90,7 +90,7 @@ sap.m.ListItemBase.extend("sap.m.FeedListItem", { metadata : {
 		"timestamp" : {type : "string", group : "Data", defaultValue : null},
 		"senderActive" : {type : "boolean", group : "Behavior", defaultValue : true},
 		"iconActive" : {type : "boolean", group : "Behavior", defaultValue : true},
-		"iconDensityAware" : {type : "boolean", group : "", defaultValue : true},
+		"iconDensityAware" : {type : "boolean", group : "Appearance", defaultValue : true},
 		"showIcon" : {type : "boolean", group : "Behavior", defaultValue : true}
 	},
 	events : {
@@ -396,7 +396,7 @@ sap.m.FeedListItem.M_EVENTS = {'senderPress':'senderPress','iconPress':'iconPres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.FeedListItem</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.FeedListItem</code>.<br/> itself.
  *
  * @return {sap.m.FeedListItem} <code>this</code> to allow method chaining
  * @public
@@ -460,7 +460,7 @@ sap.m.FeedListItem.M_EVENTS = {'senderPress':'senderPress','iconPress':'iconPres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.FeedListItem</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.FeedListItem</code>.<br/> itself.
  *
  * @return {sap.m.FeedListItem} <code>this</code> to allow method chaining
  * @public
@@ -499,7 +499,7 @@ sap.m.FeedListItem.M_EVENTS = {'senderPress':'senderPress','iconPress':'iconPres
  */
 
 
-// Start of sap\m\FeedListItem.js
+// Start of sap/m/FeedListItem.js
 ///**
 // * This file defines behavior for the control,
 // */
@@ -531,7 +531,7 @@ sap.m.FeedListItem.prototype.exit = function(oEvent) {
 sap.m.FeedListItem.prototype.ontap = function(oEvent) {
 	if (oEvent.srcControl.getId() === this.getId() + "-icon" && this.getIconActive()) {
 		//Use figure dom ref because some image content might be cut off
-		var sFigureDomRef = this.getDomRef("figure");
+		var sFigureDomRef = jQuery.sap.domById(this.getId() + "-figure");
 		this.fireIconPress({ domRef: sFigureDomRef});
 	} else if(!this._oLinkControl || !this.getSenderActive() || oEvent.srcControl.getId() !== this._oLinkControl.getId()) {
 		sap.m.ListItemBase.prototype.ontap.apply(this, [oEvent]);
@@ -574,7 +574,7 @@ sap.m.FeedListItem.prototype._getLinkControl = function() {
 		var that = this;
 		this._oLinkControl =  new sap.m.Link({
 				press : function() {
-					var sSenderDomRef = this.getDomRef();
+					var sSenderDomRef = jQuery.sap.domById(this.getId());
 					that.fireSenderPress({ domRef: sSenderDomRef});
 				}
 			});

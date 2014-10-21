@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.require("sap.ui.core.Renderer");
@@ -31,7 +31,7 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 		hasFooter = false,
 		mode = oTable.getMode(),
 		clsPrefix = "sapMListTbl",
-		idPrefix = oTable.getId("tbl"),
+		idPrefix = oTable.getId() + "-tbl",
 		cellTag = (type == "Head") ? "th" : "td",
 		groupTag = "t" + type.toLowerCase(),
 		aColumns = oTable.getColumns(),
@@ -48,10 +48,12 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 					!oColumn.isNeverVisible() &&
 					!oColumn.isHidden();
 		}).length == 1,
+		isDeleteOnRight = (sap.ui.core.theming.Parameters.get("sapMPlatformDependent") != "true" && mode == "Delete"),
 		createBlankCell = function(cls, id) {
 			rm.write("<");
 			rm.write(cellTag);
 			id && rm.writeAttribute("id", idPrefix + id);
+			cls == "SelCol" && rm.writeAttribute("tabindex", "-1");
 			rm.addClass(clsPrefix + cls);
 			rm.writeClasses();
 			rm.write("></");
@@ -62,8 +64,6 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 
 	rm.write("<" + groupTag + ">");
 	rm.write("<tr");
-	rm.writeAttribute("tabindex", -1);
-	rm.writeAttribute("id", oTable.addNavSection(idPrefix + type + "er" ));
 
 	if (isHeaderHidden) {
 		rm.addClass("sapMListTblHeaderNone");
@@ -74,7 +74,7 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 	rm.writeClasses();
 	rm.write(">");
 
-	if (mode != "None" && mode != "SingleSelect" && mode != "Delete") {
+	if (mode != "None" && mode != "SingleSelect" && !isDeleteOnRight) {
 		if (mode == "SingleSelectMaster") {
 			createBlankCell("None");
 			hiddens++;
@@ -119,7 +119,7 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 		rm.write("<" + cellTag);
 		cls && rm.addClass(cls);
 		rm.addClass(clsPrefix + "Cell");
-		rm.addClass(clsPrefix + type + "erCell");
+		rm.writeAttribute("tabindex", "-1");
 		rm.writeAttribute("id", idPrefix + type + index);
 		rm.writeAttribute("data-sap-orig-width", oColumn.getWidth());
 		width && rm.addStyle("width", width);
@@ -130,9 +130,9 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 		if (control) {
 			oColumn.applyAlignTo(control);
 			rm.renderControl(control);
-		}
-		if (type == "Head" && !hasFooter) {
-			hasFooter = !!oColumn.getFooter();
+			if (type == "Head" && !hasFooter) {
+				hasFooter = !!oColumn.getFooter();
+			}
 		}
 		rm.write("</" + cellTag + ">");
 		oColumn.setIndex(index++);
@@ -140,7 +140,7 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 
 	createBlankCell("NavCol", type + "Nav");
 
-	if (mode == "SingleSelect" || mode == "Delete") {
+	if (mode == "SingleSelect" || isDeleteOnRight) {
 		createBlankCell("SelCol");
 	}
 
@@ -150,7 +150,6 @@ sap.m.TableRenderer.renderColumns = function(rm, oTable, type) {
 		oTable._hasPopin = hasPopin;
 		oTable._colCount = index - hiddens;
 		oTable._hasFooter = hasFooter;
-		oTable._headerHidden = isHeaderHidden;
 	}
 };
 
@@ -169,7 +168,6 @@ sap.m.TableRenderer.renderContainerAttributes = function(rm, oControl) {
 sap.m.TableRenderer.renderListStartAttributes = function(rm, oControl) {
 	rm.write("<table");
 	rm.addClass("sapMListTbl");
-	rm.addStyle("table-layout", oControl.getFixedLayout() ? "fixed" : "auto");
 };
 
 /**
@@ -177,9 +175,7 @@ sap.m.TableRenderer.renderListStartAttributes = function(rm, oControl) {
  */
 sap.m.TableRenderer.renderListHeadAttributes = function(rm, oControl) {
 	this.renderColumns(rm, oControl, "Head");
-	rm.write("<tbody");
-	rm.writeAttribute("id", oControl.addNavSection(oControl.getId("tblBody")));
-	rm.write(">");
+	rm.write("<tbody>");	// items will be rendered after head
 };
 
 /**
@@ -196,19 +192,17 @@ sap.m.TableRenderer.renderListEndAttributes = function(rm, oControl) {
  * render no data
  */
 sap.m.TableRenderer.renderNoData = function(rm, oControl) {
-	rm.write("<tr");
-	rm.writeAttribute("id", oControl.getId("nodata"));
-	rm.addClass("sapMLIB sapMListTblRow sapMLIBTypeInactive");
-	if (!oControl._headerHidden || (!oControl.getHeaderText() && !oControl.getHeaderToolbar()) ) {
-		rm.addClass("sapMLIBShowSeparator");
-	}
-	rm.writeClasses();
-	rm.write("><td");
-	rm.writeAttribute("id", oControl.getId("nodata-text"));
-	rm.writeAttribute("colspan", oControl.getColCount());
-	rm.addClass("sapMListTblCell sapMListTblCellNoData");
-	rm.writeClasses();
-	rm.write(">");
+	rm.write("<tr id='" + oControl.getId() + "-listNoData' class='sapMLIB sapMListTblRow sapMLIBShowSeparator'>");
+	rm.write("<td colspan='" + oControl.getColCount() + "' class='sapMListTblCell sapMListTblCellNoData'>");
 	rm.writeEscaped(oControl.getNoDataText());
 	rm.write("</td></tr>");
+};
+
+/**
+ * if there is no visible column then we do not need to render items
+ */
+sap.m.TableRenderer.shouldRenderItems = function(oControl) {
+	return oControl.getColumns().some(function(oColumn) {
+		return oColumn.getVisible();
+	});
 };

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ jQuery.sap.require("sap.m.Tile");
  * @extends sap.m.Tile
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -335,7 +335,7 @@ sap.m.Tile.extend("sap.m.StandardTile", { metadata : {
  */
 
 
-// Start of sap\m\StandardTile.js
+// Start of sap/m/StandardTile.js
 ///**
 // * This file defines behavior for the control,
 // */
@@ -373,7 +373,7 @@ sap.m.StandardTile.prototype.getIcon = function() {
 sap.m.StandardTile.prototype._getImage = function() {
 	
 	var sImgId = this.getId() + "-img";
-	var sSize = sap.ui.Device.system.phone ? "1.3rem": "2rem";
+	var sSize = jQuery.device.is.phone ? "1.3rem": "2rem";
 	
 	var mProperties = { 
 		src : this.getIcon(),

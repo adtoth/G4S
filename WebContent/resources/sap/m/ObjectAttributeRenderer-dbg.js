@@ -32,10 +32,11 @@ sap.m.ObjectAttributeRenderer.render = function(oRm, oOA) {
 		var sTooltip = oOA.getTooltip_AsString();
 		if (sTooltip) {
 			oRm.writeAttributeEscaped("title", sTooltip);
-		}
+		}		
+		
 		oRm.write(">");
-		oRm.write("<span id= " + oOA.getId() + "-text >");
-		oRm.renderControl(oOA._getUpdatedTextControl());
+		oRm.write("<span>");
+		oRm.writeEscaped(oOA.getText());
 		oRm.write("</span>");
 		oRm.write("</div>");
 	}

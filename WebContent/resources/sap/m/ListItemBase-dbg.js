@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -85,8 +85,8 @@ sap.ui.core.Control.extend("sap.m.ListItemBase", { metadata : {
 		"counter" : {type : "int", group : "Misc", defaultValue : null}
 	},
 	events : {
-		"tap" : {deprecated: true}, 
-		"detailTap" : {deprecated: true}, 
+		"tap" : {}, 
+		"detailTap" : {}, 
 		"press" : {}, 
 		"detailPress" : {}
 	}
@@ -189,10 +189,7 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
 
 /**
  * Getter for property <code>selected</code>.
- * This property defines the select state of the list item when using Single/Multi-Selection.
- * 
- * Note: Binding the "selected" property in single selection mode, may cause unwanted results, if you have more than one selected item in your binding
- * 
+ * This property defines the select state of the list item when using single/Multi-Selection
  *
  * Default value is <code>false</code>
  *
@@ -241,12 +238,10 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
 
 
 /**
- * tap event 
+ * tap event (This event is deprecated, use the press event instead) 
  *
  * @name sap.m.ListItemBase#tap
  * @event
- * @deprecated Since version 1.20.0. 
- * This event is deprecated, use the press event instead.
  * @param {sap.ui.base.Event} oControlEvent
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
@@ -259,19 +254,17 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
  * When called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener<code> if specified
  * otherwise to this <code>sap.m.ListItemBase</code>.<br/> itself. 
  *  
- * tap event 
+ * tap event (This event is deprecated, use the press event instead) 
  *
  * @param {object}
  *            [oData] An application specific payload object, that will be passed to the event handler along with the event object when firing the event.
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
  *
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 1.20.0. 
- * This event is deprecated, use the press event instead.
  * @name sap.m.ListItemBase#attachTap
  * @function
  */
@@ -287,32 +280,26 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
  *            oListener Context object on which the given function had to be called.
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 1.20.0. 
- * This event is deprecated, use the press event instead.
  * @name sap.m.ListItemBase#detachTap
  * @function
  */
 
 /**
  * Fire event tap to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @protected
- * @deprecated Since version 1.20.0. 
- * This event is deprecated, use the press event instead.
  * @name sap.m.ListItemBase#fireTap
  * @function
  */
 
 
 /**
- * detail tap event 
+ * detail tap event (This event is deprecated, use the detailPress event instead) 
  *
  * @name sap.m.ListItemBase#detailTap
  * @event
- * @deprecated Since version 7.20.0. 
- * This event is deprecated, use the detailPress event instead.
  * @param {sap.ui.base.Event} oControlEvent
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
@@ -325,19 +312,17 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
  * When called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener<code> if specified
  * otherwise to this <code>sap.m.ListItemBase</code>.<br/> itself. 
  *  
- * detail tap event 
+ * detail tap event (This event is deprecated, use the detailPress event instead) 
  *
  * @param {object}
  *            [oData] An application specific payload object, that will be passed to the event handler along with the event object when firing the event.
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
  *
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 7.20.0. 
- * This event is deprecated, use the detailPress event instead.
  * @name sap.m.ListItemBase#attachDetailTap
  * @function
  */
@@ -353,20 +338,16 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
  *            oListener Context object on which the given function had to be called.
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 7.20.0. 
- * This event is deprecated, use the detailPress event instead.
  * @name sap.m.ListItemBase#detachDetailTap
  * @function
  */
 
 /**
  * Fire event detailTap to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @protected
- * @deprecated Since version 7.20.0. 
- * This event is deprecated, use the detailPress event instead.
  * @name sap.m.ListItemBase#fireDetailTap
  * @function
  */
@@ -396,7 +377,7 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
  *
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @public
@@ -421,7 +402,7 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
 
 /**
  * Fire event press to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @protected
@@ -454,7 +435,7 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ListItemBase</code>.<br/> itself.
  *
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @public
@@ -479,7 +460,7 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
 
 /**
  * Fire event detailPress to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.ListItemBase} <code>this</code> to allow method chaining
  * @protected
@@ -496,30 +477,29 @@ sap.m.ListItemBase.M_EVENTS = {'tap':'tap','detailTap':'detailTap','press':'pres
 
  * @type boolean
  * @public
- * @deprecated Since version 1.10.2. 
+ * @deprecated Since version 7.20.0. 
  * API Change makes this method unnecessary
  */
 
 
-// Start of sap\m\ListItemBase.js
+// Start of sap/m/ListItemBase.js
 jQuery.sap.require("sap.ui.core.theming.Parameters");
 
 // IE9 does not support flex-box: do special table-based rendering (see List_noFlex.css)
-sap.m.ListItemBase.prototype._bNoFlex = !jQuery.support.hasFlexBoxSupport;
+sap.m.ListItemBase.prototype._bNoFlex = (jQuery.browser.msie && jQuery.browser.fVersion < 10);
 
 // image path for different theme and OS
 sap.m.ListItemBase.prototype._sImagePath = jQuery.sap.getModulePath("sap.m", "/") + "themes/" + sap.ui.getCore().getConfiguration().getTheme() + "/img/list/" + (jQuery.os.ios ? "ios" : "android") + "/";
 
 // mode of the list e.g. singleSelection, multi...
 // internal selected state of the listitem
-sap.m.ListItemBase.prototype.init = function() {
+sap.m.ListItemBase.prototype.init = function(){
 	this._active = false;
 	this._mode = "None";
 };
 
 /*
  * Returns the binding context path via checking the named model of parent
- *
  * @protected
  * @since 1.16.3
  */
@@ -527,7 +507,6 @@ sap.m.ListItemBase.prototype.getBindingContextPath = function(sModelName) {
 	if (this._listId && !sModelName) {
 		sModelName = (sap.ui.getCore().byId(this._listId).getBindingInfo("items") || {}).model;
 	}
-
 	var oContext = this.getBindingContext(sModelName);
 	if (oContext) {
 		return oContext.getPath();
@@ -536,7 +515,6 @@ sap.m.ListItemBase.prototype.getBindingContextPath = function(sModelName) {
 
 // radiobutton for single selection
 sap.m.ListItemBase.prototype._getRadioButton = function(oRadioButtonId, sGroupName) {
-
 	// maybe mode is changed
 	if (this.hasOwnProperty("_checkBox")) {
 		this._checkBox.destroy();
@@ -552,7 +530,6 @@ sap.m.ListItemBase.prototype._getRadioButton = function(oRadioButtonId, sGroupNa
 
 // checkbox for multiselection
 sap.m.ListItemBase.prototype._getCheckBox = function(oBoxId) {
-
 	// maybe mode is changed
 	if (this.hasOwnProperty("_radioButton")) {
 		this._radioButton.destroy();
@@ -570,33 +547,26 @@ sap.m.ListItemBase.prototype.exit = function() {
 		this._radioButton.destroy();
 		delete this._radioButton;
 	}
-
 	if (this._checkBox) {
 		this._checkBox.destroy();
 		delete this._checkBox;
 	}
-
 	if (this._navImage) {
 		this._navImage.destroy();
 		delete this._navImage;
 	}
-
 	if (this._delIcon) {
 		this._delIcon.destroy();
 		delete this._delIcon;
 	}
-
 	if (this._navIcon) {
 		this._navIcon.destroy();
 		delete this._navIcon;
 	}
-
 	if (this._detailIcon) {
 		this._detailIcon.destroy();
 		delete this._detailIcon;
 	}
-
-	this._oLastFocused = null;
 };
 
 sap.m.ListItemBase.prototype.isSelectable = function() {
@@ -615,34 +585,26 @@ sap.m.ListItemBase.prototype.getSelected = function() {
 };
 
 sap.m.ListItemBase.prototype.setSelected = function(bSelect, bDontNotifyParent) {
-	bSelect = this.validateProperty("selected", bSelect);
-
 	if (this.isSelectable() && bSelect != this.getProperty("selected")) {
+		this.setProperty("selected", bSelect, true);
 
-		// notify parent about the selection first
-		if (!bDontNotifyParent && this._listId) {
-			var oParent = sap.ui.getCore().byId(this._listId);
-			if (oParent && oParent.onItemSetSelected) {
-				oParent.onItemSetSelected(this, bSelect);
-			}
-		}
-
-		// update selection box
 		if (this._checkBox) {
 			this._checkBox.setSelected(bSelect);
 		} else if (this._radioButton) {
 			this._radioButton.setSelected(bSelect);
 		}
 
-		// update DOM
 		if (this.getDomRef()) {
-			this.$().toggleClass("sapMLIBSelected", bSelect);
+			this.$().toggleClass("sapMLIBSelected", !!bSelect);
 		}
 
-		// set the property
-		this.setProperty("selected", bSelect, true);
+		if (!bDontNotifyParent && this._listId) {
+			var oParent = sap.ui.getCore().byId(this._listId);
+			if (oParent && oParent.onItemSetSelected) {
+				oParent.onItemSetSelected(this, bSelect);
+			}
+		}
 	}
-
 	return this;
 };
 
@@ -650,22 +612,19 @@ sap.m.ListItemBase.prototype.setActive = function(bActive) {
 	if (bActive != this._active) {
 		this._active = bActive;
 		this._activeHandling();
-
 		if (this.getType() == "Navigation") {
 			this._activeHandlingNav();
 		}
-
 		if (bActive) {
 			this._activeHandlingInheritor();
 		} else {
 			this._inactiveHandlingInheritor();
 		}
 	}
-
 	return this;
 };
 
-// somehow unread ignores css when changed directly in the dom...therefore rerendering reactivated
+//somehow unread ignores css when changed directly in the dom...therefore rerendering reactivated
 sap.m.ListItemBase.prototype.setUnread = function(bUnread) {
 	this.setProperty("unread", bUnread);
 	this.$().toggleClass("sapMLIBUnread", bUnread);
@@ -673,7 +632,6 @@ sap.m.ListItemBase.prototype.setUnread = function(bUnread) {
 };
 
 sap.m.ListItemBase.prototype._getNavImage = function(oImgId, oImgStyle, oSrc, oActiveSrc) {
-
 	// no navigation image for android
 	if (!jQuery.os.ios && this.getType() == "Navigation") {
 		return null;
@@ -704,37 +662,30 @@ sap.m.ListItemBase.prototype._getDelImage = function(oImgId, oImgStyle, oSrc) {
 sap.m.ListItemBase.prototype.ontap = function(oEvent) {
 	var type = this.getType();
 
-	if (this._mode === "SingleSelectMaster" || (this._includeItemInSelection && (this._mode === "SingleSelect" || this._mode === "SingleSelectLeft" || this._mode === "MultiSelect"))) {
-
+	if (this._includeItemInSelection && (this._mode === "SingleSelect" || this._mode === "SingleSelectLeft" || this._mode == "MultiSelect") || this._mode == "SingleSelectMaster") {
 		// if _includeItemInSelection all tap events will be used for the mode select and delete
-		// SingleSelectMaster always behaves like includeItemInSelection is set
 		switch (this._mode) {
 			case "SingleSelect":
 			case "SingleSelectLeft":
 			case "SingleSelectMaster":
-
 				// check if radiobutton fired the event and therefore do not set the select
 				if (!this.getSelected() && oEvent.srcControl && oEvent.srcControl.getId() !== this._radioButton.getId()) {
 					this.setSelected(true);
-					this._listId && sap.ui.getCore().byId(this._listId)._selectTapped(this);
+					sap.ui.getCore().byId(this._listId)._selectTapped(this);
 				}
-
 				break;
 			case "MultiSelect":
-
 				// check if checkbox fired the event and therefore do not set the select
 				if (oEvent.srcControl && oEvent.srcControl.getId() !== this._checkBox.getId()) {
 					this.setSelected(!this.getSelected());
-					this._listId && sap.ui.getCore().byId(this._listId)._selectTapped(this);
+					sap.ui.getCore().byId(this._listId)._selectTapped(this);
 				}
-
 				break;
 		}
 	} else {
 		switch (type) {
 			case "Active":
 			case "Navigation":
-
 				// if a fast tap happens deactivate the touchstart/touchend timers and their logic
 				if ( this._isActivationHandled(oEvent) && !this._eventHandledByControl) {
 					window.clearTimeout(this._timeoutIdStart);
@@ -751,23 +702,18 @@ sap.m.ListItemBase.prototype.ontap = function(oEvent) {
 						this.firePress({});
 					});
 				}
-
 				break;
-
 			case "Detail":
 				if (oEvent.srcControl && oEvent.srcControl.getId() === (this.getId() + "-imgDet")) {
 					this.fireDetailTap({});
 					this.fireDetailPress({});
 				}
-
 				break;
-
 			case "DetailAndActive":
 				if (oEvent.srcControl && oEvent.srcControl.getId() === (this.getId() + "-imgDet")) {
 					this.fireDetailTap({});
 					this.fireDetailPress({});
 				} else {
-
 					// if a fast tap happens deactivate the touchstart/touchend timers and their logic
 					if ( this._isActivationHandled(oEvent) && !this._eventHandledByControl) {
 						window.clearTimeout(this._timeoutIdStart);
@@ -785,26 +731,37 @@ sap.m.ListItemBase.prototype.ontap = function(oEvent) {
 						});
 					}
 				}
-
 				break;
 		}
-	}
-
-	// tell the list, item is pressed
-	if (this._listId && type != "Inactive") {
-		sap.ui.getCore().byId(this._listId)._onItemPressed(this, oEvent);
 	}
 };
 
 sap.m.ListItemBase.prototype.ontouchstart = function(oEvent) {
-	this._eventHandledByControl = oEvent.isMarked();
+	this._eventHandledByControl = oEvent.originalEvent._sapui_handledByControl;
+	if (oEvent.targetTouches){
+		this._touchedY = oEvent.targetTouches[0].clientY;
+		this._touchedX = oEvent.targetTouches[0].clientX;
+	}
 
-	this._touchedY = oEvent.targetTouches[0].clientY;
-	this._touchedX = oEvent.targetTouches[0].clientX;
+	if (!this._touchEndProxy) {
+		this._touchEndProxy = jQuery.proxy(this._ontouchend, this);
+	}
+
+	// here also bound to the mouseup mousemove event to enable it working in desktop browsers
+	if (jQuery.support.touch) {
+		jQuery(window.document).on("touchend touchcancel", this._touchEndProxy);
+	} else {
+		jQuery(window.document).on("mouseup", this._touchEndProxy);
+	}
+
+	if (!this._touchMoveProxy) {
+		this._touchMoveProxy = jQuery.proxy(this._ontouchmove, this);
+	}
+
+	jQuery(window.document).on("vmousemove", this._touchMoveProxy);
 
 	// timeout regarding active state when scrolling
 	this._timeoutIdStart = jQuery.sap.delayedCall(100, this, function() {
-
 		// several fingers could be used
 		// for selections with whole list item interaction and singleselectmaster active handling is disabled
 		if (!(this._includeItemInSelection && (this._mode == "SingleSelect" || this._mode == "SingleSelectLeft" || this._mode == "MultiSelect")) && ((oEvent.touches && oEvent.touches.length === 1) || !oEvent.touches)) {
@@ -813,12 +770,9 @@ sap.m.ListItemBase.prototype.ontouchstart = function(oEvent) {
 				case "Active":
 				case "Navigation":
 				case "DetailAndActive":
-
 					if (this._isActivationHandled(oEvent) && !this._eventHandledByControl) {
-						oEvent.setMarked();
 						this.setActive(true);
 					}
-
 					break;
 			}
 		}
@@ -826,46 +780,47 @@ sap.m.ListItemBase.prototype.ontouchstart = function(oEvent) {
 };
 
 // touch move to prevent active state when scrolling
-sap.m.ListItemBase.prototype.ontouchmove = function(oEvent) {
-	var bTouchMovement = ((Math.abs(this._touchedY - oEvent.targetTouches[0].clientY) > 10) || Math.abs(this._touchedX - oEvent.targetTouches[0].clientX) > 10);
-
-	if ((this._active || this._timeoutIdStart) && bTouchMovement) {
-
+sap.m.ListItemBase.prototype._ontouchmove = function(oEvent) {
+	var touchMovement = oEvent.targetTouches && ((Math.abs(this._touchedY - oEvent.targetTouches[0].clientY) > 10) || Math.abs(this._touchedX - oEvent.targetTouches[0].clientX) > 10);
+	if ((this._active || this._timeoutIdStart) && touchMovement) {
 		// there is movement and therefore no tap...remove active styles
-		clearTimeout(this._timeoutIdStart);
+		window.clearTimeout(this._timeoutIdStart);
 		this.setActive(false);
 		this._timeoutIdStart = null;
 		this._timeoutIdEnd = null;
 	}
 };
 
-sap.m.ListItemBase.prototype.ontouchend = function(oEvent) {
+sap.m.ListItemBase.prototype._ontouchend = function(oEvent) {
 
 	// several fingers could be used
-	if (oEvent.targetTouches.length === 0) {
+	if (((oEvent.targetTouches && oEvent.targetTouches.length === 0) || !oEvent.targetTouches)) {
 		switch (this.getType()) {
 			case "Active":
 			case "Navigation":
 			case "DetailAndActive":
-
 				// wait maybe it is a tap
 				this._timeoutIdEnd = jQuery.sap.delayedCall(100, this, function() {
 					this._event = oEvent;
 					this.setActive(false);
 				});
-
 				break;
 		}
+
+		if (jQuery.support.touch) {
+			jQuery(window.document).off("touchend touchcancel", this._touchEndProxy);
+		} else {
+			jQuery(window.document).off("mouseup", this._touchEndProxy);
+		}
+
+		jQuery(window.document).off("vmousemove", this._touchMoveProxy);
 	}
 };
 
-// During native scrolling: Chrome sends touchcancel and no touchend thereafter
-sap.m.ListItemBase.prototype.ontouchcancel = sap.m.ListItemBase.prototype.ontouchend;
-
 // toggle active styles for navigation items
 sap.m.ListItemBase.prototype._activeHandlingNav = function() {
-	if (sap.ui.Device.os.ios) {
-		this.$("imgNav").toggleClass("sapMLIBImgNavActive", this._active);
+	if (jQuery.os.ios) {
+		jQuery.sap.byId(this.getId() + "-imgNav").toggleClass("sapMLIBImgNavActive", this._active);
 	}
 };
 
@@ -873,17 +828,17 @@ sap.m.ListItemBase.prototype._activeHandlingNav = function() {
 sap.m.ListItemBase.prototype._activeHandlingInheritor = function() {
 };
 
-// hook method for inactive handling...inheritors should overwrite this method
+//hook method for inactive handling...inheritors should overwrite this method
 sap.m.ListItemBase.prototype._inactiveHandlingInheritor = function() {
 };
 
-// switch background style... toggle active feedback
+//switch background style... toggle active feedback
 sap.m.ListItemBase.prototype._activeHandling = function() {
 	this.$().toggleClass("sapMLIBActive", this._active);
-	this.$("counter").toggleClass("sapMLIBActiveCounter", this._active);
+	jQuery.sap.byId(this.getId() + "-counter").toggleClass("sapMLIBActiveCounter", this._active);
 
 	if (this.getUnread()) {
-		this.$("unread").toggleClass("sapMLIBActiveUnread", this._active);
+		jQuery.sap.byId(this.getId() + "-unread").toggleClass("sapMLIBActiveUnread", this._active);
 	}
 
 	var oImgDet = sap.ui.getCore().byId(this.getId() + "-imgDet");
@@ -902,127 +857,8 @@ sap.m.ListItemBase.prototype._activeHandling = function() {
 sap.m.ListItemBase.prototype._isActivationHandled = function(oEvent) {
 	this._event = oEvent;
 	var control = oEvent.srcControl;
-
 	if (control && control.getId() != this.getId() + "-imgDel" && control.getId() != this.getId() + "-imgDet" && (!control.getActiveHandling || control.getActiveHandling && control.getActiveHandling() !== false)) {
 		return true;
 	}
-
 	return false;
-};
-
-/* Keyboard Handling */
-sap.m.ListItemBase.prototype.onsapspace = function(oEvent) {
-	if (!this._listId ||
-		oEvent.isMarked() ||
-		!this.isSelectable() ||
-		oEvent.srcControl !== this ||
-		this._mode == "Delete" ||
-		this._mode == "None") {
-		return;
-	}
-
-	if (this._mode == "MultiSelect") {
-		this.setSelected(!this.getSelected());
-		sap.ui.getCore().byId(this._listId)._selectTapped(this);
-	} else if (!this.getSelected()) {
-		this.setSelected(true);
-		sap.ui.getCore().byId(this._listId)._selectTapped(this);
-	}
-
-	// let the parent know and prevent default not to scroll down
-	oEvent.preventDefault();
-	oEvent.setMarked();
-};
-
-sap.m.ListItemBase.prototype.onsapenter = function(oEvent) {
-	if (!this._listId ||
-		oEvent.isMarked() ||
-		oEvent.srcControl !== this) {
-		return;
-	}
-
-	// let the list know item is pressed
-	if (this.getType() != "Inactive") {
-		sap.ui.getCore().byId(this._listId)._onItemPressed(this, oEvent);
-	}
-
-	// support old bug!!!
-	// do not fire item press event when item is included into selection
-	if ((this._includeItemInSelection && this._mode != "None" && this._mode != "Delete") ||
-		this._mode == "SingleSelectMaster") {
-		this.onsapspace(oEvent);
-		return;
-	}
-
-	switch (this.getType()) {
-		case "Active":
-		case "Navigation":
-		case "DetailAndActive":
-			oEvent.setMarked();
-
-			// active feedback
-			this.setActive(true);
-			jQuery.sap.delayedCall(180, this, function() {
-				this.setActive(false);
-			});
-
-			// fire own press event
-			jQuery.sap.delayedCall(0, this, function() {
-				this.fireTap({});
-				this.firePress({});
-			});
-
-			break;
-	}
-};
-
-sap.m.ListItemBase.prototype.onsapdelete = function(oEvent) {
-	if (!this._listId ||
-		oEvent.isMarked() ||
-		oEvent.srcControl !== this ||
-		this._mode != "Delete") {
-		return;
-	}
-
-	this._delete.call(this._delIcon || this._delImage);
-	oEvent.preventDefault();
-	oEvent.setMarked();
-};
-
-sap.m.ListItemBase.prototype._switchFocus = function(oEvent) {
-	if (oEvent.srcControl !== this) {
-		this._oLastFocused = oEvent.target;
-		jQuery(oEvent.target).blur();
-		this.$().focus();
-	} else if (this._oLastFocused) {
-		jQuery(this._oLastFocused).focus();
-	}
-};
-
-sap.m.ListItemBase.prototype.onkeydown = function(oEvent) {
-	// check whether event is marked or not
-	var mKeyCodes = jQuery.sap.KeyCodes;
-	if (oEvent.isMarked()) {
-		return;
-	}
-
-	// switch focus to row and focused item with F7
-	if (oEvent.which == mKeyCodes.F7) {
-		this._switchFocus(oEvent);
-		oEvent.preventDefault();
-		oEvent.setMarked();
-		return;
-	}
-
-	// handle only the events that are coming from ListItem
-	if (oEvent.srcControl !== this) {
-		return;
-	}
-
-	// Ctrl + A to select all
-	if (oEvent.which == mKeyCodes.A && (oEvent.metaKey || oEvent.ctrlKey)) {
-		sap.ui.getCore().byId(this._listId).selectAll(true);
-		oEvent.preventDefault();
-		oEvent.setMarked();
-	}
 };

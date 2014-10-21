@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.SelectRenderer");
@@ -15,7 +15,6 @@ sap.m.SelectRenderer = {};
 
 /**
  * CSS class to be applied to the HTML root element of the Select control.
- *
  * @type {string}
  */
 sap.m.SelectRenderer.CSS_CLASS = "sapMSlt";
@@ -23,10 +22,10 @@ sap.m.SelectRenderer.CSS_CLASS = "sapMSlt";
 /**
  * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.m.Select} oSelect An object representation of the control that should be rendered.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.m.Select} oSelect an object representation of the control that should be rendered.
  */
-sap.m.SelectRenderer.render = function(oRm, oSelect) {
+sap.m.SelectRenderer.render = function(oRenderManager, oSelect) {
 	var	oSelectedItem = oSelect.getSelectedItem(),
 		sSelectedItemText = oSelectedItem ? oSelectedItem.getText() : "",
 		sTooltip = sap.ui.core.ValueStateSupport.enrichTooltip(oSelect, oSelect.getTooltip_AsString()),
@@ -34,163 +33,194 @@ sap.m.SelectRenderer.render = function(oRm, oSelect) {
 		sType = oSelect.getType(),
 		sIconURI = oSelect.getIcon(),
 		bAutoAdjustWidth = oSelect.getAutoAdjustWidth(),
-		bEnabled = oSelect.getEnabled(),
-		CSS_CLASS = sap.m.SelectRenderer.CSS_CLASS;
+		bEnabled = oSelect.getEnabled();
+		//bArrowVisible = oSelect.getArrowVisible();
 
 	// suppress rendering if not visible
 	if (!oSelect.getVisible()) {
 		return;
 	}
 
-	oRm.write("<div");
-	this.addStyleClass(oRm, oSelect);
-	oRm.addClass(CSS_CLASS);
-	oRm.addClass(CSS_CLASS + oSelect.getType());
+	oRenderManager.write("<div");
+	this.addStyleClass(oRenderManager, oSelect);
+	oRenderManager.addClass(sap.m.SelectRenderer.CSS_CLASS);
+
+	oRenderManager.addClass(sap.m.SelectRenderer.CSS_CLASS + oSelect.getType());
 
 	if (!bEnabled) {
-		oRm.addClass(CSS_CLASS + "Disabled");
+		oRenderManager.addClass(sap.m.SelectRenderer.CSS_CLASS + "Disabled");
 	}
 
 	if (bAutoAdjustWidth) {
-		oRm.addClass(CSS_CLASS + "AutoAdjustedWidth");
+		oRenderManager.addClass(sap.m.SelectRenderer.CSS_CLASS + "AutoAdjustedWidth");
 	} else {
-		oRm.addStyle("width", oSelect.getWidth());
+		oRenderManager.addStyle("width", oSelect.getWidth());
 	}
 
 	if (sIconURI) {
-		oRm.addClass(CSS_CLASS + "WithIcon");
+		oRenderManager.addClass(sap.m.SelectRenderer.CSS_CLASS + "WithIcon");
 	}
 
-	if (bEnabled && sap.ui.Device.system.desktop) {
-		oRm.addClass(CSS_CLASS + "Hoverable");
-	}
+//	if (bArrowVisible) {
+		oRenderManager.addClass(sap.m.SelectRenderer.CSS_CLASS + "WithArrow");
+//	}
 
-	oRm.addClass(CSS_CLASS + "WithArrow");
-	oRm.addStyle("max-width", oSelect.getMaxWidth());
-	oRm.writeControlData(oSelect);
-	oRm.writeStyles();
-	oRm.writeClasses();
+	oRenderManager.addStyle("max-width", oSelect.getMaxWidth());
+
+	oRenderManager.writeControlData(oSelect);
+
+	oRenderManager.writeStyles();
+	oRenderManager.writeClasses();
 
 	if (sTooltip) {
-		oRm.writeAttributeEscaped("title", sTooltip);
+		oRenderManager.writeAttributeEscaped("title", sTooltip);
 	}
 
 	if (bEnabled) {
-		oRm.writeAttribute("tabindex", "0");
+		oRenderManager.writeAttribute("tabindex", "0");
 	}
 
-	oRm.write(">");
+	oRenderManager.write(">");
 
-	switch (sType) {
-		case sap.m.SelectType.Default:
-			this._renderLabel(oRm, oSelect, sId, sSelectedItemText);
-			this._renderArrow(oRm);
-			break;
+		switch (sType) {
+			case sap.m.SelectType.Default:
+				this._renderLabel(oRenderManager, oSelect, sId, sSelectedItemText);
 
-		case sap.m.SelectType.IconOnly:
-			this._renderIcon(oRm, sIconURI);
-			break;
+				//if (bArrowVisible) {
+					this._renderArrow(oRenderManager);
+				//}
 
-		// no default
-	}
+				break;
 
-	if (oSelect._isRequiredSelectElement()) {
-		this._renderSelectElement(oRm, oSelect, sSelectedItemText);
-	}
+			case sap.m.SelectType.IconOnly:
+				this._renderIcon(oRenderManager, sIconURI);
+				break;
 
-	oRm.write("</div>");
+			// no default
+		}
+
+		if (oSelect._isRequiredSelectElement()) {
+			this._renderSelectElement(oRenderManager, oSelect, sId, bEnabled, sSelectedItemText);
+		}
+
+	oRenderManager.write("</div>");
 };
 
 /**
  * Renders the select's label, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.m.Select} oSelect An object representation of the control that should be rendered.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.m.Select} oSelect an object representation of the control that should be rendered.
  * @param {string} sId
  * @param {string} sSelectedItemText
  * @private
  */
-sap.m.SelectRenderer._renderLabel = function(oRm, oSelect, sId, sSelectedItemText) {
-	oRm.write('<label class="' + sap.m.SelectRenderer.CSS_CLASS + 'Label"');
-	oRm.writeAttribute("for", sId);
-	oRm.write(">");
-	oRm.writeEscaped(sSelectedItemText);
-	oRm.write('</label>');
+sap.m.SelectRenderer._renderLabel = function(oRenderManager, oSelect, sId, sSelectedItemText) {
+	oRenderManager.write('<label class="' + sap.m.SelectRenderer.CSS_CLASS + 'Label"');
+	oRenderManager.writeAttribute("for", sId);
+
+	oRenderManager.write(">");
+		oRenderManager.writeEscaped(sSelectedItemText);
+	oRenderManager.write('</label>');
 };
 
 /**
  * Renders the select's arrow, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
  * @private
  */
-sap.m.SelectRenderer._renderArrow = function(oRm) {
-	oRm.write('<span class="' + sap.m.SelectRenderer.CSS_CLASS + 'Arrow"></span>');
+sap.m.SelectRenderer._renderArrow = function(oRenderManager) {
+	oRenderManager.write('<span class="' + sap.m.SelectRenderer.CSS_CLASS + 'Arrow"></span>');
 };
 
 /**
  * Renders the select's icon, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
  * @param {string} sIconURI
  * @private
  */
-sap.m.SelectRenderer._renderIcon = function(oRm, sIconURI) {
-	oRm.writeIcon(sIconURI, sap.m.SelectRenderer.CSS_CLASS + "Icon");
+sap.m.SelectRenderer._renderIcon = function(oRenderManager, sIconURI) {
+	oRenderManager.writeIcon(sIconURI, sap.m.SelectRenderer.CSS_CLASS + "Icon");
 };
 
 /**
  * Renders the HTMLSelectElement for the select control, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.m.Select} oSelect An object representation of the select that should be rendered.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.m.Select} oSelect an object representation of the select that should be rendered.
+ * @param {string} sId
+ * @param {boolean} bEnabled
  * @param {string} sSelectedItemText
  * @private
  */
-sap.m.SelectRenderer._renderSelectElement = function(oRm, oSelect, sSelectedItemText) {
+sap.m.SelectRenderer._renderSelectElement = function(oRenderManager, oSelect, sId, bEnabled, sSelectedItemText) {
 	var sName = oSelect.getName();
 
-	oRm.write('<select class="'+ sap.m.SelectRenderer.CSS_CLASS + "Native" +'"');
+	oRenderManager.write("<select");
+	oRenderManager.writeAttribute("id", sId);
 
 	if (sName) {
-		oRm.writeAttributeEscaped("name", sName);
+		oRenderManager.writeAttributeEscaped("name", sName);
 	}
 
-	oRm.writeAttribute("tabindex", "-1");
-	oRm.write(">");
-	this._renderOptions(oRm, oSelect, sSelectedItemText);
-	oRm.write("</select>");
+	if (!bEnabled) {
+		oRenderManager.write(" disabled");
+	}
+
+	oRenderManager.writeAttribute("tabindex", "-1");
+
+	oRenderManager.write(">");
+
+		this._renderOptions(oRenderManager, oSelect, sSelectedItemText);
+
+	oRenderManager.write("</select>");
 };
 
 /**
  * Renders the HTMLOptionElement(s) for the select control, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.m.Select} oSelect An object representation of the select that should be rendered.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.m.Select} oSelect an object representation of the select that should be rendered.
  * @param {string} sSelectedItemText
  * @private
  */
-sap.m.SelectRenderer._renderOptions = function(oRm, oSelect, sSelectedItemText) {
+sap.m.SelectRenderer._renderOptions = function(oRenderManager, oSelect, sSelectedItemText) {
 	var aItems = oSelect.getItems(),
 		aItemsLength = aItems.length,
+		sSelectedItemId = oSelect.getAssociation("selectedItem"),
 		i = 0;
 
+	// rendering options
 	for (; i < aItemsLength; i++) {
-		oRm.write("<option>");
-		oRm.writeEscaped(aItems[i].getText());
-		oRm.write("</option>");
+		oRenderManager.write("<option");
+			oRenderManager.writeAttribute("id", aItems[i].getId());
+			oRenderManager.writeAttributeEscaped("value", (aItems[i].getKey() !== "") ? aItems[i].getKey() : aItems[i].getId());
+
+			if (aItems[i].getId() === sSelectedItemId) {
+				oRenderManager.write(" selected");
+			}
+
+			if (!aItems[i].getEnabled()) {
+				oRenderManager.write(" disabled");
+			}
+
+			oRenderManager.write(">");
+			oRenderManager.writeEscaped(aItems[i].getText());
+		oRenderManager.write("</option>");
 	}
 
 	if (aItemsLength === 0) {
-		oRm.write("<option>" + sSelectedItemText + "</option>");
+		oRenderManager.write("<option>" + sSelectedItemText + "</option>");
 	}
 };
 
 /**
  * This method is reserved for derived class to add extra classes to the HTML root element of the control.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.ui.core.Control} oSelect An object representation of the control that should be rendered.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.ui.core.Control} oSelect an object representation of the control that should be rendered.
  * @protected
  */
-sap.m.SelectRenderer.addStyleClass = function(oRm, oSelect) {};
+sap.m.SelectRenderer.addStyleClass = function(oRenderManager, oSelect) {};

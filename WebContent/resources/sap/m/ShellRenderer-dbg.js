@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
  
  jQuery.sap.declare("sap.m.ShellRenderer");
@@ -28,7 +28,7 @@ sap.m.ShellRenderer.render = function(rm, oControl) {
 		rm.addClass("sapMShellAppWidthLimited");
 	}
 	
-	sap.m.BackgroundHelper.addBackgroundColorStyles(rm, oControl.getBackgroundColor(),  oControl.getBackgroundImage(), "sapMShellGlobalOuterBackground");
+	sap.m.BackgroundHelper.addBackgroundColorStyles(rm, oControl.getBackgroundColor(),  oControl.getBackgroundImage());
 	
 	rm.writeClasses();
 	rm.writeStyles();
@@ -86,7 +86,7 @@ sap.m.ShellRenderer.render = function(rm, oControl) {
 	
 	
 	// content
-	rm.write("<section class='sapMShellContent sapMShellGlobalInnerBackground' id='" + oControl.getId() + "-content' data-sap-ui-root-content='true'>");
+	rm.write("<section class='sapMShellContent' id='" + oControl.getId() + "-content' data-sap-ui-root-content='true'>");
 
 	rm.renderControl(oControl.getApp());
 	
@@ -97,13 +97,21 @@ sap.m.ShellRenderer.getLogoImageHtml = function(oControl) {
 	var sImage = oControl.getLogo(); // configured logo
 	if (!sImage) {
 		jQuery.sap.require("sap.ui.core.theming.Parameters");
-		sImage = sap.ui.core.theming.Parameters._getThemeImage(); // theme logo
+		sImage = sap.ui.core.theming.Parameters.get('sapUiGlobalLogo'); // theme logo
+		if (sImage) {
+			var match = /url[\s]*\('?"?([^\'")]*)'?"?\)/.exec(sImage);
+			if (match) {
+				sImage = match[1];
+			} else if (sImage === "''"){ // theme default
+				sImage = null;
+			}
+		}
 	}
 	
 	var result = "";
 	if (sImage) {
 		result = "<div class='sapMShellLogo'>";
-		if (sap.ui.Device.browser.internet_explorer) {
+		if (jQuery.browser.msie) {
 			result += "<span class='sapMShellLogoImgAligner'></span>";
 		}
 		result += "<img id='" + oControl.getId() + "-logo' class='sapMShellLogoImg' src='";

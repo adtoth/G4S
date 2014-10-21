@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -57,7 +57,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @extends sap.m.ListItemBase
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -125,7 +125,6 @@ sap.m.ListItemBase.extend("sap.m.InputListItem", { metadata : {
  * Getter for aggregation <code>content</code>.<br/>
  * Content controls can be added
  * 
- * <strong>Note</strong>: this is the default aggregation for InputListItem.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.m.InputListItem#getContent
@@ -226,4 +225,4 @@ sap.m.ListItemBase.extend("sap.m.InputListItem", { metadata : {
  */
 
 
-// Start of sap\m\InputListItem.js
+// Start of sap/m/InputListItem.js

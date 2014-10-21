@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
  
 jQuery.sap.declare("sap.m.CarouselRenderer");
@@ -12,6 +12,9 @@ jQuery.sap.declare("sap.m.CarouselRenderer");
  */
 sap.m.CarouselRenderer = {
 };
+
+
+
 
 /**
  * Renders the Carousel's HTML, using the provided {@link sap.ui.core.RenderManager}.
@@ -24,9 +27,8 @@ sap.m.CarouselRenderer.render = function(rm, oCarousel){
 	if (!oCarousel.getVisible()) {
 		return;
 	}
-	
 
-	//Outer carousel div
+	//div for pages
 	rm.write("<div");
 	rm.writeControlData(oCarousel);
 
@@ -35,10 +37,6 @@ sap.m.CarouselRenderer.render = function(rm, oCarousel){
 	rm.writeStyles();
 	
 	rm.addClass("sapMCrsl");
-	//'sapMCrslFluid' is originally from mobify-carousel
-	rm.addClass("sapMCrslFluid");
-	
-	
 	// add all classes (also custom classes) to carousel tag
 	rm.writeClasses();
 	
@@ -49,70 +47,21 @@ sap.m.CarouselRenderer.render = function(rm, oCarousel){
 	
 	rm.write(">");
 	
-	var aPages = oCarousel.getPages();
-	var iPageCount = aPages.length;
-	var sPageIndicatorPlacement = oCarousel.getShowPageIndicator() ? 
-		oCarousel.getPageIndicatorPlacement() : null; 
+	//visual indicator
+	if(oCarousel.getPageIndicatorPlacement() == sap.m.PlacementType.Top) {
+		this._renderPageIndicator(rm, oCarousel);
+	}
 	
+	//prepare the div which will contain the pages
+	if(!oCarousel._oSwipeView) {
+		rm.write("<div id="); rm.writeEscaped(oCarousel._getContentId()); rm.write(" class='sapMCrslCont'></div>");
+	}
 	
 	//visual indicator
-	if(sPageIndicatorPlacement === sap.m.PlacementType.Top) {
-		this._renderPageIndicator(rm, iPageCount);
-	}
-	
-	//inner carousel div
-	rm.write("<div class='sapMCrslInner'>");
-	//do housekeeping
-	oCarousel._cleanUpScrollContainer();
-	
-	var fnRenderPage = function(oPage, iIndex) {
-		//item div
-		rm.write("<div class='sapMCrslItem");
-		if(sPageIndicatorPlacement === sap.m.PlacementType.Bottom) {
-			rm.write(" sapMCrslBottomOffset");
-		}
-		rm.write("'>");
-			//Invisible element which is used to determine when desktop keyboard navigation
-			//has reached the FIRST focusable element of a page and went beyond. In that case, the controller
-			//will focus the last focusable element of the previous page
-			rm.write("<span class='sapMCrslFirstFE' pageIndex=\"" + iIndex + "\" tabIndex=\"0\"/>");
-			rm.renderControl(oCarousel._createScrollContainer(oPage, iIndex));
-			//Invisible element which is used to determine when desktop keyboard navigation
-			//has reached the LAST focusable element of a page and went beyond. In that case, the controller
-			//will focus the first focusable element of the next page
-			rm.write("<span class='sapMCrslLastFE' pageIndex=\"" + iIndex + "\" tabIndex=\"0\"/>");
-		rm.write("</div>");	
-	};
-	
-	//Render Pages
-	aPages.forEach(fnRenderPage);
-	
-	
-	rm.write("</div>");	
-	//inner div ends
-	
-	
-	if (sap.ui.Device.system.desktop && iPageCount > 1) {
-		//heads up controls for desktop browsers
-		rm.write("<div class='sapMCrslControls sapMCrslHud'>");
-			rm.write("<a class='sapMCrslPrev' href='#' data-slide='prev' tabIndex=1><div class='sapMCrslHudInner'>");
-			rm.renderControl(oCarousel._getNavigationArrow('left'));
-			rm.write("</div></a>");
-			
-			rm.write("<a class='sapMCrslNext' href='#' data-slide='next' tabIndex=1><div class='sapMCrslHudInner'>");
-			rm.renderControl(oCarousel._getNavigationArrow('right'));
-			rm.write("</div></a>");
-		rm.write("</div>");
-	}
-	
-	
-	//visual indicator
-	if(sPageIndicatorPlacement === sap.m.PlacementType.Bottom) {
-		this._renderPageIndicator(rm, iPageCount, true);
+	if(oCarousel.getPageIndicatorPlacement() == sap.m.PlacementType.Bottom) {
+		this._renderPageIndicator(rm, oCarousel);
 	}
 	rm.write("</div>");	
-	
-	//page-wrap ends
 };
 
 
@@ -120,20 +69,35 @@ sap.m.CarouselRenderer.render = function(rm, oCarousel){
  * Renders the page indicator, using the provided {@link sap.ui.core.RenderManager}.
  * 
  * @param {sap.ui.core.RenderManager} oRm the RenderManager that can be used for writing to the render output buffer
- * @param aPages array of controls to be rendered
+ * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
  * @private
  */
-sap.m.CarouselRenderer._renderPageIndicator = function(rm, iPageCount, bBottom){
-	//page indicator div
-	rm.write("<div class='sapMCrslControls sapMCrslBulleted" + 
-			(bBottom ? " sapMCrslBottomOffset" : "") +
-			"'>");
-	for ( var i = 1; i <= iPageCount; i++) {
-		//item span
-		rm.write("<span data-slide=" + i + ">" + i + "</span>");
-	}
-	rm.write("</div>");	
+sap.m.CarouselRenderer._renderPageIndicator = function(rm, oCarousel){
+	rm.write("<ul id="); + rm.writeEscaped(oCarousel._getNavId());
+	if (!oCarousel.getShowPageIndicator()) {
+		rm.addStyle("display","none");
+		rm.writeStyles();
+	};
+	rm.write(" class='sapMCrslIndLst'>");
+	this.renderPageIndicatorDots(rm, oCarousel);
+	rm.write("</ul>");
 };
 
 
+/**
+ * Renders the page indicator dots, using the provided {@link sap.ui.core.RenderManager}.
+ * 
+ * @param {sap.ui.core.RenderManager} oRm the RenderManager that can be used for writing to the render output buffer
+ * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
+ */
+sap.m.CarouselRenderer.renderPageIndicatorDots = function(rm, oCarousel){
+	if(oCarousel.getShowPageIndicator()) {
+		rm.write("<div id="); rm.writeEscaped(oCarousel._getPrevBtnId()); rm.write(" class='sapMCrslIndLstBt'/>"); 
+		var dotCount = oCarousel.getPages().length;
+		for(var i= 0; i< dotCount; i ++) {
+			rm.write("<li id="); rm.writeEscaped(oCarousel._getNavId()); rm.write("-dot" + i + " class='sapMCrslIndLstIt'></li>");
+		}
+		rm.write("<div id="); rm.writeEscaped(oCarousel._getNextBtnId()); rm.write(" class='sapMCrslIndLstBt'/>"); 
+	}
+};
 

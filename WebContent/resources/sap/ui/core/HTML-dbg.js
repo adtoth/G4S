@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.HTML.
-sap.ui.define(['./library','./Control'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.HTML");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Control");
 
 
 /**
@@ -52,16 +53,10 @@ sap.ui.define(['./library','./Control'], function() {
  *
  * @class
  * Embeds standard HTML in a SAPUI5 control tree.
- * 
- * Security Hint: By default, the HTML content (property 'content') is not sanitized and therefore open to XSS attacks. Applications that want to show user defined input in an HTML control, should either sanitize the content on their own or activate automatic sanitizing through the 'sanitizeContent' property.
- * 
- * Although this control inherits the 'tooltip' feature from sap.ui.core.Element, it doesn't support it. Instead, the defined HTML content can contain a tooltip (title attribute).
- * 
- * For further hints about usage restrictions for this control, see also the documentation of the 'content' property.
  * @extends sap.ui.core.Control
  *
- * @author SAP AG 
- * @version 1.22.5
+ * @author Frank Weigel 
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -133,9 +128,9 @@ sap.ui.core.HTML.M_EVENTS = {'afterRendering':'afterRendering'};
  * @param {string} sContent  new value for property <code>content</code>
  * @return {sap.ui.core.HTML} <code>this</code> to allow method chaining
  * @public
- * @SecSink {,XSS} The content of the 'content' property is rendered 1:1 to allow the full flexibility of HTML in UI5 applications.
- * Applications therefore must ensure, that they don't set malicious content (e.g. derived from user input). UI5 does not provide an HTML validation function.
- * jQuery.sap.encodeHTML will encode any HTML relevant character, but this is in nearly all cases not what applications want here.
+ * @SecSink {,XSS} The content of the 'content' property is rendered 1:1 to allow the full flexibility of HTML in UI5 applications. 
+		Applications therefore must ensure, that they don't set malicious content (e.g. derived from user input). UI5 does not provide an HTML validation function. 
+		jQuery.sap.encodeHTML will encode any HTML relevant character, but this is in nearly all cases not what applications want here.
  * @name sap.ui.core.HTML#setContent
  * @function
  */
@@ -230,7 +225,7 @@ sap.ui.core.HTML.M_EVENTS = {'afterRendering':'afterRendering'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.HTML</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.HTML</code>.<br/> itself.
  *
  * @return {sap.ui.core.HTML} <code>this</code> to allow method chaining
  * @public
@@ -271,12 +266,11 @@ sap.ui.core.HTML.M_EVENTS = {'afterRendering':'afterRendering'};
 
 // Start of sap/ui/core/HTML.js
 /**
- * @return {Element} The element's DOM reference or null
+ * @return {DOMNode} The element's DOM reference or null
  * @public
  */
-sap.ui.core.HTML.prototype.getDomRef = function(sSuffix) {
-	var sId = sSuffix ? this.getId() + "-" + sSuffix : this.getId();
-	return jQuery.sap.domById("sap-ui-dummy-" + sId) || jQuery.sap.domById(sId);
+sap.ui.core.HTML.prototype.getDomRef = function() {
+	return jQuery.sap.domById("sap-ui-dummy-" + this.getId()) || jQuery.sap.domById(this.getId());
 };
 
 sap.ui.core.HTML.prototype.setContent = function(sContent) {
@@ -382,8 +376,8 @@ sap.ui.core.HTML.prototype._postprocessNewContent = function($newContent) {
  * Sets some new DOM content for this HTML control. The content will replace the existing content
  * after the next rendering. Properties are not modified, but preferDOM should be set to true.
  *
- * @param {Element} oDom the new DOM content
- * @return {sap.ui.core.HTML} <code>this</code> to facilitate method chaining
+ * @param {DOMNode} oDom the new DOM content
+ * @return this for chaining
  * @public
  */
 sap.ui.core.HTML.prototype.setDOMContent = function(oDom) {
@@ -402,11 +396,3 @@ sap.ui.core.HTML.prototype.setDOMContent = function(oDom) {
 	return this;
 };
 
-sap.ui.core.HTML.prototype.setTooltip = function(sTooltip) {
-	jQuery.sap.log.warning("The sap.ui.core.HTML control doesn't support tooltips. Add the tooltip to the HTML content instead.");
-	return sap.ui.core.Control.prototype.setTooltip.apply(this, arguments);
-};
-
-	return sap.ui.core.HTML;
-
-}, /* bExport = */ true);

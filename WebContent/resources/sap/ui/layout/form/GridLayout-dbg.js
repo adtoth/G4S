@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ jQuery.sap.require("sap.ui.layout.form.FormLayout");
  * @extends sap.ui.layout.form.FormLayout
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -121,7 +121,7 @@ sap.ui.layout.form.FormLayout.extend("sap.ui.layout.form.GridLayout", { metadata
  */
 
 
-// Start of sap\ui\layout\form\GridLayout.js
+// Start of sap/ui/layout/form/GridLayout.js
 /**
  * This file defines behavior for the control
  */
@@ -134,24 +134,7 @@ jQuery.sap.require("sap.ui.layout.form.GridElementData");
 	sap.ui.layout.form.GridLayout.prototype.toggleContainerExpanded = function(oContainer){
 
 		// rerendering of the form is needed
-		this.invalidate();
-
-	};
-
-	sap.ui.layout.form.GridLayout.prototype.onAfterRendering = function(){
-
-		// set tabindex of expander buttons to -1 to prevent tabbing from outside the Form
-		// directly to the expander
-		var oForm = this.getParent();
-		if (oForm) {
-			var aContainers = oForm.getFormContainers();
-			for ( var i = 0; i < aContainers.length; i++) {
-				var oContainer = aContainers[i];
-				if (oContainer.getExpandable()) {
-					oContainer._oExpandButton.$().attr("tabindex", "-1");
-				}
-			}
-		}
+		this.rerender();
 
 	};
 
@@ -225,7 +208,7 @@ jQuery.sap.require("sap.ui.layout.form.GridElementData");
 		for ( var i = iStartIndex; i >= 0; i--) {
 			// find the next enabled control thats rendered
 			var oField = aFields[i];
-			var iLeftnew = oField.$().offset().left;
+			var iLeftnew = jQuery.sap.byId(oField.getId()).offset().left;
 			if (iLeft < iLeftnew && i != 0) {
 				continue;
 			}
@@ -250,7 +233,7 @@ jQuery.sap.require("sap.ui.layout.form.GridElementData");
 			var aElements = oContainer.getFormElements();
 			var iMax = aElements.length;
 			var i = iCurrentIndex+1;
-			var iLeft = oControl.$().offset().left;
+			var iLeft = jQuery.sap.byId(oControl.getId()).offset().left;
 
 			while (!oNewDomRef && i < iMax) {
 				var oElement = aElements[i];
@@ -279,7 +262,7 @@ jQuery.sap.require("sap.ui.layout.form.GridElementData");
 		if(oContainer.getVisible()) {
 			var aElements = oContainer.getFormElements();
 			var i = iCurrentIndex-1;
-			var iLeft = oControl.$().offset().left;
+			var iLeft = jQuery.sap.byId(oControl.getId()).offset().left;
 
 			while (!oNewDomRef && i >= 0) {
 				var oElement = aElements[i];

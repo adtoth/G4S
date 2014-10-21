@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.mvc.View.
-sap.ui.define(['sap/ui/core/library','sap/ui/core/Control'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.mvc.View");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Control");
 
 
 /**
@@ -60,7 +61,7 @@ sap.ui.define(['sap/ui/core/library','sap/ui/core/Control'], function() {
  * @extends sap.ui.core.Control
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -320,7 +321,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
  *
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @public
@@ -345,7 +346,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
 
 /**
  * Fire event afterInit to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @protected
@@ -378,7 +379,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
  *
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @public
@@ -403,7 +404,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
 
 /**
  * Fire event beforeExit to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @protected
@@ -436,7 +437,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
  *
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @public
@@ -461,7 +462,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
 
 /**
  * Fire event afterRendering to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @protected
@@ -494,7 +495,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.mvc.View</code>.<br/> itself.
  *
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @public
@@ -519,7 +520,7 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
 
 /**
  * Fire event beforeRendering to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.ui.core.mvc.View} <code>this</code> to allow method chaining
  * @protected
@@ -709,8 +710,8 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
 	 * 
 	 * For more details see the development guide section about Model View Controller in UI5.
 	 * 
-	 * @param {string} [sIdSuffix] a suffix to be appended to the cloned element id
-	 * @param {string[]} [aLocalIds] an array of local IDs within the cloned hierarchy (internally used)
+	 * @param {String} [sIdSuffix] a suffix to be appended to the cloned element id
+	 * @param {Array} [aLocalIds] an array of local IDs within the cloned hierarchy (internally used)
 	 * @return {sap.ui.core.Element} reference to the newly created clone
 	 * @protected
 	 */
@@ -823,7 +824,3 @@ sap.ui.core.mvc.View.M_EVENTS = {'afterInit':'afterInit','beforeExit':'beforeExi
 
 
 }());
-
-	return sap.ui.core.mvc.View;
-
-}, /* bExport = */ true);

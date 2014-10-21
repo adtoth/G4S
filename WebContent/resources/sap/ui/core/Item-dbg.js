@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.Item.
-sap.ui.define(['./library','./Element'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.Item");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Element");
 
 
 /**
@@ -59,7 +60,7 @@ sap.ui.define(['./library','./Element'], function() {
  * @extends sap.ui.core.Element
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -198,7 +199,3 @@ sap.ui.core.Element.extend("sap.ui.core.Item", { metadata : {
 
 
 // Start of sap/ui/core/Item.js
-
-	return sap.ui.core.Item;
-
-}, /* bExport = */ true);

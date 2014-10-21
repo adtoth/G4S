@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -55,8 +55,8 @@ jQuery.sap.require("sap.ui.core.Control");
  * In this layout the elemnts are orderd one below the other
  * @extends sap.ui.core.Control
  *
- * @author SAP AG 
- * @version 1.22.5
+ * @author SAP 
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -180,7 +180,6 @@ sap.ui.core.Control.extend("sap.ui.layout.VerticalLayout", { metadata : {
  * Getter for aggregation <code>content</code>.<br/>
  * Child Controls within the layout.
  * 
- * <strong>Note</strong>: this is the default aggregation for VerticalLayout.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.ui.layout.VerticalLayout#getContent
@@ -258,7 +257,7 @@ sap.ui.core.Control.extend("sap.ui.layout.VerticalLayout", { metadata : {
  */
 
 
-// Start of sap\ui\layout\VerticalLayout.js
+// Start of sap/ui/layout/VerticalLayout.js
 jQuery.sap.require("sap.ui.core.EnabledPropagator");
 
 sap.ui.core.EnabledPropagator.call(sap.ui.layout.VerticalLayout.prototype);

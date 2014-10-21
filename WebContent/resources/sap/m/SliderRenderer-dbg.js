@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.SliderRenderer");
@@ -13,8 +13,8 @@ jQuery.sap.declare("sap.m.SliderRenderer");
 sap.m.SliderRenderer = {};
 
 /**
- * CSS class to be applied to the HTML root element of the Slider control.
- *
+ * Default CSS class to be applied to the root element of components rendered
+ * by this renderer.
  * @type {string}
  */
 sap.m.SliderRenderer.CSS_CLASS = "sapMSlider";
@@ -22,84 +22,72 @@ sap.m.SliderRenderer.CSS_CLASS = "sapMSlider";
 /**
  * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.ui.core.Control} oSlider An object representation of the slider that should be rendered.
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the render output buffer
+ * @param {sap.ui.core.Control} oSlider an object representation of the slider that should be rendered
  */
-sap.m.SliderRenderer.render = function(oRm, oSlider) {
-	var bEnabled = oSlider.getEnabled(),
-		sTooltip = oSlider.getTooltip_AsString(),
-		CSS_CLASS = sap.m.SliderRenderer.CSS_CLASS;
+sap.m.SliderRenderer.render = function(oRenderManager, oSlider) {
+	var fValue = oSlider.getValue(),
+		sName = oSlider.getName(),
+		bEnabled = oSlider.getEnabled(),
+		sTooltip = oSlider.getTooltip_AsString();
 
 	// avoid render when not visible
 	if (!oSlider.getVisible()) {
 		return;
 	}
 
-	oRm.write("<div");
-	oRm.addClass(CSS_CLASS);
+	oRenderManager.write("<div");
+	oRenderManager.addClass(sap.m.SliderRenderer.CSS_CLASS);
 
 	if (!bEnabled) {
-		oRm.addClass(CSS_CLASS + "Disabled");
+		oRenderManager.addClass(sap.m.SliderRenderer.CSS_CLASS + "Disabled");
 	}
 
-	oRm.addStyle("width", oSlider.getWidth());
-	oRm.addStyle("visibility", "hidden");
-	oRm.writeClasses();
-	oRm.writeStyles();
-	oRm.writeControlData(oSlider);
+	oRenderManager.addStyle("width", oSlider.getWidth());
+	oRenderManager.addStyle("visibility", "hidden");
+	oRenderManager.writeClasses();
+	oRenderManager.writeStyles();
+	oRenderManager.writeControlData(oSlider);
 
 	if (sTooltip) {
-		oRm.writeAttributeEscaped("title", sTooltip);
+		oRenderManager.writeAttributeEscaped("title", sTooltip);
 	}
 
-	oRm.write(">");
-	oRm.write('<div');
-	oRm.addClass(CSS_CLASS + "Inner");
+	oRenderManager.write(">");
 
-	if (!bEnabled) {
-		oRm.addClass(CSS_CLASS + "InnerDisabled");
-	}
+		oRenderManager.write('<div');
+			oRenderManager.addClass(sap.m.SliderRenderer.CSS_CLASS + "Inner");
 
-	oRm.writeClasses();
-	oRm.writeStyles();
-	oRm.write(">");
+			if (!bEnabled) {
+				oRenderManager.addClass(sap.m.SliderRenderer.CSS_CLASS + "InnerDisabled");
+			}
 
-	if (oSlider.getProgress()) {
-		this.renderProgressIndicator(oRm, oSlider);
-	}
+			oRenderManager.writeClasses();
+			oRenderManager.writeStyles();
+			oRenderManager.write(">");
 
-	this.renderHandle(oRm, oSlider);
-	oRm.write("</div>");
+			if (oSlider.getProgress()) {
+				oRenderManager.write('<div class="' + sap.m.SliderRenderer.CSS_CLASS + 'Progress" style="width: ' +  oSlider._sProgressValue + '"></div>');
+			}
 
-	if (oSlider.getName()) {
-		this.renderInput(oRm, oSlider);
-	}
+			this._renderHandle(oRenderManager, oSlider, fValue, bEnabled);
 
-	oRm.write("</div>");
+		oRenderManager.write("</div>");
+
+		if (sName) {
+			this._renderInput(oRenderManager, oSlider, fValue, bEnabled, sName);
+		}
+
+	oRenderManager.write("</div>");
 };
 
-sap.m.SliderRenderer.renderProgressIndicator = function(oRm, oSlider) {
-	oRm.write("<div");
-	oRm.writeAttribute("id", oSlider.getId() + "-progress");
-	oRm.addClass(sap.m.SliderRenderer.CSS_CLASS + "Progress");
-	oRm.addStyle("width", oSlider._sProgressValue);
-	oRm.writeClasses();
-	oRm.writeStyles();
-	oRm.write("></div>");
-};
-
-sap.m.SliderRenderer.renderHandle = function(oRm, oSlider) {
-	var bEnabled = oSlider.getEnabled(),
-		fValue = oSlider.getValue();
-
-	oRm.write("<span");
-	oRm.writeAttribute("id", oSlider.getId() + "-handle");
-	oRm.writeAttribute("title", fValue);
-	oRm.addClass(sap.m.SliderRenderer.CSS_CLASS + "Handle");
-	oRm.addStyle(sap.m.Slider._bRtl ? "right" : "left", oSlider._sProgressValue);
+sap.m.SliderRenderer._renderHandle = function(oRenderManager, oSlider, fValue, bEnabled) {
+	oRenderManager.write('<span');
+	oRenderManager.addClass(sap.m.SliderRenderer.CSS_CLASS + "Handle");
+	oRenderManager.addStyle(sap.m.Slider._bRtl ? "right" : "left", oSlider._sProgressValue);
 
 	// WAI-ARIA
-	oRm.writeAccessibilityState(oSlider, {
+	oRenderManager.writeAccessibilityState(oSlider, {
 		role: "slider",
 		orientation: "horizontal",
 		valuemin: oSlider.getMin(),
@@ -107,27 +95,30 @@ sap.m.SliderRenderer.renderHandle = function(oRm, oSlider) {
 		valuenow: fValue,
 		valuetext: fValue,
 		live: "assertive",
-		disabled: !bEnabled
+		disabled: !oSlider.getEnabled()
 	});
 
-	oRm.writeClasses();
-	oRm.writeStyles();
+	oRenderManager.writeClasses();
+	oRenderManager.writeStyles();
+
+	oRenderManager.writeAttribute("title", fValue);
 
 	if (bEnabled) {
-		oRm.writeAttribute("tabindex", "0");
+		oRenderManager.writeAttribute("tabindex", "0");
 	}
 
-	oRm.write("></span>");
+	oRenderManager.write('><span class="' + sap.m.SliderRenderer.CSS_CLASS + 'HandleInner"></span></span>');
 };
 
-sap.m.SliderRenderer.renderInput = function(oRm, oSlider) {
-	oRm.write('<input type="text" class="' + sap.m.SliderRenderer.CSS_CLASS + 'Input"');
+sap.m.SliderRenderer._renderInput = function(oRenderManager, oSlider, fValue, bEnabled, sName) {
+	oRenderManager.write('<input type="text" class="' + sap.m.SliderRenderer.CSS_CLASS + 'Input"');
 
-	if (!oSlider.getEnabled()) {
-		oRm.write("disabled");
+	if (!bEnabled) {
+		oRenderManager.write("disabled");
 	}
 
-	oRm.writeAttributeEscaped("name", oSlider.getName());
-	oRm.writeAttribute("value", oSlider.getValue());
-	oRm.write("/>");
+	oRenderManager.writeAttributeEscaped("name", sName);
+	oRenderManager.writeAttribute("value", fValue);
+
+	oRenderManager.write("/>");
 };

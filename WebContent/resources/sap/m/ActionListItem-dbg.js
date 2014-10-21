@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @extends sap.m.ListItemBase
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -116,7 +116,7 @@ sap.m.ListItemBase.extend("sap.m.ActionListItem", { metadata : {
  */
 
 
-// Start of sap\m\ActionListItem.js
+// Start of sap/m/ActionListItem.js
 jQuery.sap.require("sap.ui.core.EnabledPropagator");
 
 sap.m.ActionListItem.prototype.init = function() {

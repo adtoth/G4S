@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.CheckBoxRenderer");
@@ -29,14 +29,13 @@ sap.m.CheckBoxRenderer.render = function(oRm, oCheckBox){
 
 	// get control properties
 	var bEnabled = oCheckBox.getEnabled();
+	var iTabIndex = bEnabled ? 0 : -1;
 
 	// CheckBox wrapper
 	oRm.write("<div");
 	oRm.addClass("sapMCb");
 	if(bEnabled) {
 		oRm.addClass("sapMPointer");
-	} else {
-		oRm.addClass("sapMCbBgDis");
 	}
 	oRm.writeControlData(oCheckBox);
 	oRm.writeClasses();
@@ -55,18 +54,14 @@ sap.m.CheckBoxRenderer.render = function(oRm, oCheckBox){
 	// CheckBox style class
 	oRm.addClass("sapMCbBg");
 
-	if(bEnabled && sap.ui.Device.system.desktop) {
-		oRm.addClass("sapMCbHoverable");
+	if (!bEnabled) {
+		oRm.addClass("sapMCbBgDis");
 	}
 
 	if (!oCheckBox.getActiveHandling()){
 		oRm.addClass("sapMCbActiveStateOff");
 	}
-
-	if(bEnabled) {
-		oRm.writeAttribute("tabindex", oCheckBox.getTabIndex());
-	}
-
+	oRm.writeAttribute("tabindex", oCheckBox.hasOwnProperty("_iTabIndex") ? oCheckBox._iTabIndex : iTabIndex);
 	oRm.addClass("sapMCbMark"); // TODO: sapMCbMark is redundant, remove it and simplify CSS
 
 	if (oCheckBox.getSelected()) {
@@ -76,7 +71,7 @@ sap.m.CheckBoxRenderer.render = function(oRm, oCheckBox){
 
 	oRm.write(">");		// DIV element
 
-	oRm.write("<input type='CheckBox' id='");
+	oRm.write("<input type='CheckBox' tabindex='-1' id='");
 	oRm.write(oCheckBox.getId() + "-CB'");
 
 	if (oCheckBox.getSelected()) {

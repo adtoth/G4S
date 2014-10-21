@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ jQuery.sap.require("sap.ui.core.Element");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getFormElements formElements} <strong>(default aggregation)</strong> : sap.ui.layout.form.FormElement[]</li>
+ * <li>{@link #getFormElements formElements} : sap.ui.layout.form.FormElement[]</li>
  * <li>{@link #getTitle title} : sap.ui.core.Title|string</li></ul>
  * </li>
  * <li>Associations
@@ -61,7 +61,7 @@ jQuery.sap.require("sap.ui.core.Element");
  * @extends sap.ui.core.Element
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -133,7 +133,6 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormContainer", { metadata : {
 /**
  * Getter for property <code>expandable</code>.
  * Defines if the Container is expandable.
- * The expander icon will only be shown if a title is set for the Container.
  *
  * Default value is <code>false</code>
  *
@@ -185,7 +184,6 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormContainer", { metadata : {
  * Getter for aggregation <code>formElements</code>.<br/>
  * Elements of the FormContainer.
  * 
- * <strong>Note</strong>: this is the default aggregation for form/FormContainer.
  * @return {sap.ui.layout.form.FormElement[]}
  * @public
  * @name sap.ui.layout.form.FormContainer#getFormElements
@@ -276,7 +274,7 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormContainer", { metadata : {
 
 /**
  * Setter for the aggregated <code>title</code>.
- * @param {sap.ui.core.Title|string} oTitle
+ * @param oTitle {sap.ui.core.Title|string}
  * @return {sap.ui.layout.form.FormContainer} <code>this</code> to allow method chaining
  * @public
  * @name sap.ui.layout.form.FormContainer#setTitle
@@ -294,7 +292,7 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormContainer", { metadata : {
  */
 
 
-// Start of sap\ui\layout\form\FormContainer.js
+// Start of sap/ui/layout/form/FormContainer.js
 /**
  * This file defines behavior for the control,
  */
@@ -329,13 +327,11 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		if (bExpandable) {
 			var that = this;
 			if (!this._oExpandButton) {
-				this._oExpandButton = sap.ui.layout.form.FormHelper.createButton(this.getId()+"--Exp", _handleExpButtonPress, that);
+				this._oExpandButton = sap.ui.layout.form.FormHelper.createButton(this.getId()+"--Exp", handleExpButtonPress, that);
 				this._oExpandButton.setParent(this);
 			}
 			_setExpanderIcon(that);
 		}
-
-		return this;
 
 	};
 
@@ -350,8 +346,6 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		if (oForm && oForm.toggleContainerExpanded) {
 			oForm.toggleContainerExpanded(that);
 		}
-
-		return this;
 
 	};
 
@@ -378,25 +372,6 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		if (oParent && oParent.onLayoutDataChange) {
 			oParent.onLayoutDataChange(oEvent);
 		}
-
-	};
-
-	/*
-	 * Checks if properties are fine
-	 * Expander only visible if title is set -> otherwise give warning
-	 * @return 0 = no problem, 1 = warning, 2 = error
-	 * @private
-	 */
-	sap.ui.layout.form.FormContainer.prototype._checkProperties = function(){
-
-		var iReturn = 0;
-
-		if (this.getExpandable() && !this.getTitle()) {
-			jQuery.sap.log.warning("Expander only displayed if title is set", this.getId(), "FormContainer");
-			iReturn = 1;
-		}
-
-		return iReturn;
 
 	};
 
@@ -431,7 +406,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 
 	};
 
-	function _handleExpButtonPress(oEvent){
+	function handleExpButtonPress(oEvent){
 
 		this.setExpanded(!this.getExpanded());
 

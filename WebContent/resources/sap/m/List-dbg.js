@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -53,12 +53,11 @@ jQuery.sap.require("sap.m.ListBase");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * The List control provides a container for all types of list items.
- * For mobile devices, the recommended limit of list items is 100 to assure proper performance. To improve initial rendering of large lists, use the "growing" feature. Please refer to the SAPUI5 Developer Guide for more information..
+ * List control provides a container for all type of list items.
  * @extends sap.m.ListBase
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -218,7 +217,7 @@ sap.m.ListBase.extend("sap.m.List", { metadata : {
  */
 
 
-// Start of sap\m\List.js
+// Start of sap/m/List.js
 sap.m.List.prototype.onBeforeRendering = function() {
 	if (sap.m.ListBase.prototype.onBeforeRendering) {
 		sap.m.ListBase.prototype.onBeforeRendering.call(this);

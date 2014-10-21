@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.PageRenderer");
@@ -15,8 +15,8 @@ sap.m.PageRenderer = {};
 /**
  * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
  *
- * @param {sap.ui.core.RenderManager} rm the RenderManager that can be used for writing to the Render-Output-Buffer
- * @param {sap.ui.core.Control} oPage an object representation of the control that should be rendered
+ * @param {sap.ui.core.RenderManager} oRenderManager the RenderManager that can be used for writing to the Render-Output-Buffer
+ * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
  */
 sap.m.PageRenderer.render = function(rm, oPage) {
 	var oHeader = null,
@@ -32,12 +32,13 @@ sap.m.PageRenderer.render = function(rm, oPage) {
 	if (oPage.getShowFooter()){
 		oFooter = oPage.getFooter();
 	}
+
 	rm.write("<div");
 	rm.writeControlData(oPage);
 	rm.addClass("sapMPage");
 
 	rm.addClass("sapMPageBg" + oPage.getBackgroundDesign());
-
+	
 	if (oHeader) {
 		rm.addClass("sapMPageWithHeader");
 	}
@@ -47,6 +48,7 @@ sap.m.PageRenderer.render = function(rm, oPage) {
 	}
 
 	if (oFooter) {
+
 		// it is used in the PopOver to remove additional margin bottom for page with footer
 		rm.addClass("sapMPageWithFooter");
 	}
@@ -61,16 +63,15 @@ sap.m.PageRenderer.render = function(rm, oPage) {
 
 	rm.write(">");
 
-	//render headers
-	this.renderBarControl(rm, oHeader, {
-		context : "header",
-		styleClass : "sapMPageHeader"
-	});
+	// render header
+	if (oHeader) {
+		rm.renderControl(oHeader);
+	}
 
-	this.renderBarControl(rm, oSubHeader, {
-		context : "subheader",
-		styleClass : "sapMPageSubHeader"
-	});
+	if (oSubHeader) {
+		oSubHeader._context = 'header';
+		rm.renderControl(oSubHeader.addStyleClass("sapMSubHeader-CTX sapMPageSubHeader"));
+	}
 
 	// render child controls
 	rm.write('<section id="' + oPage.getId() + '-cont">');
@@ -88,29 +89,10 @@ sap.m.PageRenderer.render = function(rm, oPage) {
 	rm.write("</section>");
 
 	// render footer Element
-	this.renderBarControl(rm, oFooter, {
-		context : "footer",
-		styleClass : "sapMPageFooter"
-	});
-
-	rm.write("</div>");
-};
-
-/**
- * Renders the bar control if it is defined. Also adds classes to it.
- * 
- * @param {sap.ui.core.RenderManager} rm the RenderManager that can be used for writing to the Render-Output-Buffer
- * @param {sap.m.IBar} oBarControl the RenderManager that can be used for writing to the Render-Output-Buffer
- * @param {object} oOptions object containing the tag, contextClass and styleClass added to the bar
- */
-sap.m.PageRenderer.renderBarControl = function (rm, oBarControl, oOptions) {
-	if(!oBarControl) {
-		return;
+	if (oFooter) {
+		oFooter._context = 'footer';
+		rm.renderControl(oFooter);
 	}
 
-	oBarControl.applyTagAndContextClassFor(oOptions.context);
-
-	oBarControl.addStyleClass(oOptions.styleClass);
-
-	rm.renderControl(oBarControl);
+	rm.write("</div>");
 };

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ jQuery.sap.require("sap.m.NavContainer");
  * @extends sap.m.NavContainer
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -82,7 +82,7 @@ sap.m.NavContainer.extend("sap.m.App", { metadata : {
 		"backgroundOpacity" : {type : "float", group : "Appearance", defaultValue : 1}
 	},
 	events : {
-		"orientationChange" : {deprecated: true}
+		"orientationChange" : {}
 	}
 }});
 
@@ -270,8 +270,6 @@ sap.m.App.M_EVENTS = {'orientationChange':'orientationChange'};
  *
  * @name sap.m.App#orientationChange
  * @event
- * @deprecated Since version 1.20.0. 
- * use sap.ui.Device.orientation.attachHandler(...)
  * @param {sap.ui.base.Event} oControlEvent
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
@@ -292,12 +290,10 @@ sap.m.App.M_EVENTS = {'orientationChange':'orientationChange'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.App</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.App</code>.<br/> itself.
  *
  * @return {sap.m.App} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 1.20.0. 
- * use sap.ui.Device.orientation.attachHandler(...)
  * @name sap.m.App#attachOrientationChange
  * @function
  */
@@ -313,8 +309,6 @@ sap.m.App.M_EVENTS = {'orientationChange':'orientationChange'};
  *            oListener Context object on which the given function had to be called.
  * @return {sap.m.App} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 1.20.0. 
- * use sap.ui.Device.orientation.attachHandler(...)
  * @name sap.m.App#detachOrientationChange
  * @function
  */
@@ -330,14 +324,12 @@ sap.m.App.M_EVENTS = {'orientationChange':'orientationChange'};
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.App} <code>this</code> to allow method chaining
  * @protected
- * @deprecated Since version 1.20.0. 
- * use sap.ui.Device.orientation.attachHandler(...)
  * @name sap.m.App#fireOrientationChange
  * @function
  */
 
 
-// Start of sap\m\App.js
+// Start of sap/m/App.js
 sap.m.App.prototype.init = function() {
 	sap.m.NavContainer.prototype.init.apply(this, arguments);
 
@@ -413,6 +405,6 @@ sap.m.App.prototype.setBackgroundOpacity = function(fOpacity) {
 		jQuery.sap.log.warning("Invalid value " + fOpacity + " for App.setBackgroundOpacity() ignored. Valid values are: floats between 0 and 1.");
 		return this;
 	}
-	this.$("BG").css("opacity", fOpacity);
+	jQuery.sap.byId(this.getId() + "-BG").css("opacity", fOpacity);
 	return this.setProperty("backgroundOpacity", fOpacity, true); // no rerendering - live opacity change looks cooler
 };

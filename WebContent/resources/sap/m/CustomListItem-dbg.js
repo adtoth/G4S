@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -52,14 +52,11 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * This control with a content aggregation can be used to customize standard list items that we don't provide. List mode and ListItem type are applied to CustomListItems as well.
- * Note: Even the content aggregation allows any control, complex responsive layout controls (e.g. Table, Form) should not be aggregated as content.
- * 
- * 
+ * sap.m.CustomListItem Control
  * @extends sap.m.ListItemBase
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -99,7 +96,6 @@ sap.m.ListItemBase.extend("sap.m.CustomListItem", { metadata : {
  * Getter for aggregation <code>content</code>.<br/>
  * The content of this list item
  * 
- * <strong>Note</strong>: this is the default aggregation for CustomListItem.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.m.CustomListItem#getContent
@@ -200,5 +196,5 @@ sap.m.ListItemBase.extend("sap.m.CustomListItem", { metadata : {
  */
 
 
-// Start of sap\m\CustomListItem.js
+// Start of sap/m/CustomListItem.js
 

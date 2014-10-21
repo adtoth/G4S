@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -59,8 +59,8 @@ jQuery.sap.require("sap.ui.core.LayoutData");
  * This is a LayoutData Element that can be added to a control if this control is used within a ResponsiveFlowLayout
  * @extends sap.ui.core.LayoutData
  *
- * @author SAP AG 
- * @version 1.22.5
+ * @author SAP 
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -225,7 +225,7 @@ sap.ui.core.LayoutData.extend("sap.ui.layout.ResponsiveFlowLayoutData", { metada
  */
 
 
-// Start of sap\ui\layout\ResponsiveFlowLayoutData.js
+// Start of sap/ui/layout/ResponsiveFlowLayoutData.js
 /*!
  * @copyright@
  */

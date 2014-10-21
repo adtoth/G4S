@@ -1,18 +1,20 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /*
  * Provides the AppCacheBuster mechanism to load application files using a timestamp
  */
-sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
-	function(jQuery, Core, URI1) {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.AppCacheBuster");
+jQuery.sap.require("sap.ui.core.Core");
+jQuery.sap.require("sap.ui.thirdparty.URI");
 
-	/*global URI *///declare unusual global vars for JSLint/SAPUI5 validation
-	
+/*global URI *///declare unusual global vars for JSLint/SAPUI5 validation
+
+(function() {
+
 	/*
 	 * The AppCacheBuster is only aware of resources which are relative to the
 	 * current application or have been registered via:
@@ -120,7 +122,7 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 			jQuery.sap.log.debug("sap.ui.core.AppCacheBuster.register(\"" + sRootUrl + "\"); // BATCH MODE!");
 
 			// determine the base URL
-			var sAbsoluteRootUrl = AppCacheBuster.normalizeURL(sRootUrl); // "./" removes the html doc from path
+			var sAbsoluteRootUrl = sap.ui.core.AppCacheBuster.normalizeURL(sRootUrl); // "./" removes the html doc from path
 			
 			// log
 			jQuery.sap.log.debug("  --> normalized to: \"" + sAbsoluteRootUrl + "\"");
@@ -128,7 +130,7 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 			// create the list of absolute base urls
 			jQuery.each(sBaseUrl, function(iIndex, sUrlEntry) {
 				var sUrl = fnEnsureTrailingSlash(sUrlEntry);
-				var sAbsoluteUrl = AppCacheBuster.normalizeURL(sUrl);
+				var sAbsoluteUrl = sap.ui.core.AppCacheBuster.normalizeURL(sUrl);
 				if (!mIndex[sAbsoluteBaseUrl]) {
 					sContent.push(sAbsoluteUrl);
 				}
@@ -169,7 +171,7 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 			jQuery.sap.log.debug("sap.ui.core.AppCacheBuster.register(\"" + sBaseUrl + "\");");
 
 			// determine the base URL
-			var sAbsoluteBaseUrl = AppCacheBuster.normalizeURL(sBaseUrl); // "./" removes the html doc from path
+			var sAbsoluteBaseUrl = sap.ui.core.AppCacheBuster.normalizeURL(sBaseUrl); // "./" removes the html doc from path
 			
 			// log
 			jQuery.sap.log.debug("  --> normalized to: \"" + sAbsoluteBaseUrl + "\"");
@@ -235,9 +237,8 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 	 *  
 	 * @namespace
 	 * @public
-	 * @name sap.ui.core.AppCacheBuster
 	 */
-	var AppCacheBuster = /** @lends sap.ui.core.AppCacheBuster */ {
+	sap.ui.core.AppCacheBuster = {
 			
 			/**
 			 * Boots the AppCacheBuster by initializing and registering the 
@@ -280,7 +281,7 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 					if (bActive) {
 						
 						// initialize the AppCacheBuster
-						AppCacheBuster.init();
+						sap.ui.core.AppCacheBuster.init();
 
 						// register the components
 						fnRegister(oConfig, oSyncPoint);
@@ -310,8 +311,8 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 			init: function() {
 				
 				// function shortcuts (better performance when used frequently!)
-				var fnConvertUrl = AppCacheBuster.convertURL;
-				var fnNormalizeUrl = AppCacheBuster.normalizeURL;
+				var fnConvertUrl = sap.ui.core.AppCacheBuster.convertURL;
+				var fnNormalizeUrl = sap.ui.core.AppCacheBuster.normalizeURL;
 				
 				// resources URL's will be handled via standard
 				// UI5 cachebuster mechanism (so we simply ignore them)
@@ -429,11 +430,11 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 					// normalize the URL
 					// local resources are registered with "./" => we remove the leading "./"! 
 					// (code location for this: sap/ui/Global.js:sap.ui.localResources)
-					var sNormalizedUrl = AppCacheBuster.normalizeURL(sUrl);
+					var sNormalizedUrl = sap.ui.core.AppCacheBuster.normalizeURL(sUrl);
 					jQuery.sap.log.debug("  --> normalized to: \"" + sNormalizedUrl + "\"");
 
 					// should the URL be handled?
-					if (sNormalizedUrl && AppCacheBuster.handleURL(sNormalizedUrl)) {
+					if (sNormalizedUrl && sap.ui.core.AppCacheBuster.handleURL(sNormalizedUrl)) {
 						
 						// scan for a matching base URL (by default we use the default index)
 						// we lookup the base url in the index list and if found we split the
@@ -494,13 +495,11 @@ sap.ui.define(['jquery.sap.global', './Core', 'sap/ui/thirdparty/URI'],
 			 * @public
 			 */
 			handleURL: function(sUrl) {
-				// API function to be overridden by apps 
+				// API function to be overriden by apps 
 				// to exclude URLs from being manipulated
 				return true;
 			}
 			
 	};
-
-	return AppCacheBuster;
-
-}, /* bExport= */ true);
+	
+}());	

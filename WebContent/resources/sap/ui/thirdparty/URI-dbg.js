@@ -18,16 +18,7 @@
         module.exports = factory(require('./punycode'), require('./IPv6'), require('./SecondLevelDomains'));
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-      // ##### BEGIN: MODIFIED BY SAP
-      // define(['./punycode', './IPv6', './SecondLevelDomains'], factory);
-      // we can't support loading URI.js via AMD define. URI.js is packaged with SAPUI5 code 
-      // and define() doesn't execute synchronously. So the UI5 code executed after URI.js 
-      // fails as it is missing the URI.js code.
-      // Instead we use the standard init code and only expose the result via define()
-      // The (optional) dependencies are lost or must be loaded in advance
-      root.URI = factory(root.punycode, root.IPv6, root.SecondLevelDomains, root);
-      define([], function() { return root.URI; });
-      // ##### END: MODIFIED BY SAP
+        define(['./punycode', './IPv6', './SecondLevelDomains'], factory);
     } else {
         // Browser globals (root is window)
         root.URI = factory(root.punycode, root.IPv6, root.SecondLevelDomains, root);

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @implements sap.ui.core.Label
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -308,7 +308,7 @@ sap.ui.core.Control.extend("sap.m.Label", { metadata : {
 
 
 	
-// Start of sap\m\Label.js
+// Start of sap/m/Label.js
 
 /*
  * As own function to make possible to overwrite it (e.G. from Form).
@@ -317,23 +317,4 @@ sap.m.Label.prototype.getLabelForRendering = function(){
 
 	return this.getLabelFor();
 
-};
-
-
-sap.m.Label.prototype.setText = function(sText) {
-	var sValue = this.getText();
-	if (sValue != sText) {
-		this.setProperty("text", sText, true);
-		this.$().html(jQuery.sap.encodeHTML(this.getProperty("text")));
-	}
-	return this;
-};
-
-sap.m.Label.prototype.setTooltip = function(oTooltip) {
-	var oValue = this.getTooltip();
-	if (oValue !== oTooltip) {
-		this.setAggregation("tooltip", oTooltip, true);
-		this.$().attr("title", this.getTooltip());
-	}
-	return this;
 };

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.ui.layout.form.FormLayoutRenderer");
@@ -179,14 +179,10 @@ sap.ui.layout.form.FormLayoutRenderer.renderTitle = function(rm, oTitle, oExpand
 			rm.writeEscaped(oTitle, true);
 		}else{
 			// title control
-			var sIcon = oTitle.getIcon();
-
-			if (sIcon) {
-				var aClasses = [];
-				var mAttributes = {};
-
-				mAttributes["id"] = oTitle.getId() + "-ico";
-				rm.writeIcon(sIcon, aClasses, mAttributes);
+			if (oTitle.getIcon()) {
+				rm.write("<img id=\"" + oTitle.getId() + "-ico\" src=\"");
+				rm.writeEscaped(oTitle.getIcon());
+				rm.write("\" role=\"presentation\" alt=\"\"/>"); // role and alt added as per accessibility requirement
 			}
 			rm.writeEscaped(oTitle.getText(), true);
 		}

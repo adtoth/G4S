@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.require("sap.ui.core.Renderer");
@@ -26,11 +26,6 @@ sap.m.TextAreaRenderer = sap.ui.core.Renderer.extend(sap.m.InputBaseRenderer);
 // Adds control specific class
 sap.m.TextAreaRenderer.addOuterClasses = function(oRm, oControl) {
 	oRm.addClass("sapMTextArea");
-};
-
-// Add extra styles to Container
-sap.m.TextAreaRenderer.addOuterStyles = function(oRm, oControl) {
-	oControl.getHeight() && oRm.addStyle("height", oControl.getHeight());
 };
 
 // Write the opening tag name of the TextArea
@@ -64,4 +59,9 @@ sap.m.TextAreaRenderer.writeInnerAttributes = function(oRm, oControl) {
 	}
 	oRm.writeAttribute("rows", oControl.getRows());
 	oRm.writeAttribute("cols", oControl.getCols());
+};
+
+// Add extra styles to TextArea
+sap.m.TextAreaRenderer.addInnerStyles = function(oRm, oControl) {
+	oControl.getHeight() && oRm.addStyle("height", oControl.getHeight());
 };

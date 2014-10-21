@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.ObjectListItemRenderer");
@@ -129,15 +129,7 @@ sap.m.ObjectListItemRenderer.renderLIContent = function(rm, oLI) {
 	rm.addClass("sapMObjLTopRow");
 	rm.writeClasses();
 	rm.write(">");
-	
-	if(!!oLI.getIcon()) {
-		rm.write("<div");
-		rm.addClass("sapMObjLIconDiv");
-		rm.writeClasses();
-		rm.write(">");
-		rm.renderControl(oLI._getImageControl());
-		rm.write("</div>");
-	}
+			
 	
 	// Container for a number and a units qualifier.
 	rm.write("<div"); // Start Number/units container
@@ -172,17 +164,23 @@ sap.m.ObjectListItemRenderer.renderLIContent = function(rm, oLI) {
 	
 	// Title container displayed to the left of the number and number units container.
 	rm.write("<div"); // Start Title container
-	rm.addStyle("display","-webkit-box");
-	rm.addStyle("overflow","hidden");
-	rm.writeStyles();
+	rm.writeAttribute("id", oLI.getId() + "-title");
+	rm.addClass("sapMObjLTitle");
+	rm.writeClasses();
 	rm.write(">");
-	var oTitleText = oLI._getTitleText();
-	if (oTitleText) {
-		oTitleText.setText(oLI.getTitle());
-		oTitleText.addStyleClass("sapMObjLTitle");
-		rm.renderControl(oTitleText);
-	}
 	
+	if(!!oLI.getIcon()) {
+		rm.write("<div");
+		rm.addClass("sapMObjLIconDiv");
+		rm.writeClasses();
+		rm.write(">");
+		rm.renderControl(oLI._getImageControl());
+		rm.write("</div>");
+	}		
+		
+	if (oLI.getTitle()) {
+		rm.writeEscaped(oLI.getTitle());
+	}
 	rm.write("</div>"); // End Title container	
 	
 	rm.write("</div>"); // End Top row container
@@ -196,7 +194,7 @@ sap.m.ObjectListItemRenderer.renderLIContent = function(rm, oLI) {
 		rm.writeClasses();
 		rm.write(">");
 
-		var aAttribs = oLI._getVisibleAttributes();
+		var aAttribs = oLI.getAttributes();
 		var statuses = new Array();
 		var markers = null;
 		

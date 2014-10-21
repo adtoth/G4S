@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 jQuery.sap.declare("sap.m.PopoverRenderer");
 
@@ -20,24 +20,28 @@ sap.m.PopoverRenderer = {
  * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
  */
 sap.m.PopoverRenderer.render = function(rm, oControl){ 
-	var aClassNames;
-
+	var aClassNames,
+		oSubHeader = oControl.getSubHeader();
+	
+	if(oSubHeader){
+		oSubHeader._context = "header";
+	}
+	
 	//container
 	rm.write("<div");
 	rm.writeControlData(oControl);
-
+	rm.writeAttribute("tabIndex", "-1");
+	
 	aClassNames= this.generateRootClasses(oControl);
 	aClassNames.forEach(function(sClassName, index){
 		rm.addClass(sClassName);
 	});
 	rm.writeClasses();
-
+	
 	var sTooltip = oControl.getTooltip_AsString();
 	if (sTooltip) {
 		rm.writeAttributeEscaped("title", sTooltip);
 	}
-	rm.writeAttribute("tabindex", "-1");
-
 	rm.write(">");
 
 	this.renderContent(rm, oControl);
@@ -67,7 +71,7 @@ sap.m.PopoverRenderer.isButtonFooter = function(footer){
 };
 
 sap.m.PopoverRenderer.renderContent = function(rm, oControl){
-	var oHeader,
+	var oHeaderControl,
 		sId = oControl.getId(),
 		i = 0,
 		contents = oControl.getContent(),
@@ -78,15 +82,15 @@ sap.m.PopoverRenderer.renderContent = function(rm, oControl){
 		sFooterClass = "sapMPopoverFooter ";
 	
 	if(oControl.getShowHeader()){
-		oHeader = oControl._getAnyHeader();
+		oHeaderControl = oControl._getAnyHeader();
 	}
 	
-	if(sap.ui.Device.system.desktop) {
+	if(jQuery.device.is.desktop) {
 		//Invisible element for cycling keyboard navigation
-		rm.write("<span id='" + oControl.getId() + "-firstfe' tabindex='0'></span>");
+		rm.write("<span id='" + oControl.getId() + "-firstfe' tabIndex='0'></span>");
 	}
 
-	if(!sap.ui.Device.os.ios && !sap.m.Popover._bOneDesign){
+	if(!jQuery.os.ios && !sap.m.Popover._bOneDesign){
 		//arrow
 		rm.write("<span");
 		rm.writeAttribute("id", sId+"-arrow");
@@ -96,20 +100,12 @@ sap.m.PopoverRenderer.renderContent = function(rm, oControl){
 	}
 
 	//header
-	if(oHeader){
-		if(oHeader.applyTagAndContextClassFor){
-			oHeader.applyTagAndContextClassFor("header");
-		}
-		oHeader.addStyleClass("sapMPopoverHeader");
-		rm.renderControl(oHeader);
+	if(oHeaderControl){
+		rm.renderControl(oControl._getAnyHeader().addStyleClass("sapMPopoverHeader sapMPageHeader"));
 	}//header
 	
 	if(oSubHeader){
-		if(oSubHeader.applyTagAndContextClassFor){
-			oSubHeader.applyTagAndContextClassFor("subheader");
-		}
-		oSubHeader.addStyleClass("sapMPopoverSubHeader");
-		rm.renderControl(oSubHeader);
+		rm.renderControl(oSubHeader.addStyleClass("sapMPopoverSubHeader"));
 	}
 	
 	// content container
@@ -137,18 +133,14 @@ sap.m.PopoverRenderer.renderContent = function(rm, oControl){
 	
 	//footer
 	if (oFooter) {
-		if(oFooter.applyTagAndContextClassFor){
-			oFooter.applyTagAndContextClassFor("footer");
-			//TODO: check if this should also be added to a Bar instance
-			oFooter.addStyleClass("sapMTBNoBorders");
-		}
+		oFooter._context = 'footer';
 		if(this.isButtonFooter(oFooter)){
 			sFooterClass += "sapMPopoverSpecialFooter";
 		}
 		rm.renderControl(oFooter.addStyleClass(sFooterClass));
 	}//footer
 	
-	if(sap.ui.Device.os.ios || sap.m.Popover._bOneDesign){
+	if(jQuery.os.ios || sap.m.Popover._bOneDesign){
 		//arrow
 		rm.write("<span");
 		rm.writeAttribute("id", sId+"-arrow");
@@ -157,9 +149,9 @@ sap.m.PopoverRenderer.renderContent = function(rm, oControl){
 		rm.write("></span>");//arrow tip
 	}
 
-	if(sap.ui.Device.system.desktop) {
+	if(jQuery.device.is.desktop) {
 		//Invisible element for desktop keyboard navigation
-		rm.write("<span id='" + oControl.getId() + "-lastfe' tabindex='0'></span>");
+		rm.write("<span id='" + oControl.getId() + "-lastfe' tabIndex='0'></span>");
 	}
 };
 
@@ -211,36 +203,30 @@ sap.m.PopoverRenderer.generateRootClasses = function(oControl){
 	}
 	
 	aClassNames.push("sapMPopup-CTX");
-
-	// test popover with sap-ui-xx-formfactor=compact
-	if(sap.m._bSizeCompact){
-		aClassNames.push("sapUiSizeCompact");
-	}
-
-	// add custom classes set by the application as well 
-	return aClassNames.concat(oControl.aCustomStyleClasses);
+	
+	return aClassNames;
 };
 
 sap.m.PopoverRenderer.rerenderContentOnly = function(oControl){
 	var $Popover = oControl.$(),
 		oPopoverDomRef = oControl.getDomRef(),
 		aClassNames, oRm;
-
+	
 	if(!oPopoverDomRef){
 		//popover isn't rendered yet, just return
 		return;
 	}
-
+	
 	$Popover.removeClass();
 	aClassNames = this.generateRootClasses(oControl);
 	$Popover.addClass(aClassNames.join(" "));
 
 	oRm = sap.ui.getCore().createRenderManager();
 	this.renderContent(oRm, oControl);
-
+	
 	oRm.flush(oPopoverDomRef, true);
 	oRm.destroy();
-
+	
 	//recalculate the size and position of popover
 	oControl._onOrientationChange();
 };

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.mvc.HTMLView.
-sap.ui.define(['sap/ui/core/library','./View','sap/ui/core/DeclarativeSupport','sap/ui/core/RenderManager'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.mvc.HTMLView");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.mvc.View");
 
 
 /**
@@ -53,8 +54,8 @@ sap.ui.define(['sap/ui/core/library','./View','sap/ui/core/DeclarativeSupport','
  * A view defined/constructed by declarative HTML.
  * @extends sap.ui.core.mvc.View
  *
- * @author SAP AG 
- * @version 1.22.5
+ * @author Stefan Hipfel, Tino Butz 
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -88,8 +89,10 @@ sap.ui.core.mvc.View.extend("sap.ui.core.mvc.HTMLView", { metadata : {
 
 
 // Start of sap/ui/core/mvc/HTMLView.js
+jQuery.sap.require("sap.ui.core.DeclarativeSupport");
+jQuery.sap.require("sap.ui.core.RenderManager");
 
-
+(function(){
 	/**
 	 * Defines or creates an instance of a declarative HTML view.
 	 *
@@ -326,7 +329,4 @@ sap.ui.core.mvc.View.extend("sap.ui.core.mvc.HTMLView", { metadata : {
 		this._connectedControls = this._connectedControls || [];
 		this._connectedControls.push(oControl);
 	};
-
-	return sap.ui.core.mvc.HTMLView;
-
-}, /* bExport = */ true);
+}());

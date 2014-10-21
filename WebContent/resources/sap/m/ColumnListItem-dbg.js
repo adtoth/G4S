@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -30,12 +30,11 @@ jQuery.sap.require("sap.m.ListItemBase");
  * The supported settings are:
  * <ul>
  * <li>Properties
- * <ul>
- * <li>{@link #getVAlign vAlign} : sap.ui.core.VerticalAlign (default: sap.ui.core.VerticalAlign.Inherit)</li></ul>
+ * <ul></ul>
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getCells cells} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getCells cells} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -58,7 +57,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @extends sap.m.ListItemBase
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -71,9 +70,6 @@ sap.m.ListItemBase.extend("sap.m.ColumnListItem", { metadata : {
 
 	// ---- control specific ----
 	library : "sap.m",
-	properties : {
-		"vAlign" : {type : "sap.ui.core.VerticalAlign", group : "Appearance", defaultValue : sap.ui.core.VerticalAlign.Inherit}
-	},
 	defaultAggregation : "cells",
 	aggregations : {
     	"clonedHeaders" : {type : "sap.ui.core.Control", multiple : true, singularName : "clonedHeader", visibility : "hidden"}, 
@@ -100,38 +96,9 @@ sap.m.ListItemBase.extend("sap.m.ColumnListItem", { metadata : {
 
 
 /**
- * Getter for property <code>vAlign</code>.
- * Sets the vertical alignment of the all cells in a table row(including selection and navigation). Possible values are "Inherit", "Top", "Middle", "Bottom"
- * Note: Column's "vAlign" property is stronger than this one.
- *
- * Default value is <code>Inherit</code>
- *
- * @return {sap.ui.core.VerticalAlign} the value of property <code>vAlign</code>
- * @public
- * @since 1.20
- * @name sap.m.ColumnListItem#getVAlign
- * @function
- */
-
-/**
- * Setter for property <code>vAlign</code>.
- *
- * Default value is <code>Inherit</code> 
- *
- * @param {sap.ui.core.VerticalAlign} oVAlign  new value for property <code>vAlign</code>
- * @return {sap.m.ColumnListItem} <code>this</code> to allow method chaining
- * @public
- * @since 1.20
- * @name sap.m.ColumnListItem#setVAlign
- * @function
- */
-
-
-/**
  * Getter for aggregation <code>cells</code>.<br/>
  * Every item inside the cells aggregation defines one column of the row.
  * 
- * <strong>Note</strong>: this is the default aggregation for ColumnListItem.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.m.ColumnListItem#getCells
@@ -232,46 +199,30 @@ sap.m.ListItemBase.extend("sap.m.ColumnListItem", { metadata : {
  */
 
 
-// Start of sap\m\ColumnListItem.js
+// Start of sap/m/ColumnListItem.js
 
 // prototype lookup for pop-in id
 sap.m.ColumnListItem.prototype._popinId = "";
 
-/**
- * remove pop-in from DOM
- * @protected
- */
+// remove pop-in from DOM
 sap.m.ColumnListItem.prototype.removePopin = function() {
-	if (this.hasPopin()) {
+	if (this._popinId) {
 		jQuery.sap.byId(this._popinId).remove();
 		this._popinId = "";
 	}
 	return this;
 };
 
-/**
- * Whether has pop-in or not
- * @protected
- */
+// whether has pop-in or not
 sap.m.ColumnListItem.prototype.hasPopin = function() {
-	return !!(this._popinId);
-};
-
-/*
- * remove pop-in from DOM when setVisible false is called
- * @overwite
- */
-sap.m.ColumnListItem.prototype.setVisible = function() {
-	sap.m.ListItemBase.prototype.setVisible.apply(this, arguments);
-	if (!this.getVisible()) {
-		this.removePopin();
-	}
-	return this;
+	return Boolean(this._popinId);
 };
 
 // remove pop-in on destroy
 sap.m.ColumnListItem.prototype.exit = function() {
-	sap.m.ListItemBase.prototype.exit.call(this);
+	if (sap.m.ListItemBase.prototype.exit) {
+		sap.m.ListItemBase.prototype.exit.call(this);
+	}
 	this.destroyAggregation("clonedHeaders", true);
 	return this.removePopin();
 };
@@ -286,13 +237,14 @@ sap.m.ColumnListItem.prototype._inactiveHandlingInheritor = function() {
 	this._toggleActiveClass(false);
 };
 
-/*
+/**
  * Common code for the two methods _inactiveHandlingInheritor,_activeHandlingInheritor
  *
- * @param {boolean} bSwitch Determine whether the class should be added or removed.
+ * @private
+ * @param {boolean} b Determine whether the class should be added or removed.
  */
 sap.m.ColumnListItem.prototype._toggleActiveClass = function(bSwitch){
-	if (this.hasPopin()) {
+	if (this._popinId) {
 		jQuery.sap.byId(this._popinId).toggleClass("sapMLIBActive", bSwitch);
 	}
 };
@@ -303,10 +255,11 @@ sap.m.ColumnListItem.prototype._toggleActiveClass = function(bSwitch){
  * @static
  * @protected
  *
- * @param {jQuery.Event} oEvent jQuery event object
- * @param {HTMLElement} oContainerDomRef max parent element to search in DOM to find pop-in
+ * @param {object} oEvent jQuery event object
+ * @param {string} sEventName event name to map
+ * @param {object} oContainerDomRef max parent element to search in DOM to find pop-in
  */
-sap.m.ColumnListItem.handleEvents = function(oEvent, oContainerDomRef) {
+sap.m.ColumnListItem.handleEvents = function(oEvent, sEventName, oContainerDomRef) {
 	// check if event is coming from pop-in
 	var $popin = jQuery(oEvent.target).closest(".sapMListTblSubRow", oContainerDomRef);
 	if ($popin.length) {
@@ -317,21 +270,9 @@ sap.m.ColumnListItem.handleEvents = function(oEvent, oContainerDomRef) {
 			oEvent.srcControl = sap.ui.getCore().byId(oEvent.target.id) || oColumnLI;
 
 			// call the related ListItemBase event
-			if (oColumnLI["on" + oEvent.type]) {
-				oColumnLI["on" + oEvent.type](oEvent);
+			if (oColumnLI["on" + sEventName]) {
+				oColumnLI["on" + sEventName](oEvent);
 			}
 		}
 	}
-};
-
-/**
- * Checks whether popin is focused or not
- *
- * @static
- * @protected
- *
- * @param {jQuery.Event} oEvent jQuery event object
- */
-sap.m.ColumnListItem.isPopinFocused = function(oEvent) {
-	return jQuery(document.activeElement).hasClass("sapMListTblSubRow");
 };

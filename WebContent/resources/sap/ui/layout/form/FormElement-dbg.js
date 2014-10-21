@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ jQuery.sap.require("sap.ui.core.Element");
  * <li>Aggregations
  * <ul>
  * <li>{@link #getLabel label} : sap.ui.core.Label|string</li>
- * <li>{@link #getFields fields} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getFields fields} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -58,7 +58,7 @@ jQuery.sap.require("sap.ui.core.Element");
  * @extends sap.ui.core.Element
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -141,7 +141,7 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormElement", { metadata : {
 
 /**
  * Setter for the aggregated <code>label</code>.
- * @param {sap.ui.core.Label|string} oLabel
+ * @param oLabel {sap.ui.core.Label|string}
  * @return {sap.ui.layout.form.FormElement} <code>this</code> to allow method chaining
  * @public
  * @name sap.ui.layout.form.FormElement#setLabel
@@ -163,7 +163,6 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormElement", { metadata : {
  * Getter for aggregation <code>fields</code>.<br/>
  * Formular controls.
  * 
- * <strong>Note</strong>: this is the default aggregation for form/FormElement.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.ui.layout.form.FormElement#getFields
@@ -252,7 +251,7 @@ sap.ui.core.Element.extend("sap.ui.layout.form.FormElement", { metadata : {
  */
 
 
-// Start of sap\ui\layout\form\FormElement.js
+// Start of sap/ui/layout/form/FormElement.js
 /**
  * This file defines behavior for the control,
  */

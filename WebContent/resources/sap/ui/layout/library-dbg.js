@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* -----------------------------------------------------------------------------------
@@ -10,7 +10,7 @@
  * ----------------------------------------------------------------------------------- */
 
 /**
- * Initialization Code and shared classes of library sap.ui.layout (1.22.5)
+ * Initialization Code and shared classes of library sap.ui.layout (1.16.3)
  */
 jQuery.sap.declare("sap.ui.layout.library");
 jQuery.sap.require("sap.ui.core.Core");
@@ -42,7 +42,6 @@ sap.ui.getCore().initLibrary({
     "sap.ui.layout.Grid",
     "sap.ui.layout.HorizontalLayout",
     "sap.ui.layout.ResponsiveFlowLayout",
-    "sap.ui.layout.Splitter",
     "sap.ui.layout.VerticalLayout",
     "sap.ui.layout.form.Form",
     "sap.ui.layout.form.FormLayout",
@@ -54,18 +53,17 @@ sap.ui.getCore().initLibrary({
   elements: [
     "sap.ui.layout.GridData",
     "sap.ui.layout.ResponsiveFlowLayoutData",
-    "sap.ui.layout.SplitterLayoutData",
     "sap.ui.layout.form.FormContainer",
     "sap.ui.layout.form.FormElement",
     "sap.ui.layout.form.GridContainerData",
     "sap.ui.layout.form.GridElementData"
   ],
-  version: "1.22.5"});
+  version: "1.16.3"});
 
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* -----------------------------------------------------------------------------------
@@ -80,7 +78,6 @@ jQuery.sap.require('sap.ui.base.DataType');
 /**
  * @class A string type that represents Grid's indent values for large, medium and small screens. Allowed values are separated by space Letters L, M or S followed by number of columns from 1 to 11 that the container has to take, for example: "L2 M4 S6", "M12", "s10" or "l4 m4". Note that the parameters has to be provided in the order large  medium  small.
  *
- * @author SAP AG
  * @static
  * @public
  */
@@ -94,9 +91,9 @@ sap.ui.layout.GridIndent = sap.ui.base.DataType.createType('sap.ui.layout.GridIn
 );
 
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -111,35 +108,35 @@ jQuery.sap.declare("sap.ui.layout.GridPosition");
 /**
  * @class Position of the Grid. Can be "Left", "Center" or "Right". "Left" is default.
  *
- * @version 1.22.5
+ * @version 1.16.3
  * @static
  * @public
  */
 sap.ui.layout.GridPosition = {
+  
+    /**
+     * Grid is aligned left. 
+     * @public
+     */
+    Left : "Left",
 
-	/**
-	 * Grid is aligned left.
-	 * @public
-	 */
-	Left : "Left",
+    /**
+     * Grid is aligned to the right. 
+     * @public
+     */
+    Right : "Right",
 
-	/**
-	 * Grid is aligned to the right.
-	 * @public
-	 */
-	Right : "Right",
+    /**
+     * Grid is centered on the screen. 
+     * @public
+     */
+    Center : "Center"
 
-	/**
-	 * Grid is centered on the screen.
-	 * @public
-	 */
-	Center : "Center"
-
-};
+  };
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* -----------------------------------------------------------------------------------
@@ -154,7 +151,6 @@ jQuery.sap.require('sap.ui.base.DataType');
 /**
  * @class A string type that represents Grid's span values for large, medium and small screens. Allowed values are separated by space Letters L, M or S followed by number of columns from 1 to 12 that the container has to take, for example: "L2 M4 S6", "M12", "s10" or "l4 m4". Note that the parameters has to be provided in the order large  medium  small.
  *
- * @author SAP AG
  * @static
  * @public
  */
@@ -168,9 +164,9 @@ sap.ui.layout.GridSpan = sap.ui.base.DataType.createType('sap.ui.layout.GridSpan
 );
 
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* -----------------------------------------------------------------------------------
@@ -198,9 +194,9 @@ sap.ui.layout.form.GridElementCells = sap.ui.base.DataType.createType('sap.ui.la
 );
 
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -215,33 +211,33 @@ jQuery.sap.declare("sap.ui.layout.form.SimpleFormLayout");
 /**
  * @class Available FormLayouts used for the SimpleForm.
  *
- * @version 1.22.5
+ * @version 1.16.3
  * @static
  * @public
  * @since 1.16.0
  */
 sap.ui.layout.form.SimpleFormLayout = {
+  
+    /**
+     * Uses the ResponsiveLayout for the SimpleForm 
+     * @public
+     */
+    ResponsiveLayout : "ResponsiveLayout",
 
-	/**
-	 * Uses the ResponsiveLayout for the SimpleForm
-	 * @public
-	 */
-	ResponsiveLayout : "ResponsiveLayout",
+    /**
+     * Uses the GridLayout for the SimpleForm 
+     * @public
+     */
+    GridLayout : "GridLayout",
 
-	/**
-	 * Uses the GridLayout for the SimpleForm
-	 * @public
-	 */
-	GridLayout : "GridLayout",
+    /**
+     * Uses the ResponsiveGridLayout for the SimpleForm 
+     * @public
+     * @since 1.16.0
+     */
+    ResponsiveGridLayout : "ResponsiveGridLayout"
 
-	/**
-	 * Uses the ResponsiveGridLayout for the SimpleForm
-	 * @public
-	 * @since 1.16.0
-	 */
-	ResponsiveGridLayout : "ResponsiveGridLayout"
-
-};
+  };
 
 // -----------------------------------------------------------------------------
 // Begin of Library Initialization coding, copied from shared.js
@@ -254,7 +250,6 @@ if (!sap.ui.layout.form.FormHelper) {
 		createButton: function(sId, fPressFunction, oThis){ throw new Error("no Button control available!"); }, /* must return a button control */
 		setButtonContent: function(oButton, sText, sTooltip, sIcon, sIconHovered){ throw new Error("no Button control available!"); },
 		addFormClass: function(){ return null; },
-		bArrowKeySupport: true, /* enables the keyboard support for arrow keys */
 		bFinal: false /* if true, the helper must not be overwritten by an other library */
 	};
 }

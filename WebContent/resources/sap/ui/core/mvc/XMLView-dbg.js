@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.mvc.XMLView.
-sap.ui.define(['sap/ui/core/library','./View','jquery.sap.xml','sap/ui/base/DataType','sap/ui/model/resource/ResourceModel','sap/ui/core/XMLTemplateProcessor'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.mvc.XMLView");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.mvc.View");
 
 
 /**
@@ -54,7 +55,7 @@ sap.ui.define(['sap/ui/core/library','./View','jquery.sap.xml','sap/ui/base/Data
  * @extends sap.ui.core.mvc.View
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -87,8 +88,12 @@ sap.ui.core.mvc.View.extend("sap.ui.core.mvc.XMLView", { metadata : {
 
 
 // Start of sap/ui/core/mvc/XMLView.js
+jQuery.sap.require("jquery.sap.xml");
+jQuery.sap.require("sap.ui.base.DataType");
+jQuery.sap.require("sap.ui.model.resource.ResourceModel");
+jQuery.sap.require("sap.ui.core.XMLTemplateProcessor");
 
-
+(function(){
 
 	/**
 	 * Instantiates an XMLView of the given name and with the given id.
@@ -229,11 +234,6 @@ sap.ui.core.mvc.View.extend("sap.ui.core.mvc.XMLView", { metadata : {
 		this._$oldContent = undefined;
 	};
 	
-	sap.ui.core.mvc.XMLView.prototype._onChildRerenderedEmpty = function(oControl, oElement) {
-		// when the render manager notifies us about an empty child rendering, we replace the old DOM with a dummy
-		jQuery(oElement).replaceWith('<div id="sap-ui-dummy-' + oControl.getId() + '" class="sapUiHidden"/>');
-		return true; // indicates that we have taken care
-	};
 	
 	/**
 	 * Dummy control for after rendering notification before onAfterRendering of
@@ -245,8 +245,4 @@ sap.ui.core.mvc.View.extend("sap.ui.core.mvc.XMLView", { metadata : {
 		}
 	});
 
-
-
-	return sap.ui.core.mvc.XMLView;
-
-}, /* bExport = */ true);
+}());

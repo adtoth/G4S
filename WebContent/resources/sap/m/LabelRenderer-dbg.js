@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 
@@ -42,9 +42,10 @@ sap.m.LabelRenderer.render = function(rm, oLabel){
 		rm.addStyle("font-weight", "bold");
 	}
 
-	if (oLabel.getRequired()) {
+	if (oLabel.getRequired()){
 		rm.addClass("sapMLabelRequired");
 	}
+
 
 	if (oLabel.getLabelForRendering()) {
 		var oFor = sap.ui.getCore().byId(oLabel.getLabelForRendering());
@@ -56,28 +57,24 @@ sap.m.LabelRenderer.render = function(rm, oLabel){
 			rm.write(oLabel.getLabelForRendering());
 		}
 		rm.write("\"");
-	} else if(oLabel.getParent() instanceof sap.m.Toolbar) {
-		rm.addClass("sapMLabelTBHeader");
 	}
 
 	// Text direction
-	var sTextDir = oLabel.getTextDirection();
-	if (sTextDir) {
-		rm.addStyle("direction", sTextDir.toLowerCase());
+	var oTextDir = oLabel.getTextDirection();
+	if (oTextDir) {
+		rm.writeAttribute("dir", oTextDir);
 	}
 
 	// Style for width
 	var sWidth = oLabel.getWidth();
-	if (sWidth) {
+	if(sWidth) {
 		rm.addStyle("width", sWidth);
-	} else {
-		rm.addClass("sapMLabelMaxWidth");
 	}
 
 	// Style for text alignment
-	var sTextAlign = oLabel.getTextAlign();
-	if(sTextAlign) {
-		var sTextAlign = r.getTextAlign(sTextAlign, sTextDir);
+	var oTextAlign = oLabel.getTextAlign();
+	if(oTextAlign) {
+		var sTextAlign = r.getTextAlign(oTextAlign, oTextDir);
 		if (sTextAlign) {
 			rm.addStyle("text-align", sTextAlign);
 		}
@@ -95,11 +92,11 @@ sap.m.LabelRenderer.render = function(rm, oLabel){
 	if (sTooltip) {
 		rm.writeAttributeEscaped("title", sTooltip);
 	}
-
+	
 	rm.write(">");
 
 	// Write the label text
-
+	
 	if (sLabelText) {
 		rm.writeEscaped(sLabelText);
 	}

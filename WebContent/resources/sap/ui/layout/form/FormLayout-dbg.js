@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -86,7 +86,7 @@ sap.ui.core.Control.extend("sap.ui.layout.form.FormLayout", { metadata : {
  */
 
 
-// Start of sap\ui\layout\form\FormLayout.js
+// Start of sap/ui/layout/form/FormLayout.js
 /**
  * This file defines behavior for the control,
  */
@@ -107,10 +107,10 @@ jQuery.sap.require("sap.ui.layout.form.Form");
 		if(this.getDomRef()){
 			if (bExpanded) {
 				//show content
-				oContainer.$("content").css("display", "");
+				jQuery.sap.byId(oContainer.getId()+"-content").css("display", "");
 			} else {
 				//hide content
-				oContainer.$("content").css("display", "none");
+				jQuery.sap.byId(oContainer.getId()+"-content").css("display", "none");
 			}
 		}
 
@@ -150,187 +150,170 @@ jQuery.sap.require("sap.ui.layout.form.Form");
 	 * using Tab only the editable/active controls are reached. So the tab-chain is short
 	 * Via F6 the navigation goes to the next container
 	 * There is an "edit mode" to allow arrow key navigation inside of controls.
-	 * For mobile application the Arrow-key navigation should be disabled
 	 */
 
 	sap.ui.layout.form.FormLayout.prototype.onsapright = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var bRtl = sap.ui.getCore().getConfiguration().getRTL();
-			var that = this;
+		var bRtl = sap.ui.getCore().getConfiguration().getRTL();
+		var that = this;
 
-			if (!bRtl) {
-				this.navigateForward(oEvent, that);
-			} else {
-				this.navigateBack(oEvent, that);
-			}
+		if (!bRtl) {
+			this.navigateForward(oEvent, that);
+		} else {
+			this.navigateBack(oEvent, that);
 		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsapleft = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var bRtl = sap.ui.getCore().getConfiguration().getRTL();
-			var that = this;
+		var bRtl = sap.ui.getCore().getConfiguration().getRTL();
+		var that = this;
 
-			if (!bRtl) {
-				this.navigateBack(oEvent, that);
-			} else {
-				this.navigateForward(oEvent, that);
-			}
+		if (!bRtl) {
+			this.navigateBack(oEvent, that);
+		} else {
+			this.navigateForward(oEvent, that);
 		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsapdown = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var oControl = oEvent.srcControl;
-			var iCurrentIndex = 0;
-			var oNewDomRef;
-			var oRoot = this.findElement(oControl);
-			var oElement = oRoot.element;
-			oControl = oRoot.rootControl;
-			if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
-				oNewDomRef = this.findFieldBelow(oControl, oElement);
-			} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
-				// current control is not inside an Element - maybe a title or expander?
-				oNewDomRef = this.findFirstFieldOfNextElement(oElement, 0);
-			}
+		var oControl = oEvent.srcControl;
+		var iCurrentIndex = 0;
+		var oNewDomRef;
+		var oRoot = this.findElement(oControl);
+		var oElement = oRoot.element;
+		oControl = oRoot.rootControl;
+		if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
+			oNewDomRef = this.findFieldBelow(oControl, oElement);
+		} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
+			// current control is not inside an Element - maybe a title or expander?
+			oNewDomRef = this.findFirstFieldOfNextElement(oElement, 0);
+		}
 
-			if (oNewDomRef) {
-				jQuery.sap.focus(oNewDomRef);
-				oEvent.preventDefault(); // to avoid moving cursor in next field
-			}
+		if (oNewDomRef) {
+			jQuery.sap.focus(oNewDomRef);
+			oEvent.preventDefault(); // to avoid moving cursor in next field
 		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsapup = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var oControl = oEvent.srcControl;
-			var iCurrentIndex = 0;
-			var oNewDomRef;
-			var oRoot = this.findElement(oControl);
-			var oElement = oRoot.element;
-			oControl = oRoot.rootControl;
-			if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
-				oNewDomRef = this.findFieldAbove(oControl, oElement);
-			} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
-				// current control is not inside an Element - maybe a title or expander?
-				var oForm = oElement.getParent();
-				iCurrentIndex = oForm.indexOfFormContainer(oElement);
-				oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iCurrentIndex-1);
-			}
+		var oControl = oEvent.srcControl;
+		var iCurrentIndex = 0;
+		var oNewDomRef;
+		var oRoot = this.findElement(oControl);
+		var oElement = oRoot.element;
+		oControl = oRoot.rootControl;
+		if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
+			oNewDomRef = this.findFieldAbove(oControl, oElement);
+		} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
+			// current control is not inside an Element - maybe a title or expander?
+			var oForm = oElement.getParent();
+			iCurrentIndex = oForm.indexOfFormContainer(oElement);
+			oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iCurrentIndex-1);
+		}
 
-			if (oNewDomRef) {
-				jQuery.sap.focus(oNewDomRef);
-				oEvent.preventDefault(); // to avoid moving cursor in next field
-			}
+		if (oNewDomRef) {
+			jQuery.sap.focus(oNewDomRef);
+			oEvent.preventDefault(); // to avoid moving cursor in next field
 		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsaphome = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var oControl = oEvent.srcControl;
-			var iCurrentIndex = 0;
-			var oNewDomRef;
-			var oRoot = this.findElement(oControl);
-			var oElement = oRoot.element;
-			var oContainer = oElement.getParent();
-			var oForm = oContainer.getParent();
+		var oControl = oEvent.srcControl;
+		var iCurrentIndex = 0;
+		var oNewDomRef;
+		var oRoot = this.findElement(oControl);
+		var oElement = oRoot.element;
+		var oContainer = oElement.getParent();
+		var oForm = oContainer.getParent();
 
-			iCurrentIndex = oForm.indexOfFormContainer(oContainer);
-			// actually it's within the same container
-			oNewDomRef = this.findFirstFieldOfFirstElementInNextContainer(oForm, iCurrentIndex);
+		iCurrentIndex = oForm.indexOfFormContainer(oContainer);
+		// actually it's within the same container
+		oNewDomRef = this.findFirstFieldOfFirstElementInNextContainer(oForm, iCurrentIndex);
 
-			if (oNewDomRef) {
-				jQuery.sap.focus(oNewDomRef);
-				oEvent.preventDefault(); // to avoid moving cursor in next field
-			}
+		if (oNewDomRef) {
+			jQuery.sap.focus(oNewDomRef);
+			oEvent.preventDefault(); // to avoid moving cursor in next field
 		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsaptop = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var oControl = oEvent.srcControl;
-			var oRoot = this.findElement(oControl);
-			var oElement = oRoot.element;
-			var oNewDomRef;
-			var oContainer;
+		var oControl = oEvent.srcControl;
+		var oRoot = this.findElement(oControl);
+		var oElement = oRoot.element;
+		var oNewDomRef;
+		var oContainer;
 
-			if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
-				oContainer = oElement.getParent();
-			} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
-				// current control is not inside an Element - maybe a title or expander?
-				oContainer = oElement;
-			}
-			var oForm = oContainer.getParent();
+		if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
+			oContainer = oElement.getParent();
+		} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
+			// current control is not inside an Element - maybe a title or expander?
+			oContainer = oElement;
+		}
+		var oForm = oContainer.getParent();
 
-			oNewDomRef = this.findFirstFieldOfForm(oForm);
+		oNewDomRef = this.findFirstFieldOfForm(oForm);
 
-			if (oNewDomRef) {
-				jQuery.sap.focus(oNewDomRef);
-				oEvent.preventDefault(); // to avoid moving cursor in next field
-			}
-}
+		if (oNewDomRef) {
+			jQuery.sap.focus(oNewDomRef);
+			oEvent.preventDefault(); // to avoid moving cursor in next field
+		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsapend = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var oControl = oEvent.srcControl;
-			var iCurrentIndex = 0;
-			var oNewDomRef;
-			var oRoot = this.findElement(oControl);
-			var oElement = oRoot.element;
-			var oContainer = oElement.getParent();
-			var oForm = oContainer.getParent();
+		var oControl = oEvent.srcControl;
+		var iCurrentIndex = 0;
+		var oNewDomRef;
+		var oRoot = this.findElement(oControl);
+		var oElement = oRoot.element;
+		var oContainer = oElement.getParent();
+		var oForm = oContainer.getParent();
 
-			iCurrentIndex = oForm.indexOfFormContainer(oContainer);
-			oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iCurrentIndex);
+		iCurrentIndex = oForm.indexOfFormContainer(oContainer);
+		oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iCurrentIndex);
 
-			if (oNewDomRef) {
-				jQuery.sap.focus(oNewDomRef);
-				oEvent.preventDefault(); // to avoid moving cursor in next field
-			}
-}
+		if (oNewDomRef) {
+			jQuery.sap.focus(oNewDomRef);
+			oEvent.preventDefault(); // to avoid moving cursor in next field
+		}
 
 	};
 
 	sap.ui.layout.form.FormLayout.prototype.onsapbottom = function(oEvent){
 
-		if (sap.ui.layout.form.FormHelper.bArrowKeySupport) {
-			var oControl = oEvent.srcControl;
-			var oRoot = this.findElement(oControl);
-			var oElement = oRoot.element;
-			var oNewDomRef;
-			var oContainer;
+		var oControl = oEvent.srcControl;
+		var oRoot = this.findElement(oControl);
+		var oElement = oRoot.element;
+		var oNewDomRef;
+		var oContainer;
 
-			if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
-				oContainer = oElement.getParent();
-			} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
-				// current control is not inside an Element - maybe a title or expander?
-				oContainer = oElement;
-			}
-			var oForm = oContainer.getParent();
+		if (oElement && oElement instanceof sap.ui.layout.form.FormElement) {
+			oContainer = oElement.getParent();
+		} else if (oElement && oElement instanceof sap.ui.layout.form.FormContainer) {
+			// current control is not inside an Element - maybe a title or expander?
+			oContainer = oElement;
+		}
+		var oForm = oContainer.getParent();
 
-			var aContainers = oForm.getFormContainers();
-			var iLength = aContainers.length;
+		var aContainers = oForm.getFormContainers();
+		var iLength = aContainers.length;
 
-			oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iLength - 1);
+		oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iLength - 1);
 
-			if (oNewDomRef) {
-				jQuery.sap.focus(oNewDomRef);
-				oEvent.preventDefault(); // to avoid moving cursor in next field
-			}
+		if (oNewDomRef) {
+			jQuery.sap.focus(oNewDomRef);
+			oEvent.preventDefault(); // to avoid moving cursor in next field
 		}
 
 	};
@@ -632,10 +615,9 @@ jQuery.sap.require("sap.ui.layout.form.Form");
 		while (!oNewDomRef && i < iLength) {
 			var oContainer = aContainers[i];
 			if (oContainer.getExpandable() && bTabOver) {
-				oNewDomRef = oContainer._oExpandButton.getFocusDomRef();
-				if (oNewDomRef) {
-					break;
-				}
+				oNewDomRef = oContainer._oExpandButton;
+				return oNewDomRef;
+				break;
 			}
 			if (!oContainer.getExpandable() || oContainer.getExpanded()) {
 				if (bTabOver == true){
@@ -740,9 +722,8 @@ jQuery.sap.require("sap.ui.layout.form.Form");
 					var oForm = oContainer.getParent();
 					iCurrentIndex = oForm.indexOfFormContainer(oContainer);
 					if (oContainer.getExpandable()) {
-						oNewDomRef = oContainer._oExpandButton.getFocusDomRef();
-					}
-					if (!oNewDomRef) {
+						oNewDomRef = oContainer._oExpandButton;
+					} else {
 						oNewDomRef = this.findLastFieldOfLastElementInPrevContainer(oForm, iCurrentIndex-1, true);
 					}
 				}
@@ -819,10 +800,9 @@ jQuery.sap.require("sap.ui.layout.form.Form");
 		while (!oNewDomRef && i >= 0) {
 			var oContainer = aContainers[i];
 			if (oContainer.getExpandable() && !oContainer.getExpanded() && bTabOver) {
-				oNewDomRef = oContainer._oExpandButton.getFocusDomRef();
-				if (oNewDomRef) {
-					break;
-				}
+				oNewDomRef = oContainer._oExpandButton;
+				return oNewDomRef;
+				break;
 			}
 			if (!oContainer.getExpandable() || oContainer.getExpanded()) {
 				var iLength = oContainer.getFormElements().length;

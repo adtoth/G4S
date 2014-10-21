@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.LocalBusyIndicator.
-sap.ui.define(['./library','./Control','./theming/Parameters','./LocalBusyIndicatorRenderer'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.LocalBusyIndicator");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Control");
 
 
 /**
@@ -60,7 +61,7 @@ sap.ui.define(['./library','./Control','./theming/Parameters','./LocalBusyIndica
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -157,9 +158,10 @@ sap.ui.core.Control.extend("sap.ui.core.LocalBusyIndicator", { metadata : {
 
 
 // Start of sap/ui/core/LocalBusyIndicator.js
+jQuery.sap.require("sap.ui.core.theming.Parameters");
+jQuery.sap.require("sap.ui.core.LocalBusyIndicatorRenderer");
 
 (function() {
-	
 	sap.ui.core.LocalBusyIndicator.prototype.init = function() {
 		var sRoot = "sap.ui.core.LocalBusyIndicator:";
 
@@ -196,7 +198,8 @@ sap.ui.core.Control.extend("sap.ui.core.LocalBusyIndicator", { metadata : {
 		$this.css("width", w + "px");
 		$this.css("height", h + "px");
 
-		var $animation = this.$("animation");
+		var sId = this.getId();
+		var $animation = jQuery.sap.byId(sId + "-animation");
 
 		var left = Math.floor(w / 2);
 		left -= Math.floor((5 * this._iBoxSize) / 2);
@@ -207,13 +210,13 @@ sap.ui.core.Control.extend("sap.ui.core.LocalBusyIndicator", { metadata : {
 		$animation.css("top", top + "px");
 
 		if (!this._$left) {
-			this._$left = this.$("leftBox");
+			this._$left = jQuery.sap.byId(sId + "-leftBox");
 		}
 		if (!this._$middle) {
-			this._$middle = this.$("middleBox");
+			this._$middle = jQuery.sap.byId(sId + "-middleBox");
 		}
 		if (!this._$right) {
-			this._$right = this.$("rightBox");
+			this._$right = jQuery.sap.byId(sId + "-rightBox");
 		}
 
 		this._delayedCallId = jQuery.sap.delayedCall(0, this, this._animateProxy);
@@ -276,9 +279,4 @@ sap.ui.core.Control.extend("sap.ui.core.LocalBusyIndicator", { metadata : {
 			this._delayedCallId = jQuery.sap.delayedCall(1200, this, this._animateProxy);
 		}
 	};
-
 }());
-
-	return sap.ui.core.LocalBusyIndicator;
-
-}, /* bExport = */ true);

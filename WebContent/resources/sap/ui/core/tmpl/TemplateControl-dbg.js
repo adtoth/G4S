@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.tmpl.TemplateControl.
-sap.ui.define(['sap/ui/core/library','sap/ui/core/Control','./DOMElement','./DOMAttribute','sap/ui/core/DeclarativeSupport'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.tmpl.TemplateControl");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Control");
 
 
 /**
@@ -55,7 +56,7 @@ sap.ui.define(['sap/ui/core/library','sap/ui/core/Control','./DOMElement','./DOM
  * @extends sap.ui.core.Control
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -176,7 +177,7 @@ sap.ui.core.tmpl.TemplateControl.M_EVENTS = {'afterRendering':'afterRendering','
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.tmpl.TemplateControl</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.tmpl.TemplateControl</code>.<br/> itself.
  *
  * @return {sap.ui.core.tmpl.TemplateControl} <code>this</code> to allow method chaining
  * @public
@@ -201,7 +202,7 @@ sap.ui.core.tmpl.TemplateControl.M_EVENTS = {'afterRendering':'afterRendering','
 
 /**
  * Fire event afterRendering to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.ui.core.tmpl.TemplateControl} <code>this</code> to allow method chaining
  * @protected
@@ -234,7 +235,7 @@ sap.ui.core.tmpl.TemplateControl.M_EVENTS = {'afterRendering':'afterRendering','
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.ui.core.tmpl.TemplateControl</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.ui.core.tmpl.TemplateControl</code>.<br/> itself.
  *
  * @return {sap.ui.core.tmpl.TemplateControl} <code>this</code> to allow method chaining
  * @public
@@ -259,7 +260,7 @@ sap.ui.core.tmpl.TemplateControl.M_EVENTS = {'afterRendering':'afterRendering','
 
 /**
  * Fire event beforeRendering to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.ui.core.tmpl.TemplateControl} <code>this</code> to allow method chaining
  * @protected
@@ -269,6 +270,9 @@ sap.ui.core.tmpl.TemplateControl.M_EVENTS = {'afterRendering':'afterRendering','
 
 
 // Start of sap/ui/core/tmpl/TemplateControl.js
+jQuery.sap.require("sap.ui.core.tmpl.DOMElement");
+jQuery.sap.require("sap.ui.core.tmpl.DOMAttribute");
+jQuery.sap.require("sap.ui.core.DeclarativeSupport");
 
 
 /*
@@ -303,7 +307,7 @@ sap.ui.core.tmpl.TemplateControl.prototype.isInline = function() {
 
 
 /*
- * Overridden to remove the old content for inline templates and clean up the
+ * Overriden to remove the old content for inline templates and clean up the
  * old UIArea which is in the "nirvana" now 
  */
 sap.ui.core.tmpl.TemplateControl.prototype.placeAt = function(oRef, oPosition) {
@@ -526,7 +530,11 @@ sap.ui.core.tmpl.TemplateControl.prototype.createControl = function(mSettings, s
 	// conversion for the values done (would be the better approach)
 	var mHTMLSettings = {};
 	jQuery.each(mSettings, function(sKey, oValue) {
-		mHTMLSettings["data-" + jQuery.sap.hyphen(sKey)] = oValue;
+		if (sKey.indexOf("-") === -1) {
+			mHTMLSettings["data-" + jQuery.sap.hyphen(sKey)] = oValue;
+		} else {
+			mHTMLSettings["data-" + sKey] = oValue;
+		}
 	});
 	var $control = jQuery("<div/>", mHTMLSettings);
 	var oControl = sap.ui.core.DeclarativeSupport._createControl($control.get(0), oView);
@@ -539,7 +547,3 @@ sap.ui.core.tmpl.TemplateControl.prototype.createControl = function(mSettings, s
 	}
 	return oControl;
 };
-
-	return sap.ui.core.tmpl.TemplateControl;
-
-}, /* bExport = */ true);

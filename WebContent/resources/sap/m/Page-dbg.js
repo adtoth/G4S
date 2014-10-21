@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -43,10 +43,10 @@ jQuery.sap.require("sap.ui.core.Control");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li>
- * <li>{@link #getCustomHeader customHeader} : sap.m.IBar</li>
- * <li>{@link #getFooter footer} : sap.m.IBar</li>
- * <li>{@link #getSubHeader subHeader} : sap.m.IBar</li>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li>
+ * <li>{@link #getCustomHeader customHeader} : sap.m.Bar</li>
+ * <li>{@link #getFooter footer} : sap.m.Bar</li>
+ * <li>{@link #getSubHeader subHeader} : sap.m.Bar</li>
  * <li>{@link #getHeaderContent headerContent} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
@@ -68,7 +68,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -88,21 +88,21 @@ sap.ui.core.Control.extend("sap.m.Page", { metadata : {
 		"title" : {type : "string", group : "Data", defaultValue : null},
 		"showNavButton" : {type : "boolean", group : "Appearance", defaultValue : false},
 		"showHeader" : {type : "boolean", group : "Appearance", defaultValue : true},
-		"navButtonText" : {type : "string", group : "Misc", defaultValue : null, deprecated: true},
+		"navButtonText" : {type : "string", group : "Misc", defaultValue : null},
 		"enableScrolling" : {type : "boolean", group : "Behavior", defaultValue : true},
-		"icon" : {type : "sap.ui.core.URI", group : "Appearance", defaultValue : null, deprecated: true},
+		"icon" : {type : "sap.ui.core.URI", group : "Appearance", defaultValue : null},
 		"backgroundDesign" : {type : "sap.m.PageBackgroundDesign", group : "Appearance", defaultValue : sap.m.PageBackgroundDesign.Standard},
-		"navButtonType" : {type : "sap.m.ButtonType", group : "Appearance", defaultValue : sap.m.ButtonType.Back, deprecated: true},
+		"navButtonType" : {type : "sap.m.ButtonType", group : "Appearance", defaultValue : sap.m.ButtonType.Back},
 		"showFooter" : {type : "boolean", group : "Appearance", defaultValue : true}
 	},
 	defaultAggregation : "content",
 	aggregations : {
     	"content" : {type : "sap.ui.core.Control", multiple : true, singularName : "content"}, 
-    	"customHeader" : {type : "sap.m.IBar", multiple : false}, 
-    	"footer" : {type : "sap.m.IBar", multiple : false}, 
-    	"subHeader" : {type : "sap.m.IBar", multiple : false}, 
+    	"customHeader" : {type : "sap.m.Bar", multiple : false}, 
+    	"footer" : {type : "sap.m.Bar", multiple : false}, 
+    	"subHeader" : {type : "sap.m.Bar", multiple : false}, 
     	"headerContent" : {type : "sap.ui.core.Control", multiple : true, singularName : "headerContent"}, 
-    	"_internalHeader" : {type : "sap.m.IBar", multiple : false, visibility : "hidden"}
+    	"_internalHeader" : {type : "sap.m.Bar", multiple : false, visibility : "hidden"}
 	},
 	events : {
 		"navButtonTap" : {deprecated: true}, 
@@ -208,14 +208,12 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Getter for property <code>navButtonText</code>.
- * The text of the nav button when running in iOS (if shown) in case it deviates from the default, which is "Back". This property is mvi-theme-dependent and will not have any effect in other themes.
+ * The text of the nav button when running in iOS (if shown) in case it deviates from the default, which is "Back". This property is theme-dependent and might not have any effect in a certain theme.
  *
  * Default value is empty/<code>undefined</code>
  *
  * @return {string} the value of property <code>navButtonText</code>
  * @public
- * @deprecated Since version 1.20. 
- * Deprecated since the MVI theme is removed now. This property only affected the NavButton in that theme.
  * @name sap.m.Page#getNavButtonText
  * @function
  */
@@ -228,8 +226,6 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * @param {string} sNavButtonText  new value for property <code>navButtonText</code>
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 1.20. 
- * Deprecated since the MVI theme is removed now. This property only affected the NavButton in that theme.
  * @name sap.m.Page#setNavButtonText
  * @function
  */
@@ -266,14 +262,12 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Getter for property <code>icon</code>.
- * the icon that is rendered in the page header bar in non-iOS phone/tablet platforms. This property is theme-dependent and only has an effect in the MVI theme.
+ * the icon that is rendered in the page header bar in non-iOS platforms. This property is theme-dependent and might not have any effect in a certain theme.
  *
  * Default value is empty/<code>undefined</code>
  *
  * @return {sap.ui.core.URI} the value of property <code>icon</code>
  * @public
- * @deprecated Since version 1.20. 
- * Deprecated since the MVI theme is removed now. This property only affected the NavButton in that theme.
  * @name sap.m.Page#getIcon
  * @function
  */
@@ -286,8 +280,6 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * @param {sap.ui.core.URI} sIcon  new value for property <code>icon</code>
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 1.20. 
- * Deprecated since the MVI theme is removed now. This property only affected the NavButton in that theme.
  * @name sap.m.Page#setIcon
  * @function
  */
@@ -327,8 +319,6 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * @return {sap.m.ButtonType} the value of property <code>navButtonType</code>
  * @public
  * @since 1.12
- * @deprecated Since version 1.20. 
- * Deprecated since the MVI theme is removed now. This property is only useable with a Button text in that theme.
  * @name sap.m.Page#getNavButtonType
  * @function
  */
@@ -342,8 +332,6 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
  * @since 1.12
- * @deprecated Since version 1.20. 
- * Deprecated since the MVI theme is removed now. This property is only useable with a Button text in that theme.
  * @name sap.m.Page#setNavButtonType
  * @function
  */
@@ -380,7 +368,6 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * Getter for aggregation <code>content</code>.<br/>
  * The content of this page
  * 
- * <strong>Note</strong>: this is the default aggregation for Page.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.m.Page#getContent
@@ -464,7 +451,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * Use this aggregation only when a custom header is constructed where the default header consisting of title text + nav button is not sufficient.
  * If this aggregation is set, the simple properties "title", "showNavButton", "NavButtonText" and "icon" are not used.
  * 
- * @return {sap.m.IBar}
+ * @return {sap.m.Bar}
  * @public
  * @name sap.m.Page#getCustomHeader
  * @function
@@ -473,7 +460,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Setter for the aggregated <code>customHeader</code>.
- * @param {sap.m.IBar} oCustomHeader
+ * @param oCustomHeader {sap.m.Bar}
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.Page#setCustomHeader
@@ -495,7 +482,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * Getter for aggregation <code>footer</code>.<br/>
  * The (optional) footer of this page. It is always located at the bottom of the page
  * 
- * @return {sap.m.IBar}
+ * @return {sap.m.Bar}
  * @public
  * @name sap.m.Page#getFooter
  * @function
@@ -504,7 +491,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Setter for the aggregated <code>footer</code>.
- * @param {sap.m.IBar} oFooter
+ * @param oFooter {sap.m.Bar}
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.Page#setFooter
@@ -526,7 +513,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * Getter for aggregation <code>subHeader</code>.<br/>
  * a subHeader will be rendered directly under the header
  * 
- * @return {sap.m.IBar}
+ * @return {sap.m.Bar}
  * @public
  * @name sap.m.Page#getSubHeader
  * @function
@@ -535,7 +522,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Setter for the aggregated <code>subHeader</code>.
- * @param {sap.m.IBar} oSubHeader
+ * @param oSubHeader {sap.m.Bar}
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.Page#setSubHeader
@@ -661,7 +648,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.Page</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.Page</code>.<br/> itself.
  *
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
@@ -690,7 +677,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Fire event navButtonTap to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @protected
@@ -726,7 +713,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.Page</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.Page</code>.<br/> itself.
  *
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @public
@@ -753,7 +740,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
 
 /**
  * Fire event navButtonPress to attached listeners.
- *
+
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.Page} <code>this</code> to allow method chaining
  * @protected
@@ -780,7 +767,7 @@ sap.m.Page.M_EVENTS = {'navButtonTap':'navButtonTap','navButtonPress':'navButton
  */
 
 
-// Start of sap\m\Page.js
+// Start of sap/m/Page.js
 sap.m.Page.prototype.init = function() {
 	jQuery.sap.require("sap.ui.core.theming.Parameters");
 	this._bIsPlatformDependent = sap.ui.core.theming.Parameters.get("sapMPlatformDependent") == "true";
@@ -793,7 +780,7 @@ sap.m.Page.prototype.init = function() {
 
 // Return true if scrolling is allowed
 sap.m.Page.prototype._hasScrolling = function() {
-	return this.getEnableScrolling();
+	return !(jQuery.browser.msie && jQuery.browser.version < 9) && this.getEnableScrolling();
 };
 
 sap.m.Page.prototype.onBeforeRendering = function() {
@@ -807,7 +794,6 @@ sap.m.Page.prototype.onBeforeRendering = function() {
 			horizontal: false,
 			vertical: true,
 			zynga: false,
-			iscroll: this._bUseIScroll,
 			preventDefault: false,
 			nonTouchScrolling: "scrollbar",
 			scrollbarClass: "sapMScrollbar"
@@ -843,7 +829,7 @@ sap.m.Page.prototype.setBackgroundDesign = function(sBgDesign) {
 	var sBgDesignOld = this.getBackgroundDesign();
 
 	this.setProperty("backgroundDesign", sBgDesign, true);
-	this.$().removeClass("sapMPageBg" + sBgDesignOld).addClass("sapMPageBg" + this.getBackgroundDesign());
+	jQuery.sap.byId(this.getId()).removeClass("sapMPageBg" + sBgDesignOld).addClass("sapMPageBg" + this.getBackgroundDesign());
 	return this;
 };
 
@@ -855,7 +841,7 @@ sap.m.Page.prototype.setTitle = function(sTitle) {
 	
 	if(bWasNull){
 		if (this._bIsPlatformDependent){
-			if(sap.ui.Device.os.ios){
+			if(jQuery.os.ios){
 				this._updateHeaderContent(this._headerTitle, 'middle', 0);
 			} else {
 				this._titleIndex = this._titleIndex || 0;
@@ -879,7 +865,7 @@ sap.m.Page.prototype.setShowNavButton = function (bShowNavBtn) {
 	this.setProperty("showNavButton", bShowNavBtn, true);
 	this._navBtn = this._navBtn || new sap.m.Button(this.getId() + "-navButton", {press: jQuery.proxy(function(){this.fireNavButtonPress(); this.fireNavButtonTap();},this)});
 	var sNavButtonType = this.getNavButtonType();
-	if(sap.ui.Device.os.android && sNavButtonType == sap.m.ButtonType.Back){
+	if(!jQuery.os.ios && sNavButtonType == sap.m.ButtonType.Back){
 		this._navBtn.setType(sap.m.ButtonType.Up);
 	} else {
 		this._navBtn.setType(sNavButtonType);
@@ -887,24 +873,19 @@ sap.m.Page.prototype.setShowNavButton = function (bShowNavBtn) {
 			this._navBtn.setText(this.getNavButtonText()); 
 		}
 	}
-
+	
 	if (bShowNavBtn){
-		if (sap.ui.Device.os.android && this._bIsPlatformDependent){
-			//On android show the title after the navButton
-			this._titleIndex = 1;
-			if(this.getIcon()) {
-				this._navBtn.setIcon(this.getIcon());
-			}
+		if (!jQuery.os.ios && this.getIcon() && this._bIsPlatformDependent){
+			this._navBtn.setIcon(this.getIcon());	
 		}
 		if (this._appIcon){
 			this._updateHeaderContent(this._appIcon, 'left', -1);
 		}
-
 		this._updateHeaderContent(this._navBtn, 'left', 0);
 	} else {
 		// remove back button from header bar
 		this._updateHeaderContent(this._navBtn, 'left', -1);
-		if (this._bIsPlatformDependent && !sap.ui.Device.os.ios && this.getIcon()){
+		if (this._bIsPlatformDependent && !jQuery.os.ios && this.getIcon()){
 			this._appIcon = this._appIcon || new sap.m.Image(this.getId()+"-icon", {src: this.getIcon()});
 			this._updateHeaderContent(this._appIcon, 'left', 0);
 		}
@@ -914,7 +895,7 @@ sap.m.Page.prototype.setShowNavButton = function (bShowNavBtn) {
 
 sap.m.Page.prototype.setNavButtonType = function (sNavButtonType) {
 	this._navBtn = this._navBtn || new sap.m.Button(this.getId() + "-navButton", {press: jQuery.proxy(function(){this.fireNavButtonPress(); this.fireNavButtonTap();},this)});
-	if(!sap.ui.Device.os.ios && sNavButtonType == sap.m.ButtonType.Back){
+	if(!jQuery.os.ios && sNavButtonType == sap.m.ButtonType.Back){
 		// internal conversion from Back to Up for non-iOS platform
 		this._navBtn.setType(sap.m.ButtonType.Up);
 	} else {
@@ -929,7 +910,7 @@ sap.m.Page.prototype.setNavButtonText = function (sText) {
 	if (sText == "" && this._bIsPlatformDependent){
 		sText = this._rb.getText("PAGE_NAVBUTTON_TEXT");
 	}
-	if(sap.ui.Device.os.ios && this._bIsPlatformDependent){
+	if(jQuery.os.ios && this._bIsPlatformDependent){
 		this._navBtn.setText(sText);
 	}
 	this.setProperty("navButtonText", sText, true);
@@ -942,7 +923,7 @@ sap.m.Page.prototype.setIcon = function (sIconSrc) {
 		return this;
 	}
 	
-	if (!sap.ui.Device.os.ios && this._bIsPlatformDependent){
+	if (!jQuery.os.ios && this._bIsPlatformDependent){
 		if(sIconSrc){
 			if (this.getShowNavButton()){
 				this._navBtn = this._navBtn || new sap.m.Button(this.getId() + "-navButton", {press: jQuery.proxy(function(){this.fireNavButtonPress(); this.fireNavButtonTap();},this)});
@@ -1029,7 +1010,6 @@ sap.m.Page.prototype._updateHeaderContent = function (oContent, sContentPosition
 
 /**
  * Create internal header
- * @returns {sap.m.IBar}
  * @private
  */
 
@@ -1038,7 +1018,8 @@ sap.m.Page.prototype._getInternalHeader= function() {
 	if (!oInternalHeader){
 		this.setAggregation('_internalHeader', new sap.m.Bar(this.getId() + "-intHeader"));
 		oInternalHeader = this.getAggregation("_internalHeader");
-		if(sap.ui.Device.os.ios){
+		oInternalHeader._context = 'header';
+		if(jQuery.os.ios){
 			if (this.getShowNavButton() && this._navBtn){
 				this._updateHeaderContent(this._navBtn, 'left', 0);
 			}
@@ -1071,17 +1052,16 @@ sap.m.Page.prototype._getInternalHeader= function() {
 /**
  * Returns the custom or internal header
  * @private
- * @returns {sap.m.IBar}
  */
 sap.m.Page.prototype._getAnyHeader = function() {
 	var oCustomHeader = this.getCustomHeader();
-
 	if (oCustomHeader) {
+		oCustomHeader._context = 'header';
 		// return aggregated header, if it exists
-		return oCustomHeader.addStyleClass("sapMPageHeader");
+		return oCustomHeader.addStyleClass('sapMPageHeader').addStyleClass("sapMHeader-CTX");
+	} else {
+		return this._getInternalHeader().addStyleClass('sapMPageHeader').addStyleClass("sapMHeader-CTX");
 	}
-
-	return this._getInternalHeader().addStyleClass("sapMPageHeader");
 };
 
 /**

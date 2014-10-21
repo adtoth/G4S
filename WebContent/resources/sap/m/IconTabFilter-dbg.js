@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ jQuery.sap.require("sap.ui.core.Item");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -64,7 +64,7 @@ jQuery.sap.require("sap.ui.core.Item");
  * @implements sap.m.IconTab
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -297,7 +297,6 @@ sap.ui.core.Item.extend("sap.m.IconTabFilter", { metadata : {
  * The content to show for this item (optional).
  * If this content is set, it will be displayed instead of the general content inside the IconTabBar.
  * 
- * <strong>Note</strong>: this is the default aggregation for IconTabFilter.
  * @return {sap.ui.core.Control[]}
  * @public
  * @since 1.15.0
@@ -382,7 +381,7 @@ sap.ui.core.Item.extend("sap.m.IconTabFilter", { metadata : {
  */
 
 
-// Start of sap\m\IconTabFilter.js
+// Start of sap/m/IconTabFilter.js
 /**
  * Lazy load icon tab filter image.
  *
@@ -394,7 +393,7 @@ sap.ui.core.Item.extend("sap.m.IconTabFilter", { metadata : {
  * @private
  */
 sap.m.IconTabFilter.prototype._getImageControl = function(aCssClassesToAdd, oParent, aCssClassesToRemove) {
-	var mProperties = {
+	var mProperties = { 
 		src : this.getIcon(),
 		densityAware : this.getIconDensityAware()
 	};
@@ -411,6 +410,7 @@ sap.m.IconTabFilter.prototype._getImageControl = function(aCssClassesToAdd, oPar
  * @private
  */
 sap.m.IconTabFilter.prototype.exit = function(oEvent) {
+	
 	if (this._oImageControl) {
 		this._oImageControl.destroy();
 	}
@@ -420,28 +420,3 @@ sap.m.IconTabFilter.prototype.exit = function(oEvent) {
 	}
 };
 
-sap.m.IconTabFilter.prototype.invalidate = function() {
-	var oIconTabBar,
-		oObjectHeader;
-
-	// the iconTabHeader is rendered by the IconTabBar or the ObjectHeader or standalone, we treat these cases here
-	if (this.getParent() instanceof sap.m.IconTabHeader && this.getParent().getParent() instanceof sap.m.IconTabBar) {
-		oIconTabBar = this.getParent().getParent();
-		if (!arguments.length) {
-			// only invalidate the header if invalidate was not called from a child control (content)
-			this.getParent().invalidate();
-		} else {
-			if (oIconTabBar.getParent() instanceof sap.m.ObjectHeader) {
-				// invalidate the object header to re-render IconTabBar content and header
-				oObjectHeader = oIconTabBar.getParent();
-				oObjectHeader.invalidate();
-			} else {
-				// invalidate the IconTabBar to re-render the content (this will not update the header)
-				oIconTabBar.invalidate();
-			}
-		}
-	} else {
-		// if used standalone just invalidate this filter element
-		sap.ui.core.Element.prototype.invalidate.apply(this, arguments);
-	}
-};

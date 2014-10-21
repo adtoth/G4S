@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ jQuery.sap.require("sap.ui.layout.form.FormLayout");
  * @extends sap.ui.layout.form.FormLayout
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -88,7 +88,7 @@ sap.ui.layout.form.FormLayout.extend("sap.ui.layout.form.ResponsiveLayout", { me
  */
 
 
-// Start of sap\ui\layout\form\ResponsiveLayout.js
+// Start of sap/ui/layout/form/ResponsiveLayout.js
 /**
  * This file defines behavior for the control,
  */
@@ -141,7 +141,7 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 		},
 		associations: {
 			"container" : {type: "sap.ui.layout.form.FormContainer", multiple: false},
-			"layout"    : {type: "sap.ui.layout.form.ResponsiveLayout", multiple: false}
+			"layout"    : {type: "sap.ui.layout.form.ResponsiveLayout", multiple: false},
 		}
 	},
 
@@ -172,9 +172,9 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 		var oContainer = sap.ui.getCore().byId(this.getContainer());
 		if (oContainer) {
 			if (oContainer.getExpanded()) {
-				this.$().removeClass("sapUiRLContainerColl");
+				jQuery.sap.byId(this.getId()).removeClass("sapUiRLContainerColl");
 			}else {
-				this.$().addClass("sapUiRLContainerColl");
+				jQuery.sap.byId(this.getId()).addClass("sapUiRLContainerColl");
 			}
 		}
 	},
@@ -184,11 +184,6 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 		var oContainer = sap.ui.getCore().byId(oPanel.getContainer());
 		var oLayout    = sap.ui.getCore().byId(oPanel.getLayout());
 		var oContent   = oPanel.getContent();
-
-		if (!oContainer || !oLayout) {
-			// Container might be removed, but ResponsiveFlowLayout still calls a rerendering with old content
-			return;
-		}
 
 		var bExpandable = oContainer.getExpandable();
 		var sTooltip = oContainer.getTooltip_AsString();
@@ -276,7 +271,7 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 
 		sap.ui.layout.form.FormLayout.prototype.contentOnAfterRendering.apply(this, arguments);
 
-		if (oControl.getWidth && ( !oControl.getWidth() || oControl.getWidth() == "auto" ) && oControl.getMetadata().getName() != "sap.ui.commons.Image") {
+		if (oControl.getWidth && !oControl.getWidth()) {
 			oControl.$().css("width", "100%");
 		}
 
@@ -340,7 +335,6 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 		var iVisibleContainers = 0;
 		for ( var i = 0; i < iLength; i++) {
 			var oContainer = aContainers[i];
-			oContainer._checkProperties();
 			if (oContainer.getVisible()) {
 				iVisibleContainers++;
 				var sContainerId = oContainer.getId();
@@ -436,7 +430,6 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 
 		var oRFLayout;
 		var oFieldsRFLayout;
-		var iLastIndex = -1;
 		for (var i = 0; i < iLength; i++) {
 			var oElement = aElements[i];
 			if (oElement.getVisible()) {
@@ -445,7 +438,6 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 				if (mRFLayouts[sElementId]) {
 					// ResponsiveFlowLayout already created
 					oRFLayout = mRFLayouts[sElementId][0];
-					iLastIndex = oContainerLayout.indexOfContent(oRFLayout);
 				}else{
 					oRFLayout = _createResponsiveFlowLayout(oLayout, oContainer, oElement);
 					oRFLayout.addStyleClass("sapUiRLElement");
@@ -453,8 +445,7 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 						oRFLayout.addStyleClass("sapUiRLElementWithLabel");
 					}
 					mRFLayouts[sElementId] = [oRFLayout, undefined];
-					iLastIndex++;
-					oContainerLayout.insertContent(oRFLayout, iLastIndex);
+					oContainerLayout.insertContent(oRFLayout, iVisibleElements);
 				}
 
 				// if more fields after a label put the fields in an additional ResponsiveFlowLayout
@@ -552,8 +543,7 @@ sap.ui.core.Control.extend("sap.ui.layout.form.ResponsiveLayoutPanel", {
 								aContent.push(oLabel);
 							}
 							if(oLayout.mContainers[sContainerId] && oLayout.mContainers[sContainerId][2] &&
-									oLayout.mContainers[sContainerId][2][sElementId] &&
-									oLayout.mContainers[sContainerId][2][sElementId][1]){
+									oLayout.mContainers[sContainerId][2][sElementId]){
 								aContent.push(oLayout.mContainers[sContainerId][2][sElementId][1]);
 							}
 						}

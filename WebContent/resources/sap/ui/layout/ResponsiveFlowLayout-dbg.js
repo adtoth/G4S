@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -53,8 +53,8 @@ jQuery.sap.require("sap.ui.core.Control");
  * This is a layout where several controls can be added. These controls are blown up to fit a whole line. If the window resizes the controls are moved between the lines and resized again.
  * @extends sap.ui.core.Control
  *
- * @author SAP AG 
- * @version 1.22.5
+ * @author SAP 
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -70,7 +70,6 @@ sap.ui.core.Control.extend("sap.ui.layout.ResponsiveFlowLayout", { metadata : {
 	properties : {
 		"responsive" : {type : "boolean", group : "Misc", defaultValue : true}
 	},
-	defaultAggregation : "content",
 	aggregations : {
     	"content" : {type : "sap.ui.core.Control", multiple : true, singularName : "content"}
 	}
@@ -123,7 +122,6 @@ sap.ui.core.Control.extend("sap.ui.layout.ResponsiveFlowLayout", { metadata : {
  * Getter for aggregation <code>content</code>.<br/>
  * Added content that should be positioned. Every content item should have a ResponsiveFlowLayoutData attached otherwise the default values are used.
  * 
- * <strong>Note</strong>: this is the default aggregation for ResponsiveFlowLayout.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.ui.layout.ResponsiveFlowLayout#getContent
@@ -201,22 +199,34 @@ sap.ui.core.Control.extend("sap.ui.layout.ResponsiveFlowLayout", { metadata : {
  */
 
 
-// Start of sap\ui\layout\ResponsiveFlowLayout.js
+// Start of sap/ui/layout/ResponsiveFlowLayout.js
 jQuery.sap.require("sap.ui.layout.ResponsiveFlowLayoutData");
 jQuery.sap.require("sap.ui.core.IntervalTrigger");
 jQuery.sap.require("sap.ui.core.theming.Parameters");
 
 (function() {
+	// a singelton instance of the centralized interval trigger
+	sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER_INTERVAL = 300;
+	sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER = new sap.ui.core.IntervalTrigger(0);
+
 	sap.ui.layout.ResponsiveFlowLayout.prototype.init = function() {
 		this._rows = [];
 
 		this._bIsRegistered = false;
+		this._iInterval = sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER_INTERVAL;
 		this._proxyComputeWidths = jQuery.proxy(computeWidths, this);
 
 		this.oRm = new sap.ui.core.RenderManager();
 		this.oRm.writeStylesAndClasses = function() {
 			this.writeStyles();
 			this.writeClasses();
+		};
+		this.oRm.writeWidthPercentage = function(iProcWidth) {
+			if (iProcWidth === 100) {
+				this.addClass("sapUiRFLFullLength");
+			}
+
+			this.addStyle("width", iProcWidth + "%");
 		};
 		this.oRm.writeHeader = function(sId, oStyles, aClasses) {
 			this.write('<div id="' + sId + '"');
@@ -229,7 +239,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 					this.addStyle(key, oStyles[key]);
 				}
 			}
-			for (var i = 0; i < aClasses.length; i++) {
+			for ( var i = 0; i < aClasses.length; i++) {
 				this.addClass(aClasses[i]);
 			}
 
@@ -242,15 +252,16 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 	sap.ui.layout.ResponsiveFlowLayout.prototype.exit = function() {
 		delete this._rows;
 
+		if (this._bIsRegistered) {
+			sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER.removeListener(this._proxyComputeWidths, this);
+			delete this._bIsRegistered;
+		}
+
 		if (this._IntervalCall) {
 			jQuery.sap.clearDelayedCall(this._IntervalCall);
 			this._IntervalCall = undefined;
 		}
 
-		if (this._resizeHandlerComputeWidthsID) {
-			sap.ui.core.ResizeHandler.deregister(this._resizeHandlerComputeWidthsID);
-		}
-		delete this._resizeHandlerComputeWidthsID;
 		delete this._proxyComputeWidths;
 
 		this.oRm.destroy();
@@ -272,7 +283,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		var minWidth = 0, weight = 0, length = 0;
 		var bBreak = false, bMargin = false, bLinebreakable = false;
 
-		for (var i = 0; i < aControls.length; i++) {
+		for ( var i = 0; i < aControls.length; i++) {
 			// use default values -> are overwritten if LayoutData exists
 			minWidth = sap.ui.layout.ResponsiveFlowLayoutData.MIN_WIDTH;
 			weight = sap.ui.layout.ResponsiveFlowLayoutData.WEIGHT;
@@ -322,7 +333,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 			if (!!!bLinebreakable) {
 				// if an element mustn't break -> find any previous element that
 				// is allowed to do wrapping
-				for (var br = length; br > 0; br--) {
+				for ( var br = length; br > 0; br--) {
 					oLast = aRows[iRow].cont[br - 1];
 					if (oLast.linebreakable) {
 						oLast.breakWith.push(oItem);
@@ -341,12 +352,13 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		oThis._rows = aRows;
 	};
 
-	var getCurrentWrapping = function(oRow, $Row, oThis) {
+	var getCurrrentWrapping = function(oRow, $Row, oThis) {
 		var r = [];
 		var lastOffsetLeft = 10000000;
 		var currentRow = -1;
 
-		var fnCurrentWrapping = function(j) {
+		// Find out the "rows" within a row
+		for ( var j = 0; j < oRow.cont.length; j++) {
 			var $cont = jQuery.sap.byId(oRow.cont[j].id);
 			if ($cont.length > 0) {
 				var offset = $cont[0].offsetLeft;
@@ -360,19 +372,6 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 				r[currentRow].cont.push(oRow.cont[j]);
 			}
 		}
-
-		// Find out the "rows" within a row
-		if (sap.ui.getCore().getConfiguration().getRTL()) {
-			// for RTL-mode the elements have to be checked the other way round
-			for (var i = oRow.cont.length - 1; i >= 0; i--) {
-				fnCurrentWrapping(i);
-			}
-		} else {
-			for (var i = 0; i < oRow.cont.length; i++) {
-				fnCurrentWrapping(i);
-			}
-		}
-
 		return r;
 	};
 
@@ -424,6 +423,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 					indexLinebreak = j;
 				}
 				currentRow++;
+
 			}
 			r[currentRow].cont.push(oRow.cont[j]);
 		}
@@ -435,7 +435,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 			return true;
 		}
 
-		for (var i = 0; i < wrap1.length; i++) {
+		for ( var i = 0; i < wrap1.length; i++) {
 			if (wrap1[i].cont.length != wrap2[i].cont.length) {
 				return true;
 			}
@@ -451,11 +451,9 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 	 * @param {object}
 	 *            [oTargetWrapping] is the wrapping how it should be (may differ
 	 *            from current wrapping)
-	 * @param {int}
-	 *            [iWidth] the available inner width of the row
 	 * @private
 	 */
-	sap.ui.layout.ResponsiveFlowLayout.prototype.renderContent = function(oTargetWrapping, iWidth) {
+	sap.ui.layout.ResponsiveFlowLayout.prototype.renderContent = function(oTargetWrapping) {
 		var r = oTargetWrapping;
 		var iRowProcWidth = 0;
 		var aWidths = [];
@@ -471,12 +469,10 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		var sHeaderId = "";
 
 		for (i = 0; i < r.length; i++) {
-			/*
-			 * reset all corresponding values for each row
-			 */
+			// reset all corresponding values for each row
 			iProcWidth = 0;
 			aWidths.length = 0;
-			iRowProcWidth = 100; // subtract the used values from a whole row
+			iRowProcWidth = 0;
 			aClasses.length = 0;
 
 			aClasses.push("sapUiRFLRow");
@@ -500,65 +496,34 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 				if (oCont.breakWith.length > 0) {
 					tWeight = oCont.weight;
 					tMinWidth = oCont.minWidth;
-					for (var br = 0; br < oCont.breakWith.length; br++) {
+					for ( var br = 0; br < oCont.breakWith.length; br++) {
 						tWeight += oCont.breakWith[br].weight;
 						tMinWidth += oCont.breakWith[br].minWidth;
 					}
 				}
 
-				/*
-				 * Render Container
-				 */
+				iProcWidth = 100 / totalWeight * oCont.weight;
+				iProcWidth = Math.floor(iProcWidth);
+
+				aWidths.push(iProcWidth);
+				iRowProcWidth += iProcWidth;
+
+				// if percentage is not 100% and this is the last item
+				if (iRowProcWidth < 100 && j === (r[i].cont.length - 1)) {
+					iProcWidth += 100 - iRowProcWidth;
+				}
+
+				// container
 				sHeaderId = r[i].cont[j].id;
 				aClasses.length = 0;
-				// clear all other values from the object
-				oStyles = {
-					// the unit "px" is added below to be able to calculate with
-					// the value of min-width
-					"min-width" : oCont.breakWith.length > 0 ? tMinWidth : oCont.minWidth
-				}
-
-				iProcWidth = 100 / totalWeight * oCont.weight;
-				var iProcMinWidth = oStyles["min-width"] / iWidth * 100;
-				// round the values BEFORE they are used for the percental value
-				// because if the un-rounded values don't need the percental
-				// value
-				// of the min-width the percentage value of the calculated width
-				// might be lower
-				// after it is floored.
-				var iPMinWidth = Math.ceil(iProcMinWidth);
-				var iPWidth = Math.floor(iProcWidth);
-				if (iPWidth !== 100 && iPMinWidth > iPWidth) {
-					// if the percentage of the element's width will lead
-					// into a too small element use the corresponding
-					// percentage value of the min-width
-					iProcWidth = iPMinWidth;
-				} else {
-					iProcWidth = iPWidth;
-				}
-
-				// check how many percentage points are still left. If there
-				// are less available than calculated just use the rest of
-				// the row
-				iProcWidth = iRowProcWidth < iProcWidth ? iRowProcWidth : iProcWidth;
-
-				iRowProcWidth -= iProcWidth;
-				aWidths.push(iProcWidth);
-
-				// if possible percentage amount is not 0% and this is the
-				// last item
-				if (iRowProcWidth > 0 && j === (r[i].cont.length - 1)) {
-					iProcWidth += iRowProcWidth;
-				}
-
 				aClasses.push("sapUiRFLContainer");
-				oStyles["width"] = iProcWidth + "%";
-				oStyles["min-width"] = oStyles["min-width"] + "px";
+				oStyles = {
+					"width" : iProcWidth + "%",
+					"min-width" : oCont.breakWith.length > 0 ? tMinWidth + "px" : oCont.minWidth + "px"
+				}
 				this.oRm.writeHeader(sHeaderId, oStyles, aClasses);
 
-				/*
-				 * content rendering (render control)
-				 */
+				// content rendering (render control)
 				aClasses.length = 0;
 				aClasses.push("sapUiRFLContainerContent");
 				if (oCont.breakWith.length > 0) {
@@ -567,34 +532,24 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 				if (oCont.padding) {
 					aClasses.push("sapUiRFLPaddingClass");
 				}
-
 				oStyles = {};
 				this.oRm.writeHeader("", oStyles, aClasses);
 
-				/*
-				 * Render all following elements into same container if there
-				 * are any that should wrap together with container. Else simply
-				 * render the control.
-				 */
 				if (oCont.breakWith.length > 0) {
-					/*
-					 * Render first element of wrap-together-group
-					 */
-					sHeaderId = r[i].cont[j].id + "-multi0";
-					aClasses.length = 0;
-					oStyles = {
-						"min-width" : tMinWidth + "px"
-					}
 					// set width of first element
 					var percW = 100 / tWeight * oCont.weight;
 					percW = Math.floor(percW);
 					aBreakWidths.push(percW);
 
+					sHeaderId = r[i].cont[j].id + "-multi0";
+					aClasses.length = 0;
 					aClasses.push("sapUiRFLMultiContent");
-					oStyles["width"] = percW + "%";
-
 					if (r[i].cont[j].padding) {
 						aClasses.push("sapUiRFLPaddingClass");
+					}
+					oStyles = {
+						"width" : percW + "%",
+						"min-width" : tMinWidth + "px"
 					}
 					this.oRm.writeHeader(sHeaderId, oStyles, aClasses);
 
@@ -604,34 +559,27 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 					this.oRm.renderControl(oCont.control);
 					this.oRm.write("</div>");
 
-					/*
-					 * Render all following elements that should wrap with the
-					 * trailing one
-					 */
 					for (jj = 0; jj < oCont.breakWith.length; jj++) {
-						sHeaderId = oCont.breakWith[jj].id + '-multi' + (jj + 1);
-						aClasses.length = 0;
-						oStyles = {
-							"min-width" : oCont.breakWith[jj].minWidth + "px"
-						}
-
 						percW = 100 / tWeight * oCont.breakWith[jj].weight;
 						percW = Math.floor(percW);
 
 						aBreakWidths.push(percW);
 						tPercentage += percW;
 
-						// if percentage is not 100% and this is the last
-						// item
+						// if percentage is not 100% and this is the last item
 						if (tPercentage < 100 && jj === (oCont.breakWith.length - 1)) {
 							percW += 100 - tPercentage;
 						}
 
+						sHeaderId = oCont.breakWith[jj].id + '-multi' + (jj + 1);
+						aClasses.length = 0;
 						aClasses.push("sapUiRFLMultiContent");
-						oStyles["width"] = percW + "%";
-
 						if (oCont.breakWith[jj].padding) {
 							aClasses.push("sapUiRFLPaddingClass");
+						}
+						oStyles = {
+							"width" : percW + "%",
+							"min-width" : oCont.breakWith[jj].minWidth + "px"
 						}
 						this.oRm.writeHeader(sHeaderId, oStyles, aClasses);
 
@@ -661,11 +609,11 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 			var bRender = false;
 
 			if (this._rows) {
-				for (var i = 0; i < this._rows.length; i++) {
+				for ( var i = 0; i < this._rows.length; i++) {
 					var $Row = this._$DomRef.find("#" + sId + "-row" + i);
 
 					var oTargetWrapping = getTargetWrapping(this._rows[i], iInnerWidth);
-					var oCurrentWrapping = getCurrentWrapping(this._rows[i], $Row, this);
+					var oCurrentWrapping = getCurrrentWrapping(this._rows[i], $Row, this);
 
 					// render if wrapping differs
 					bRender = checkWrappingDiff(oCurrentWrapping, oTargetWrapping);
@@ -680,30 +628,29 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 					}
 
 					// if this sould be the initial rendering -> do it
-					bRender = bRender || (typeof (bInitial) === "boolean" && bInitial);
+					bRender = bRender || bInitial;
 
 					if (this._bLayoutDataChanged || bRender) {
 						this._oDomRef.innerHTML = "";
 						// reset this to be clean for next check interval
 						this._bLayoutDataChanged = false;
 
-						this.renderContent(oTargetWrapping, iInnerWidth);
+						this.renderContent(oTargetWrapping);
 					}
 				}
 
 				if (this._oDomRef.innerHTML === "") {
 					this.oRm.flush(this._oDomRef);
+					var oTmpRect = {};
 
-					for (var i = 0; i < this._rows.length; i++) {
-						var oTmpRect = jQuery.sap.byId(sId + "-row" + i).rect();
+					for ( var i = 0; i < this._rows.length; i++) {
+						oTmpRect = jQuery.sap.byId(sId + "-row" + i).rect();
 						this._rows[i].oRect = oTmpRect;
 					}
-				}
 
-				if (this._rows.length === 0) {
-					if (this._resizeHandlerComputeWidthsID) {
-						sap.ui.core.ResizeHandler.deregister(this._resizeHandlerComputeWidthsID);
-						delete this._resizeHandlerComputeWidthsID;
+					if (this._rows.length === 0) {
+						sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER.removeListener(this._proxyComputeWidths, this);
+						sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER.setInterval(0);
 					}
 				}
 			}
@@ -717,11 +664,6 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 	sap.ui.layout.ResponsiveFlowLayout.prototype.onBeforeRendering = function() {
 		// update the internal structure of the rows
 		updateRows(this);
-
-		if (this._resizeHandlerFullLengthID) {
-			sap.ui.core.ResizeHandler.deregister(this._resizeHandlerFullLengthID);
-			delete this._resizeHandlerFullLengthID;
-		}
 	};
 
 	/**
@@ -732,30 +674,39 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		this._oDomRef = this.getDomRef();
 		this._$DomRef = jQuery(this._oDomRef);
 
-		// Initial Width Adaptation
-		this._proxyComputeWidths(true);
-
 		if (this.getResponsive()) {
-			if (!this._resizeHandlerComputeWidthsID) {
-				this._resizeHandlerComputeWidthsID = sap.ui.core.ResizeHandler.register(this, this._proxyComputeWidths);
+			// Initial Width Adaptation
+
+			this._proxyComputeWidths(true);
+
+			// make sure that interval is only called after last rendering if
+			// multiple times rendered at one time
+			if (this._IntervalCall) {
+				jQuery.sap.clearDelayedCall(this._IntervalCall);
 			}
-		} else {
-			if (this._resizeHandlerComputeWidthsID) {
-				sap.ui.core.ResizeHandler.deregister(this._resizeHandlerComputeWidthsID);
-				delete this._resizeHandlerComputeWidthsID;
-			}
+
+			this._IntervalCall = jQuery.sap.delayedCall(sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER_INTERVAL, this, function() {
+				if (!this._bIsRegistered) {
+					this._bIsRegistered = true;
+					this._IntervalCall = undefined;
+					sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER.addListener(this._proxyComputeWidths, this);
+					sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER.setInterval(this._iInterval);
+				}
+			});
 		}
 	};
 
 	sap.ui.layout.ResponsiveFlowLayout.prototype.onThemeChanged = function(oEvent) {
 		if (oEvent.type === "LayoutDataChange") {
+			updateRows(this);
 			this._bLayoutDataChanged = true;
 		}
-		if (!this._resizeHandlerComputeWidthsID) {
-			this._resizeHandlerComputeWidthsID = sap.ui.core.ResizeHandler.register(this, this._proxyComputeWidths);
+		if (oEvent.type === "ThemeChanged") {
+			// start triggering by setting an interval when all styles are
+			// loaded
+			sap.ui.layout.ResponsiveFlowLayout.INTERVAL_TRIGGER.setInterval(this._iInterval);
 		}
 
-		updateRows(this);
 		this._proxyComputeWidths();
 	};
 
@@ -775,7 +726,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 		} else if (oLayoutData.getMetadata().getName() == "sap.ui.core.VariantLayoutData") {
 			// multiple LayoutData available - search here
 			var aLayoutData = oLayoutData.getMultipleLayoutData();
-			for (var i = 0; i < aLayoutData.length; i++) {
+			for ( var i = 0; i < aLayoutData.length; i++) {
 				var oLayoutData2 = aLayoutData[i];
 				if (oLayoutData2 instanceof sap.ui.layout.ResponsiveFlowLayoutData) {
 					return oLayoutData2;
@@ -806,7 +757,7 @@ jQuery.sap.require("sap.ui.core.theming.Parameters");
 	 * 
 	 * @param {Object}
 	 *            [oContent] the content that should be inserted to the layout
-	 * @param {int}
+	 * @param {integer}
 	 *            [iIndex] the index where the content should be inserted into
 	 * @public
 	 */

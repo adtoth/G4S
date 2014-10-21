@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 jQuery.sap.declare("sap.m.SplitContainerRenderer");
@@ -29,8 +29,8 @@ sap.m.SplitContainerRenderer.render = function(oRm, oControl){
 		this.renderAttributes(oRm, oControl); // may be used by inheriting renderers, but DO NOT write class or style attributes! Instead, call addClass/addStyle.
 	}
 	
-	if(!sap.ui.Device.system.phone) {
-		if(sap.ui.Device.orientation.portrait) {
+	if(!jQuery.device.is.phone) {
+		if(jQuery.device.is.portrait) {
 			oRm.addClass("sapMSplitContainerPortrait");
 		}
 		switch(oControl.getMode()) {
@@ -59,8 +59,8 @@ sap.m.SplitContainerRenderer.render = function(oRm, oControl){
 		this.renderBeforeContent(oRm, oControl);
 	}
 	
-	if(!sap.ui.Device.system.phone) {
-		if(oControl.getMode() === "PopoverMode" && sap.ui.Device.orientation.portrait) {
+	if(!jQuery.device.is.phone) {
+		if(oControl.getMode() === "PopoverMode" && jQuery.device.is.portrait) {
 			oControl._oDetailNav.addStyleClass("sapMSplitContainerDetail");
 			oRm.renderControl(oControl._oDetailNav);
 			//add master to popover if it's not yet added

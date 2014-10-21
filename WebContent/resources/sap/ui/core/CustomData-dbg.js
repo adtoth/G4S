@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.CustomData.
-sap.ui.define(['./library','./Element'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.CustomData");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Element");
 
 
 /**
@@ -57,7 +58,7 @@ sap.ui.define(['./library','./Element'], function() {
  * @extends sap.ui.core.Element
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -180,26 +181,3 @@ sap.ui.core.Element.extend("sap.ui.core.CustomData", { metadata : {
 
 
 // Start of sap/ui/core/CustomData.js
-sap.ui.core.CustomData.prototype.setValue = function(oValue) {
-	this.setProperty("value", oValue, true);
-	
-	var oControl = this.getParent();
-	if (oControl && oControl.getDomRef() && this.getWriteToDom()) {
-		// update DOM directly
-		var key = this.getKey();
-		if (typeof oValue === "string") {
-			if ((sap.ui.core.ID.isValid(key)) && (key.indexOf(":") == -1) && (key.indexOf("sap-ui") !== 0)) {
-				oControl.$().attr("data-" + key, oValue);
-			} else { // error case
-				jQuery.sap.log.error("CustomData with key " + key + " should be written to HTML of " + oControl + " but the key is not valid (must be a valid sap.ui.core.ID without any colon and may not start with 'sap-ui').");
-			}
-		} else { // error case: non-string value
-			jQuery.sap.log.error("CustomData with key " + key + " should be written to HTML of " + oControl + " but the value is not a string.");
-		}
-	}
-	return this;
-};
-
-	return sap.ui.core.CustomData;
-
-}, /* bExport = */ true);

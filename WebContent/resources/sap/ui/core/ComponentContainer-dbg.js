@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.ComponentContainer.
-sap.ui.define(['./library','./Control'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.ComponentContainer");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Control");
 
 
 /**
@@ -58,7 +59,7 @@ sap.ui.define(['./library','./Control'], function() {
  * @extends sap.ui.core.Control
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -296,7 +297,7 @@ sap.ui.core.ComponentContainer.prototype.getComponentInstance = function () {
  * question which was not answered before - what to do here when exchanging
  * the component - destroy or not? Right now we at least unlink the container. 
  */
-sap.ui.core.ComponentContainer.prototype.setComponent = function(oComponent, bSupressInvalidate) {
+sap.ui.core.ComponentContainer.prototype.setComponent = function(oComponent) {
 	// unlink the old component from the container
 	var oOldComponent = this.getComponentInstance();
 	if (oOldComponent) {
@@ -304,7 +305,7 @@ sap.ui.core.ComponentContainer.prototype.setComponent = function(oComponent, bSu
 		oOldComponent.setContainer(undefined);
 	}
 	// set the new component
-	this.setAssociation("component", oComponent, bSupressInvalidate);
+	this.setAssociation("component", oComponent);
 	// cross link the new component and propagate the properties (models)
 	oComponent = this.getComponentInstance();
 	if (oComponent) {
@@ -334,7 +335,7 @@ sap.ui.core.ComponentContainer.prototype.onBeforeRendering = function(){
 				url: this.getUrl(),
 				settings: this.getSettings() 
 			});
-			this.setComponent(oComponent, true);
+			this.setComponent(oComponent);
 		}
 	}
 
@@ -368,7 +369,7 @@ sap.ui.core.ComponentContainer.prototype.exit = function(){
 
 
 /*
- * overridden to support property propagation to the associated component
+ * overriden to support property propagation to the associated component
  */
 sap.ui.core.ComponentContainer.prototype.propagateProperties = function (vName) {
 	var oComponent = this.getComponentInstance();
@@ -377,7 +378,3 @@ sap.ui.core.ComponentContainer.prototype.propagateProperties = function (vName) 
 		sap.ui.core.Control.prototype.propagateProperties.apply(this, arguments);
 	}
 };
-
-	return sap.ui.core.ComponentContainer;
-
-}, /* bExport = */ true);

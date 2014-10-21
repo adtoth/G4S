@@ -961,21 +961,6 @@
         return parent;
     };
 
-    // ##### BEGIN: MODIFIED BY SAP
-    // polyfill for document.createAttributeNS which was removed from Chrome 34
-    // but will be added back in, see:
-    // http://datajs.codeplex.com/workitem/1272
-    // https://code.google.com/p/chromium/issues/detail?id=347506
-    // https://codereview.chromium.org/243333003
-    var _createAttributeNS = function(namespaceURI, qualifiedName) {
-        var dummy = document.createElement('dummy');
-        dummy.setAttributeNS(namespaceURI, qualifiedName, '');
-        var attr = dummy.attributes[0];
-        dummy.removeAttributeNode(attr);
-        return attr;
-    };
-    // ##### END: MODIFIED BY SAP
-
     var xmlNewAttribute = function (dom, namespaceURI, qualifiedName, value) {
         /// <summary>Creates a new DOM attribute node.</summary>
         /// <param name="dom">DOM document used to create the attribute.</param>
@@ -983,13 +968,9 @@
         /// <param name="namespaceURI" type="String">Namespace URI.</param>
         /// <returns>DOM attribute node for the namespace declaration.</returns>
 
-        // ##### BEGIN: MODIFIED BY SAP
-        // added usage of _createAttributeNS as fallback (see function above)
         var attribute =
             dom.createAttributeNS && dom.createAttributeNS(namespaceURI, qualifiedName) ||
-            dom.createNode && dom.createNode(2, qualifiedName, namespaceURI || undefined) ||
-            _createAttributeNS(namespaceURI, qualifiedName);
-        // ##### END: MODIFIED BY SAP
+            dom.createNode(2, qualifiedName, namespaceURI || undefined);
 
         attribute.value = value || "";
         return attribute;
@@ -2423,25 +2404,18 @@
             	headers["Content-Type"] = contentType;
             if (contentLength)
             	headers["Content-Length"] = contentLength;
-        } else {
-        // ##### END: MODIFIED BY SAP
+        }else{
         	responseHeaders = responseHeaders.split(/\r?\n/);
         	var i, len;
         	for (i = 0, len = responseHeaders.length; i < len; i++) {
         		if (responseHeaders[i]) {
-        			// ##### BEGIN: MODIFIED BY SAP
-
-        			// expression matches "field-name: field-value"
-        			// removes trailing/leading whitespace(s) from the field-value.
-        			// result array: 0 = header, 1 = field-name, 2 = field-value
-        			var header = responseHeaders[i].match(/([^:]*):\s*((?:\s*\S+)+)?\s*/);
-        			headers[header[1]] = header[2];
-
-        			// ##### END: MODIFIED BY SAP
+        			var header = responseHeaders[i].split(": ");
+        			headers[header[0]] = header[1];
         		}
         	}
         }
-
+        // ##### END: MODIFIED BY SAP
+        
     };
 
     var writeHtmlToIFrame = function (iframe, html) {
@@ -3669,9 +3643,7 @@
     var edmNs2b = ado + "2009/08/edm";                  // http://schemas.microsoft.com/ado/2009/08/edm
 
     var edmNs3 = ado + "2009/11/edm";                   // http://schemas.microsoft.com/ado/2009/11/edm
-    // ##### BEGIN: MODIFIED BY SAP
-	var edmNs4 = http + "docs.oasis-open.org/odata/ns/edm";  // http://docs.oasis-open.org/odata/ns/edm
-	// ##### END: MODIFIED BY SAP
+
     var odataXmlNs = adoDs;                             // http://schemas.microsoft.com/ado/2007/08/dataservices
     var odataMetaXmlNs = adoDs + "/metadata";           // http://schemas.microsoft.com/ado/2007/08/dataservices/metadata
     var odataRelatedPrefix = adoDs + "/related/";       // http://schemas.microsoft.com/ado/2007/08/dataservices/related
@@ -5681,14 +5653,8 @@
         elements: {
             Annotations: schemaElement(
             /*attributes*/["Target", "Qualifier"],
-            /*elements*/["Annotation*","TypeAnnotation*", "ValueAnnotation*"] // ##### MODIFIED BY SAP
+            /*elements*/["TypeAnnotation*", "ValueAnnotation*"]
             ),
-            // ##### BEGIN: MODIFIED BY SAP
-            Annotation: schemaElement(
-            /*attributes*/["Term"],
-            /*elements*/["Record"]
-            ),
-            // ##### END: MODIFIED BY SAP
             Association: schemaElement(
             /*attributes*/["Name"],
             /*elements*/["End*", "ReferentialConstraint", "TypeAnnotation*", "ValueAnnotation*"]
@@ -5834,15 +5800,9 @@
             /*attributes*/["Name"]
             ),
             PropertyValue: schemaElement(
-            /*attributes*/["PropertyPath", "Property", "Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time"], // ##### MODIFIED BY SAP
-            /*Elements*/["Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time", "Collection", "Record", "LabeledElement", "Null"] 
+            /*attributes*/["Property", "Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time"],
+            /*Elements*/["Path", "String", "Int", "Float", "Decimal", "Bool", "DateTime", "DateTimeOffset", "Guid", "Binary", "Time", "Collection", "Record", "LabeledElement", "Null"]
             ),
-            // ##### BEGIN: MODIFIED BY SAP
-            Record: schemaElement(
-            /*attributes*/["Type"],
-            /*Elements*/["PropertyValue*"] 
-            ),
-            // ##### END: MODIFIED BY SAP
             ReferenceType: schemaElement(
             /*attributes*/["Type"]
             ),
@@ -5995,9 +5955,6 @@
             || nsURI === edmNs2a
             || nsURI === edmNs2b
             || nsURI === edmNs3
-            // ##### BEGIN: MODIFIED BY SAP
-            || nsURI === edmNs4
-            // ##### END: MODIFIED BY SAP
     };
 
     var parseConceptualModelElement = function (element) {

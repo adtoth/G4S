@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -12,7 +12,7 @@
 // Provides control sap.m.FacetFilterItem.
 jQuery.sap.declare("sap.m.FacetFilterItem");
 jQuery.sap.require("sap.m.library");
-jQuery.sap.require("sap.m.ListItemBase");
+jQuery.sap.require("sap.ui.core.Item");
 
 
 /**
@@ -31,8 +31,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * <ul>
  * <li>Properties
  * <ul>
- * <li>{@link #getKey key} : string</li>
- * <li>{@link #getText text} : string</li>
+ * <li>{@link #getSelected selected} : boolean (default: false)</li>
  * <li>{@link #getCount count} : int</li></ul>
  * </li>
  * <li>Aggregations
@@ -47,7 +46,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * </ul> 
  *
  * 
- * In addition, all settings applicable to the base type {@link sap.m.ListItemBase#constructor sap.m.ListItemBase}
+ * In addition, all settings applicable to the base type {@link sap.ui.core.Item#constructor sap.ui.core.Item}
  * can be used as well.
  *
  * @param {string} [sId] id for the new control, generated automatically if no id is given 
@@ -55,25 +54,25 @@ jQuery.sap.require("sap.m.ListItemBase");
  *
  * @class
  * Represents a value for the FacetFilterList control.
- * @extends sap.m.ListItemBase
+ * @extends sap.ui.core.Item
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
+ * @since 1.16.0
  * @name sap.m.FacetFilterItem
  */
-sap.m.ListItemBase.extend("sap.m.FacetFilterItem", { metadata : {
+sap.ui.core.Item.extend("sap.m.FacetFilterItem", { metadata : {
 
 	// ---- object ----
 
 	// ---- control specific ----
 	library : "sap.m",
 	properties : {
-		"key" : {type : "string", group : "Data", defaultValue : null},
-		"text" : {type : "string", group : "Misc", defaultValue : null},
-		"count" : {type : "int", group : "Misc", defaultValue : null, deprecated: true}
+		"selected" : {type : "boolean", group : "Behavior", defaultValue : false},
+		"count" : {type : "int", group : "Misc", defaultValue : null}
 	}
 }});
 
@@ -96,51 +95,26 @@ sap.m.ListItemBase.extend("sap.m.FacetFilterItem", { metadata : {
 
 
 /**
- * Getter for property <code>key</code>.
- * Can be used as input for subsequent actions.
+ * Getter for property <code>selected</code>.
+ * Indicated that this value is selected in the FacetFilterList.
  *
- * Default value is empty/<code>undefined</code>
+ * Default value is <code>false</code>
  *
- * @return {string} the value of property <code>key</code>
+ * @return {boolean} the value of property <code>selected</code>
  * @public
- * @name sap.m.FacetFilterItem#getKey
+ * @name sap.m.FacetFilterItem#getSelected
  * @function
  */
 
 /**
- * Setter for property <code>key</code>.
+ * Setter for property <code>selected</code>.
  *
- * Default value is empty/<code>undefined</code> 
+ * Default value is <code>false</code> 
  *
- * @param {string} sKey  new value for property <code>key</code>
+ * @param {boolean} bSelected  new value for property <code>selected</code>
  * @return {sap.m.FacetFilterItem} <code>this</code> to allow method chaining
  * @public
- * @name sap.m.FacetFilterItem#setKey
- * @function
- */
-
-
-/**
- * Getter for property <code>text</code>.
- * The text to be displayed for the item.
- *
- * Default value is empty/<code>undefined</code>
- *
- * @return {string} the value of property <code>text</code>
- * @public
- * @name sap.m.FacetFilterItem#getText
- * @function
- */
-
-/**
- * Setter for property <code>text</code>.
- *
- * Default value is empty/<code>undefined</code> 
- *
- * @param {string} sText  new value for property <code>text</code>
- * @return {sap.m.FacetFilterItem} <code>this</code> to allow method chaining
- * @public
- * @name sap.m.FacetFilterItem#setText
+ * @name sap.m.FacetFilterItem#setSelected
  * @function
  */
 
@@ -153,8 +127,6 @@ sap.m.ListItemBase.extend("sap.m.FacetFilterItem", { metadata : {
  *
  * @return {int} the value of property <code>count</code>
  * @public
- * @deprecated Since version 7.20.0. 
- * Use setCounter instead.
  * @name sap.m.FacetFilterItem#getCount
  * @function
  */
@@ -167,36 +139,15 @@ sap.m.ListItemBase.extend("sap.m.FacetFilterItem", { metadata : {
  * @param {int} iCount  new value for property <code>count</code>
  * @return {sap.m.FacetFilterItem} <code>this</code> to allow method chaining
  * @public
- * @deprecated Since version 7.20.0. 
- * Use setCounter instead.
  * @name sap.m.FacetFilterItem#setCount
  * @function
  */
 
 
-// Start of sap\m\FacetFilterItem.js
-
-sap.m.FacetFilterItem.prototype.setCount = function(iCount) { 
-	
-	 // App dev can still call setCounter on ListItemBase, so we have redundancy here.
-	this.setProperty("count", iCount);
-	this.setProperty("counter", iCount);
-};
-
-sap.m.FacetFilterItem.prototype.setCounter = function(iCount) {
-	
-	this.setProperty("count", iCount);
-	this.setProperty("counter", iCount);
-};
-
-/**
- * @private
- */
-sap.m.FacetFilterItem.prototype.init = function() {
-	
-  sap.m.ListItemBase.prototype.init.apply(this);
-  
-  // This class must be added to the ListItemBase container element, not the FacetFilterItem container
-  this.addStyleClass("sapMFFLI"); 
-};
-
+// Start of sap/m/FacetFilterItem.js
+///**
+// * This file defines behavior for the control,
+// */
+//sap.m.FacetItem.prototype.init = function(){
+//   // do something for initialization...
+//};

@@ -1,5 +1,6 @@
 {
-  "sEntity" : "Theme",
-  "sId" : "sap_bluecrystal",
-  "oExtends" : "UI5.sap/ui/core.base"
+  "sEntity": "Theme",
+  "sId": "sap_bluecrystal",
+  "sLabel": "SAP Blue Crystal",
+  "sVendor": "SAP"
 }

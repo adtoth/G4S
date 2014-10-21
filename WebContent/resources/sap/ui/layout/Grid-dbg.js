@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -60,7 +60,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -82,7 +82,6 @@ sap.ui.core.Control.extend("sap.ui.layout.Grid", { metadata : {
 		"defaultIndent" : {type : "sap.ui.layout.GridIndent", group : "Behavior", defaultValue : "L0 M0 S0"},
 		"containerQuery" : {type : "boolean", group : "Behavior", defaultValue : false}
 	},
-	defaultAggregation : "content",
 	aggregations : {
     	"content" : {type : "sap.ui.core.Control", multiple : true, singularName : "content"}
 	}
@@ -285,7 +284,6 @@ sap.ui.core.Control.extend("sap.ui.layout.Grid", { metadata : {
  * Getter for aggregation <code>content</code>.<br/>
  * Controls that are placed into Grid layout.
  * 
- * <strong>Note</strong>: this is the default aggregation for Grid.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.ui.layout.Grid#getContent
@@ -363,7 +361,7 @@ sap.ui.core.Control.extend("sap.ui.layout.Grid", { metadata : {
  */
 
 
-// Start of sap\ui\layout\Grid.js
+// Start of sap/ui/layout/Grid.js
 /**
  * This file defines behavior for the control
  */
@@ -431,10 +429,6 @@ sap.ui.core.Control.extend("sap.ui.layout.Grid", { metadata : {
 		// Prove if Dom reference exist, and if not - clean up the references.
 		if (!oDomRef) {
 			this._cleanup();
-			return;
-		}
-
-		if (!jQuery(oDomRef).is(":visible")) {
 			return;
 		}
 

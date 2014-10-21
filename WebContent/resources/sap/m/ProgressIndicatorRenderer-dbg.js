@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 jQuery.sap.declare("sap.m.ProgressIndicatorRenderer");
 
@@ -39,11 +39,7 @@ sap.m.ProgressIndicatorRenderer.render = function(oRm, oC) {
 	if (fWidthBar > 50) {
 		oRm.addClass("sapMPIValueGreaterHalf");
 	}
-	oRm.addStyle("width", iWidthControl);
-	if(iHeightControl){
-		oRm.addStyle("height", iHeightControl);
-	}
-	oRm.writeStyles();
+	oRm.writeAttribute("style", "width:" + iWidthControl + "; height:" + iHeightControl);
 
 	if (oC.getEnabled()) {
 		oRm.writeAttribute('tabIndex', '-1');

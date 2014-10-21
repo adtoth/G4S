@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getAttributes attributes} <strong>(default aggregation)</strong> : sap.m.ObjectAttribute[]</li>
+ * <li>{@link #getAttributes attributes} : sap.m.ObjectAttribute[]</li>
  * <li>{@link #getFirstStatus firstStatus} : sap.m.ObjectStatus</li>
  * <li>{@link #getSecondStatus secondStatus} : sap.m.ObjectStatus</li></ul>
  * </li>
@@ -65,11 +65,11 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * ObjectListItem is a display control that provides summary information about an object as an item in a list. The object list item title is the key identifier of the object. Additional text and icons can be used to further distinguish it from other objects. Attributes and statuses can be used to provide additional meaning about the object to the user.
+ * The extended list item control
  * @extends sap.m.ListItemBase
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -123,7 +123,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>title</code>.
- * Object list item title
+ * title
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -148,7 +148,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>number</code>.
- * Object list item number
+ * Number field
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -173,7 +173,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>numberUnit</code>.
- * The number units qualifier of the object list item
+ * Number units qualifier
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -198,7 +198,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>intro</code>.
- * Introductory text for the object list item.
+ * Introductory text for the list item.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -223,7 +223,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>icon</code>.
- * Object list item icon displayed to the left of the title.
+ * List item icon displayed to the left of the title.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -248,7 +248,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>activeIcon</code>.
- * Icon displayed when the object list item is active.
+ * Icon displayed when the list item is active.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -300,7 +300,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>markFavorite</code>.
- * Set the favorite state for the object list item
+ * Set the favorite state for the object.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -327,7 +327,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>markFlagged</code>.
- * Set the flagged state for the object list item
+ * Set the flagged state for the object.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -354,7 +354,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>showMarkers</code>.
- * Set to true if the object list item can be marked with icons such as favorite and flag.
+ * Set to true if the object can be marked with icons such as favorite and flag.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -381,7 +381,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Getter for property <code>numberState</code>.
- * Object list item number and numberUnit value state.
+ * number and numberUnit value state.
  *
  * Default value is <code>None</code>
  *
@@ -410,7 +410,6 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
  * Getter for aggregation <code>attributes</code>.<br/>
  * List of attributes displayed below the title to the left of the status fields.
  * 
- * <strong>Note</strong>: this is the default aggregation for ObjectListItem.
  * @return {sap.m.ObjectAttribute[]}
  * @public
  * @name sap.m.ObjectListItem#getAttributes
@@ -501,7 +500,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Setter for the aggregated <code>firstStatus</code>.
- * @param {sap.m.ObjectStatus} oFirstStatus
+ * @param oFirstStatus {sap.m.ObjectStatus}
  * @return {sap.m.ObjectListItem} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.ObjectListItem#setFirstStatus
@@ -532,7 +531,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
 
 /**
  * Setter for the aggregated <code>secondStatus</code>.
- * @param {sap.m.ObjectStatus} oSecondStatus
+ * @param oSecondStatus {sap.m.ObjectStatus}
  * @return {sap.m.ObjectListItem} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.ObjectListItem#setSecondStatus
@@ -550,7 +549,7 @@ sap.m.ListItemBase.extend("sap.m.ObjectListItem", { metadata : {
  */
 
 
-// Start of sap\m\ObjectListItem.js
+// Start of sap/m/ObjectListItem.js
 ///**
 // * This file defines behavior for the control,
 // */
@@ -581,17 +580,12 @@ sap.m.ObjectListItem.prototype.exit = function(oEvent) {
 		this._oFlagIcon = undefined;
 	}	
 	
-	if(this._oTitleText){
-		this._oTitleText.destroy();
-		this._oTitleText = undefined;
-	}
-	
 	sap.m.ListItemBase.prototype.exit.apply(this);
 };
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectListItem.prototype._hasAttributes = function() {
 	var attributes = this.getAttributes(); 
@@ -607,7 +601,7 @@ sap.m.ObjectListItem.prototype._hasAttributes = function() {
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectListItem.prototype._hasStatus = function() {
 	return ((this.getFirstStatus() && !this.getFirstStatus()._isEmpty())
@@ -616,29 +610,11 @@ sap.m.ObjectListItem.prototype._hasStatus = function() {
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectListItem.prototype._hasBottomContent = function() {
 	
 	return (this._hasAttributes() || this._hasStatus() || this.getShowMarkers());
-};
-
-/**
- * @private
- * @returns {Array}
- */
-sap.m.ObjectListItem.prototype._getVisibleAttributes = function() {
-
-	var aAllAttributes = this.getAttributes();
-	var aVisibleAttributes = [];
-
-	for (var i=0; i < aAllAttributes.length; i++) {
-		if(aAllAttributes[i].getVisible()){
-			aVisibleAttributes.push(aAllAttributes[i]);
-		}
-	};
-
-	return aVisibleAttributes;
 };
 
 /**
@@ -743,16 +719,3 @@ sap.m.ObjectListItem.prototype._getFavoriteIcon = function() {
 	return this._oFavIcon;
 };
 
-/**
- * @private
- * @returns title text control
- */
-sap.m.ObjectListItem.prototype._getTitleText = function() {
-	
-	if(!this._oTitleText) {
-		this._oTitleText = new sap.m.Text(this.getId() + "-titleText", {
-			maxLines: 2
-		});
-	}
-	return this._oTitleText;
-};

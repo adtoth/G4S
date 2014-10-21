@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.Message.
-sap.ui.define(['./library','./Element','./theming/Parameters'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.Message");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.Element");
 
 
 /**
@@ -33,8 +34,7 @@ sap.ui.define(['./library','./Element','./theming/Parameters'], function() {
  * <li>{@link #getText text} : string</li>
  * <li>{@link #getTimestamp timestamp} : string</li>
  * <li>{@link #getIcon icon} : sap.ui.core.URI</li>
- * <li>{@link #getLevel level} : sap.ui.core.MessageType (default: sap.ui.core.MessageType.None)</li>
- * <li>{@link #getReadOnly readOnly} : boolean (default: false)</li></ul>
+ * <li>{@link #getLevel level} : sap.ui.core.MessageType (default: sap.ui.core.MessageType.None)</li></ul>
  * </li>
  * <li>Aggregations
  * <ul></ul>
@@ -60,8 +60,8 @@ sap.ui.define(['./library','./Element','./theming/Parameters'], function() {
  * Its default level is none.
  * @extends sap.ui.core.Element
  *
- * @author SAP AG 
- * @version 1.22.5
+ * @author SAP 
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -81,8 +81,7 @@ sap.ui.core.Element.extend("sap.ui.core.Message", { metadata : {
 		"text" : {type : "string", group : "Misc", defaultValue : null},
 		"timestamp" : {type : "string", group : "Misc", defaultValue : null},
 		"icon" : {type : "sap.ui.core.URI", group : "Misc", defaultValue : null},
-		"level" : {type : "sap.ui.core.MessageType", group : "Misc", defaultValue : sap.ui.core.MessageType.None},
-		"readOnly" : {type : "boolean", group : "Misc", defaultValue : false}
+		"level" : {type : "sap.ui.core.MessageType", group : "Misc", defaultValue : sap.ui.core.MessageType.None}
 	}
 }});
 
@@ -205,33 +204,6 @@ sap.ui.core.Element.extend("sap.ui.core.Message", { metadata : {
 
 
 /**
- * Getter for property <code>readOnly</code>.
- * Determines whether the message should be read only. This helps the application to handle a message a different way if the application differentiates between read-only and common messages.
- *
- * Default value is <code>false</code>
- *
- * @return {boolean} the value of property <code>readOnly</code>
- * @public
- * @since 1.19.0
- * @name sap.ui.core.Message#getReadOnly
- * @function
- */
-
-/**
- * Setter for property <code>readOnly</code>.
- *
- * Default value is <code>false</code> 
- *
- * @param {boolean} bReadOnly  new value for property <code>readOnly</code>
- * @return {sap.ui.core.Message} <code>this</code> to allow method chaining
- * @public
- * @since 1.19.0
- * @name sap.ui.core.Message#setReadOnly
- * @function
- */
-
-
-/**
  * Returns the icon's default URI depending on given size. There are default icons for messages available that can be used this way. If no parameter is given the size will be 16x16 per default. If larger icons are needed the parameter "32x32" might be given.
  *
  * @name sap.ui.core.Message.prototype.getDefaultIcon
@@ -246,6 +218,7 @@ sap.ui.core.Element.extend("sap.ui.core.Message", { metadata : {
 
 
 // Start of sap/ui/core/Message.js
+jQuery.sap.require("sap.ui.core.theming.Parameters");
 /**
  * This file defines behavior for the control,
  */
@@ -350,7 +323,3 @@ sap.ui.core.Message.compareByType = function(oMessage1, oMessage2) {
 		return 0;
 	}
 };
-
-	return sap.ui.core.Message;
-
-}, /* bExport = */ true);

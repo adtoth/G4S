@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -45,18 +45,14 @@ jQuery.sap.require("sap.ui.core.Control");
  * <li>{@link #getMarkFlagged markFlagged} : boolean (default: false)</li>
  * <li>{@link #getShowMarkers showMarkers} : boolean (default: false)</li>
  * <li>{@link #getShowTitleSelector showTitleSelector} : boolean (default: false)</li>
- * <li>{@link #getNumberState numberState} : sap.ui.core.ValueState (default: sap.ui.core.ValueState.None)</li>
- * <li>{@link #getCondensed condensed} : boolean (default: false)</li>
- * <li>{@link #getBackgroundDesign backgroundDesign} : sap.m.BackgroundDesign (default: sap.m.BackgroundDesign.Transparent)</li>
- * <li>{@link #getResponsive responsive} : boolean (default: false)</li></ul>
+ * <li>{@link #getNumberState numberState} : sap.ui.core.ValueState (default: sap.ui.core.ValueState.None)</li></ul>
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getAttributes attributes} <strong>(default aggregation)</strong> : sap.m.ObjectAttribute[]</li>
+ * <li>{@link #getAttributes attributes} : sap.m.ObjectAttribute[]</li>
  * <li>{@link #getFirstStatus firstStatus} : sap.m.ObjectStatus</li>
  * <li>{@link #getSecondStatus secondStatus} : sap.m.ObjectStatus</li>
- * <li>{@link #getStatuses statuses} : sap.ui.core.Control[]</li>
- * <li>{@link #getHeaderContainer headerContainer} : sap.m.ObjectHeaderContainer</li></ul>
+ * <li>{@link #getStatuses statuses} : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -75,11 +71,11 @@ jQuery.sap.require("sap.ui.core.Control");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * ObjectHeader is a display control that enables the user to easily identify a specific object. The object header title is the key identifier of the object and additional text and icons can be used to further distinguish it from other objects.
+ * ObjectHeader control is used to display brief information about object similar to the StandardListItem
  * @extends sap.ui.core.Control
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -107,19 +103,14 @@ sap.ui.core.Control.extend("sap.m.ObjectHeader", { metadata : {
 		"markFlagged" : {type : "boolean", group : "Misc", defaultValue : false},
 		"showMarkers" : {type : "boolean", group : "Misc", defaultValue : false},
 		"showTitleSelector" : {type : "boolean", group : "Misc", defaultValue : false},
-		"numberState" : {type : "sap.ui.core.ValueState", group : "Misc", defaultValue : sap.ui.core.ValueState.None},
-		"condensed" : {type : "boolean", group : "Appearance", defaultValue : false},
-		"backgroundDesign" : {type : "sap.m.BackgroundDesign", group : "Appearance", defaultValue : sap.m.BackgroundDesign.Transparent},
-		"responsive" : {type : "boolean", group : "Behavior", defaultValue : false}
+		"numberState" : {type : "sap.ui.core.ValueState", group : "Misc", defaultValue : sap.ui.core.ValueState.None}
 	},
 	defaultAggregation : "attributes",
 	aggregations : {
     	"attributes" : {type : "sap.m.ObjectAttribute", multiple : true, singularName : "attribute"}, 
     	"firstStatus" : {type : "sap.m.ObjectStatus", multiple : false, deprecated: true}, 
     	"secondStatus" : {type : "sap.m.ObjectStatus", multiple : false, deprecated: true}, 
-    	"statuses" : {type : "sap.ui.core.Control", multiple : true, singularName : "status"}, 
-    	"_objectNumber" : {type : "sap.m.ObjectNumber", multiple : false, visibility : "hidden"}, 
-    	"headerContainer" : {type : "sap.m.ObjectHeaderContainer", multiple : false}
+    	"statuses" : {type : "sap.ui.core.Control", multiple : true, singularName : "status"}
 	},
 	events : {
 		"titlePress" : {}, 
@@ -151,7 +142,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Getter for property <code>title</code>.
- * Object header title
+ * title
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -176,7 +167,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Getter for property <code>number</code>.
- * Object header number field
+ * Number field
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -201,7 +192,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Getter for property <code>numberUnit</code>.
- * Object header number units qualifier.
+ * Number units qualifier
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -326,7 +317,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Getter for property <code>iconActive</code>.
- * Indicates that the object header icon is clickable
+ * Indicates that the iconis clickable
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -351,7 +342,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Getter for property <code>visible</code>.
- * Indicates if object header is visible. Invisible object headers are not rendered.
+ * Invisible object headers are not rendered.
  *
  * Default value is <code>true</code>
  *
@@ -511,7 +502,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Getter for property <code>numberState</code>.
- * Object header number and numberUnit value state.
+ * number and numberUnit value state.
  *
  * Default value is <code>None</code>
  *
@@ -537,89 +528,9 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 
 /**
- * Getter for property <code>condensed</code>.
- * Displays the condensed object header with title, one attribute, number and number unit.
- *
- * Default value is <code>false</code>
- *
- * @return {boolean} the value of property <code>condensed</code>
- * @public
- * @name sap.m.ObjectHeader#getCondensed
- * @function
- */
-
-/**
- * Setter for property <code>condensed</code>.
- *
- * Default value is <code>false</code> 
- *
- * @param {boolean} bCondensed  new value for property <code>condensed</code>
- * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
- * @public
- * @name sap.m.ObjectHeader#setCondensed
- * @function
- */
-
-
-/**
- * Getter for property <code>backgroundDesign</code>.
- * NOTE: Only applied if you set "condensed=true" or "responsive=true".
- * This property is used to set the background color of the ObjectHeader. Possible values are "Solid", "Translucent" and "Transparent".
- *
- * Default value is <code>Transparent</code>
- *
- * @return {sap.m.BackgroundDesign} the value of property <code>backgroundDesign</code>
- * @public
- * @name sap.m.ObjectHeader#getBackgroundDesign
- * @function
- */
-
-/**
- * Setter for property <code>backgroundDesign</code>.
- *
- * Default value is <code>Transparent</code> 
- *
- * @param {sap.m.BackgroundDesign} oBackgroundDesign  new value for property <code>backgroundDesign</code>
- * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
- * @public
- * @name sap.m.ObjectHeader#setBackgroundDesign
- * @function
- */
-
-
-/**
- * Getter for property <code>responsive</code>.
- * If this property is set to true the ObjectHeader is rendered with a different design and reacts responsively to the screen sizes.
- * Be aware that the design and behavior of the responsive ObjectHeader can change without further notification.
- *
- * Default value is <code>false</code>
- *
- * @return {boolean} the value of property <code>responsive</code>
- * @public
- * @since 1.21.1
- * @name sap.m.ObjectHeader#getResponsive
- * @function
- */
-
-/**
- * Setter for property <code>responsive</code>.
- *
- * Default value is <code>false</code> 
- *
- * @param {boolean} bResponsive  new value for property <code>responsive</code>
- * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
- * @public
- * @since 1.21.1
- * @name sap.m.ObjectHeader#setResponsive
- * @function
- */
-
-
-/**
  * Getter for aggregation <code>attributes</code>.<br/>
  * The list of Object Attributes
  * 
- * <strong>Note</strong>: this is the default aggregation for ObjectHeader.
  * @return {sap.m.ObjectAttribute[]}
  * @public
  * @name sap.m.ObjectHeader#getAttributes
@@ -700,7 +611,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 /**
  * Getter for aggregation <code>firstStatus</code>.<br/>
  * First status shown on the right side of the attributes above the second status.
- * If it is not set the first attribute will expand to take the entire row.
+ * If it is not set the first attibute will expand to take the entire row.
  * 
  * @return {sap.m.ObjectStatus}
  * @public
@@ -713,7 +624,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Setter for the aggregated <code>firstStatus</code>.
- * @param {sap.m.ObjectStatus} oFirstStatus
+ * @param oFirstStatus {sap.m.ObjectStatus}
  * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
  * @public
  * @deprecated Since version 1.16.0. 
@@ -738,7 +649,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 /**
  * Getter for aggregation <code>secondStatus</code>.<br/>
  * Second status shown on the right side of the attributes below the first status.
- * If it is not set the second attribute will expand to take the entire row.
+ * If it is not set the second attibute will expand to take the entire row.
  * 
  * @return {sap.m.ObjectStatus}
  * @public
@@ -751,7 +662,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 /**
  * Setter for the aggregated <code>secondStatus</code>.
- * @param {sap.m.ObjectStatus} oSecondStatus
+ * @param oSecondStatus {sap.m.ObjectStatus}
  * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
  * @public
  * @deprecated Since version 1.16.0. 
@@ -862,41 +773,6 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 
 /**
- * Getter for aggregation <code>headerContainer</code>.<br/>
- * This aggregation takes only effect when you set "responsive" to true.
- * This is an association for the end area of the object header. It can either be filled with an sap.m.IconTabBar or a sap.suite.ui.commons.HeaderContainer control. Overflow handling must be taken care of by the inner control. If used with an IconTabBar control, only the header will be displayed inside the object header, the content will be displayed below the ObjectHeader.
- * 
- * @return {sap.m.ObjectHeaderContainer}
- * @public
- * @since 1.21.1
- * @name sap.m.ObjectHeader#getHeaderContainer
- * @function
- */
-
-
-/**
- * Setter for the aggregated <code>headerContainer</code>.
- * @param {sap.m.ObjectHeaderContainer} oHeaderContainer
- * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
- * @public
- * @since 1.21.1
- * @name sap.m.ObjectHeader#setHeaderContainer
- * @function
- */
-	
-
-/**
- * Destroys the headerContainer in the aggregation 
- * named <code>headerContainer</code>.
- * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
- * @public
- * @since 1.21.1
- * @name sap.m.ObjectHeader#destroyHeaderContainer
- * @function
- */
-
-
-/**
  * Event is fired when the title is active and the user tap/click on it 
  *
  * @name sap.m.ObjectHeader#titlePress
@@ -905,7 +781,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
 
- * @param {object} oControlEvent.getParameters.domRef Dom reference of the object header' title to be used for positioning.
+ * @param {string} oControlEvent.getParameters.domRef Dom reference of the object header' title to be used for positioning.
  * @public
  */
  
@@ -921,7 +797,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
  *
  * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
  * @public
@@ -949,7 +825,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * 
  * Expects following event parameters:
  * <ul>
- * <li>'domRef' of type <code>object</code> Dom reference of the object header' title to be used for positioning.</li>
+ * <li>'domRef' of type <code>string</code> Dom reference of the object header' title to be used for positioning.</li>
  * </ul>
  *
  * @param {Map} [mArguments] the arguments to pass along with the event.
@@ -969,7 +845,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
 
- * @param {object} oControlEvent.getParameters.domRef Dom reference of the object header' intro to be used for positioning.
+ * @param {string} oControlEvent.getParameters.domRef Dom reference of the object header' intro to be used for positioning.
  * @public
  */
  
@@ -985,7 +861,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
  *
  * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
  * @public
@@ -1013,7 +889,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * 
  * Expects following event parameters:
  * <ul>
- * <li>'domRef' of type <code>object</code> Dom reference of the object header' intro to be used for positioning.</li>
+ * <li>'domRef' of type <code>string</code> Dom reference of the object header' intro to be used for positioning.</li>
  * </ul>
  *
  * @param {Map} [mArguments] the arguments to pass along with the event.
@@ -1033,7 +909,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
 
- * @param {object} oControlEvent.getParameters.domRef Dom reference of the object header' icon to be used for positioning.
+ * @param {string} oControlEvent.getParameters.domRef Dom reference of the object header' icon to be used for positioning.
  * @public
  */
  
@@ -1049,7 +925,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
  *
  * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
  * @public
@@ -1077,7 +953,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * 
  * Expects following event parameters:
  * <ul>
- * <li>'domRef' of type <code>object</code> Dom reference of the object header' icon to be used for positioning.</li>
+ * <li>'domRef' of type <code>string</code> Dom reference of the object header' icon to be used for positioning.</li>
  * </ul>
  *
  * @param {Map} [mArguments] the arguments to pass along with the event.
@@ -1089,7 +965,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
 
 
 /**
- * Event is fired when the object header title selector (down-arrow) is pressed 
+ * Event is fired when the selector is pressed. 
  *
  * @name sap.m.ObjectHeader#titleSelectorPress
  * @event
@@ -1098,7 +974,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * @param {sap.ui.base.EventProvider} oControlEvent.getSource
  * @param {object} oControlEvent.getParameters
 
- * @param {object} oControlEvent.getParameters.domRef Dom reference of the object header' titleArrow to be used for positioning.
+ * @param {string} oControlEvent.getParameters.domRef Dom reference of the object header' titleArrow to be used for positioning.
  * @public
  */
  
@@ -1107,14 +983,14 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * When called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener<code> if specified
  * otherwise to this <code>sap.m.ObjectHeader</code>.<br/> itself. 
  *  
- * Event is fired when the object header title selector (down-arrow) is pressed 
+ * Event is fired when the selector is pressed. 
  *
  * @param {object}
  *            [oData] An application specific payload object, that will be passed to the event handler along with the event object when firing the event.
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectHeader</code>.<br/> itself.
  *
  * @return {sap.m.ObjectHeader} <code>this</code> to allow method chaining
  * @public
@@ -1144,7 +1020,7 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  * 
  * Expects following event parameters:
  * <ul>
- * <li>'domRef' of type <code>object</code> Dom reference of the object header' titleArrow to be used for positioning.</li>
+ * <li>'domRef' of type <code>string</code> Dom reference of the object header' titleArrow to be used for positioning.</li>
  * </ul>
  *
  * @param {Map} [mArguments] the arguments to pass along with the event.
@@ -1156,11 +1032,12 @@ sap.m.ObjectHeader.M_EVENTS = {'titlePress':'titlePress','introPress':'introPres
  */
 
 
-// Start of sap\m\ObjectHeader.js
+// Start of sap/m/ObjectHeader.js
 ///**
 jQuery.sap.require("sap.ui.core.IconPool");
 
 sap.m.ObjectHeader.prototype.init = function() {
+
 	this._fNumberWidth = undefined;
 	
 	//TODO Remove placeholder when Safari iconFont issue is addressed.
@@ -1184,107 +1061,37 @@ sap.m.ObjectHeader.prototype.init = function() {
 		src : oFavIconUri,
 		visible : false
 	});
-		
-	var oTitleArrowIconUri = sap.ui.core.IconPool.getIconURI("slim-arrow-down"),
-		that = this;
+	
+	var oTitleArrowIconUri = sap.ui.core.IconPool.getIconURI("slim-arrow-down");	
 	this._oTitleArrowIcon = sap.ui.core.IconPool.createControlByURI({
 		id : this.getId() + "-titleArrow",
 		src : oTitleArrowIconUri,
-		decorative: false,
-		visible : false,
-		press : function(oEvent) {
-			that.fireTitleSelectorPress({
-				domRef : this.getDomRef()	 
-			});
-		}
-	});
-	
-
-	
-
+		visible : false
+	});	
+			
 	this._titleText = new sap.m.Text(this.getId() + "-titleText");
 	this._titleText.setMaxLines(3);
-
-//	sap.ui.Device.media.attachHandler(
-//			this._handleMediaChange, this, sap.ui.Device.media.RANGESETS.SAP_STANDARD
-//	);
-
-};
-
-//sap.m.ObjectHeader.prototype._handleMediaChange = function (mParams) {
-//	var sDeviceName = mParams.name;
-//	this._lastDeviceName = sDeviceName;
-//};
-
-/**
- * Set the number value to the internal aggregation
- * @override
- * @public
- * @param {string} sNumber the new value
- * @returns {this} this pointer for chaining
- */
-sap.m.ObjectHeader.prototype.setNumber = function (sNumber) {
-	this.setProperty("number", sNumber);
-	this._getObjectNumber().setNumber(sNumber);
-	return this;
-};
-
-/**
- * Set the number unit to the internal aggregation
- * @override
- * @public
- * @param {string} sUnit the new value
- * @returns {this} this pointer for chaining
- */
-sap.m.ObjectHeader.prototype.setNumberUnit = function (sUnit) {
-	this.setProperty("numberUnit", sUnit);
-	this._getObjectNumber().setNumberUnit(sUnit);
-	return this;
-};
-
-/**
- * Set the number state to the internal aggregation
- * @override
- * @public
- * @param {string} sState the new value
- * @returns {this} this pointer for chaining
- */
-sap.m.ObjectHeader.prototype.setNumberState = function (sState) {
-	this.setProperty("numberState", sState,true);
-	this._getObjectNumber().setState(sState);
-	return this;
-};
-
-/**
- * lazy initializes the object number aggregation
- * @private
- * @returns {Object} the newly created control
- */
-sap.m.ObjectHeader.prototype._getObjectNumber = function () {
-	var oControl = this.getAggregation("_objectNumber");
-
-	if (!oControl) {
-		oControl = new sap.m.ObjectNumber(this.getId() + "-number", {
-			emphasized: false
-		});
-		this.setAggregation("_objectNumber", oControl, true);
-	}
-	return oControl;
+	
 };
 
 sap.m.ObjectHeader.prototype.ontap = function(oEvent) {
+
 	var sourceId = oEvent.target.id;
 	if (this.getIntroActive() && sourceId === this.getId() + "-intro") {
 		this.fireIntroPress({
 			domRef : jQuery.sap.domById(sourceId)
 		});
-	} else if (this.getTitleActive() && oEvent.srcControl === this._titleText) {
+	} else if (this.getTitleActive() && sourceId === this._titleText.getId()) {
 		this.fireTitlePress({
 			domRef : jQuery.sap.domById(sourceId)
 		});
 	} else if (this.getIconActive() && (sourceId === this.getId() + "-img" || sourceId === this.getId() + "-icon")) {
 		this.fireIconPress({
 			domRef : jQuery.sap.domById(sourceId)
+		});
+	} else if (sourceId === this.getId() + "-titleArrow") {		
+		this.fireTitleSelectorPress({
+			domRef : jQuery.sap.domById(sourceId)	 
 		});
 	} 
 };
@@ -1338,24 +1145,15 @@ sap.m.ObjectHeader.prototype.exit = function() {
  * 
  * @private
  */
- 
 sap.m.ObjectHeader.prototype._getImageControl = function() {
 
 	var sImgId = this.getId() + "-img";
-	var sSize = sap.ui.Device.system.phone ? "2.5rem" : "3rem";
-	var sHeight = sSize;
-	var sWidth = sSize;
-	
-	if (this.getResponsive()) {
-		sSize = "2.5rem";
-		sHeight = "3rem";
-		sWidth = "3rem";
-	}
+	var sSize = jQuery.device.is.phone ? "2.5rem" : "3rem";
 
 	var mProperties = {
 		src : this.getIcon(),
-		height : sHeight,
-		width : sWidth,
+		height : sSize,
+		width : sSize,
 		size : sSize,
 		densityAware : this.getIconDensityAware()
 	};
@@ -1366,11 +1164,6 @@ sap.m.ObjectHeader.prototype._getImageControl = function() {
 };
 
 sap.m.ObjectHeader.prototype.onBeforeRendering = function() {
-	// the icontabbar content is rendered internally by the object header
-	// therefore we have to remove it manually before re-rendering
-	if (this.getHeaderContainer() instanceof sap.ui.core.Control && this.getHeaderContainer().$()) {
-		this.getHeaderContainer().$().remove();		
-	}
 
 	if (this._sResizeListenerId) {
 		sap.ui.core.ResizeHandler.deregister(this._sResizeListenerId);
@@ -1380,16 +1173,10 @@ sap.m.ObjectHeader.prototype.onBeforeRendering = function() {
 };
 
 sap.m.ObjectHeader.prototype.onAfterRendering = function() {
-	
-	if (this.getShowTitleSelector()) {
-		this._oTitleArrowIcon.$().css("cursor", "pointer");
-	}
 
-	if (this.$("number").length > 0) {
+	if (jQuery.sap.byId(this.getId() + "-number").length > 0) {
 		this._sResizeListenerId = sap.ui.core.ResizeHandler.register(this.getDomRef(), jQuery.proxy(this._resizeElements, this));
-		setTimeout(jQuery.proxy(this._resizeElements, this));
 	}
-
 };
 
 sap.m.ObjectHeader.prototype._resizeElements = function() {
@@ -1398,23 +1185,20 @@ sap.m.ObjectHeader.prototype._resizeElements = function() {
 		return;
 
 	var id = this.getId();
-	if (!this.getResponsive()) {
-		var $numberDiv = jQuery.sap.byId(id + "-numberdiv");
-		var bHasWrap = $numberDiv.hasClass("sapMOHNumberWrap");
-	
-		if (this._fNumberWidth === undefined) {
-			this._fNumberWidth = $numberDiv.outerWidth();
-		}
-	
-		var bOverflow = $numberDiv.parent().width() * 35 / 100 < this._fNumberWidth;
-	
-		if (bOverflow != bHasWrap) {
-			$numberDiv.toggleClass("sapMOHNumberWrap");
-			jQuery.sap.byId(id + "-titlediv").toggleClass("sapMOHNumberWrap");
-	
-			jQuery(sap.m.ObjectHeader._escapeId(id) + " .sapMOHBottomRow").css("margin-top", bOverflow && sap.ui.Device.system.phone ? ".25rem" : "");
-			this._titleText.setMaxLines(bOverflow ? 2 : 3).rerender();
-		}
+	var $numberDiv = jQuery.sap.byId(id + "-numberdiv");
+	var bHasWrap = $numberDiv.hasClass("sapMOHNumberWrap");
+
+	if (this._fNumberWidth === undefined) {
+		this._fNumberWidth = $numberDiv.width();
+	}
+
+	var bOverflow = $numberDiv.parent().width() * 35 / 100 < this._fNumberWidth;
+
+	if (bOverflow != bHasWrap) {
+		$numberDiv.toggleClass("sapMOHNumberWrap");
+		jQuery.sap.byId(id + "-titlediv").toggleClass("sapMOHNumberWrap");
+
+		jQuery(sap.m.ObjectHeader._escapeId(id) + " .sapMOHBottomRow").css("margin-top", bOverflow && jQuery.device.is.phone ? ".25rem" : "");
 	}
 };
 
@@ -1431,7 +1215,7 @@ sap.m.ObjectHeader._escapeId = function(sId) {
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectHeader.prototype._hasBottomContent = function() {
 
@@ -1440,7 +1224,7 @@ sap.m.ObjectHeader.prototype._hasBottomContent = function() {
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectHeader.prototype._hasIcon = function() {
 
@@ -1449,7 +1233,7 @@ sap.m.ObjectHeader.prototype._hasIcon = function() {
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectHeader.prototype._hasAttributes = function() {
 
@@ -1466,7 +1250,7 @@ sap.m.ObjectHeader.prototype._hasAttributes = function() {
 
 /**
  * @private
- * @returns {boolean}
+ * @returns {Boolean}
  */
 sap.m.ObjectHeader.prototype._hasStatus = function() {
 
@@ -1479,6 +1263,7 @@ sap.m.ObjectHeader.prototype._hasStatus = function() {
 				bHasStatus = true;
 				break;
 			}
+			
 			else if (statuses[i] instanceof sap.m.ProgressIndicator) {
 				bHasStatus = true;
 				break;

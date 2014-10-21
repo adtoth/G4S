@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.mvc.TemplateView.
-sap.ui.define(['sap/ui/core/library','./View'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.mvc.TemplateView");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.mvc.View");
 
 
 /**
@@ -54,7 +55,7 @@ sap.ui.define(['sap/ui/core/library','./View'], function() {
  * @extends sap.ui.core.mvc.View
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -168,11 +169,6 @@ sap.ui.core.mvc.View.extend("sap.ui.core.mvc.TemplateView", { metadata : {
 		});
 		this._sControllerName = this._oTemplate._sControllerName;
 		this._oTemplate = this._oTemplate.createControl(undefined, undefined, this);
-		this.addContent(this._oTemplate);
 	};
 
 }());
-
-	return sap.ui.core.mvc.TemplateView;
-
-}, /* bExport = */ true);

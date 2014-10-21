@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -333,7 +333,7 @@ sap.m.CheckBox.M_EVENTS = {'select':'select'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.CheckBox</code>.<br/> itself.
+ *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.CheckBox</code>.<br/> itself.
  *
  * @return {sap.m.CheckBox} <code>this</code> to allow method chaining
  * @public
@@ -372,10 +372,7 @@ sap.m.CheckBox.M_EVENTS = {'select':'select'};
  */
 
 
-// Start of sap\m\CheckBox.js
-jQuery.sap.require("sap.ui.core.EnabledPropagator");
-sap.ui.core.EnabledPropagator.call(sap.m.CheckBox.prototype);
-jQuery.sap.require("sap.m.Label");
+// Start of sap/m/CheckBox.js
 
 sap.m.CheckBox.prototype.init = function() {
 	this.addActiveState(this);
@@ -395,13 +392,8 @@ sap.m.CheckBox.prototype.ontouchstart = function(oEvent) {
 };
 
 sap.m.CheckBox.prototype.setSelected = function(bSelected) {
-	bSelected = !!bSelected;
-	if (bSelected == this.getSelected()) {
-		return this;
-	}
-	
-	this.$("CbBg").toggleClass("sapMCbMarkChecked", bSelected);
-	var oCheckBox = this.getDomRef("CB");
+	jQuery.sap.byId(this.getId()+'-CbBg').toggleClass("sapMCbMarkChecked", bSelected);
+	var oCheckBox = jQuery.sap.domById(this.getId()+'-CB');
 	if (oCheckBox){
 		bSelected ? oCheckBox.setAttribute('checked', 'checked') : oCheckBox.removeAttribute('checked');
 	}
@@ -428,7 +420,7 @@ sap.m.CheckBox.prototype.ontap = function(oEvent) {
  */
 
 sap.m.CheckBox.prototype.addActiveState = function(oControl) {
-	if (sap.ui.Device.os.blackberry || (sap.ui.Device.os.android && (sap.ui.Device.os.versionStr.match(/[23]\./)))){
+	if (jQuery.os.blackberry || (jQuery.os.android && (jQuery.os.version.match(/[23]\./)))){
 		oControl.addDelegate({
 			ontouchstart: function(oEvent){
 				jQuery(oControl.getDomRef()).addClass("sapMActive");
@@ -440,37 +432,34 @@ sap.m.CheckBox.prototype.addActiveState = function(oControl) {
 	}
 };
 
-/**
- * sets a property of the label, and creates the label if it has not been initialized
- * @private
- */
-sap.m.CheckBox.prototype._setLabelProperty = function (sPropertyName, vPropertyValue, bSupressRerendering) {
-	var bHasLabel = !!this._oLabel,
-		sUpperPropertyName = jQuery.sap.charToUpperCase(sPropertyName, 0);
-
-	this.setProperty(sPropertyName, vPropertyValue, bHasLabel && bSupressRerendering);
-
-	if(!bHasLabel){
-		this._oLabel = new sap.m.Label(this.getId() + "-label", {})
-							.addStyleClass("sapMCbLabel")
-							.setParent(this, null, true);
+sap.m.CheckBox.prototype.setText = function(sText){
+	this.setProperty("text", sText, true);
+	if(this._oLabel){
+		this._oLabel.setText(this.getText());
+	}else{
+		this._createLabel("text", this.getText());
 	}
-
-	this._oLabel["set" + sUpperPropertyName](this["get" + sUpperPropertyName]()); // e.g. this._oLabel.setText(value);
-
 	return this;
 };
 
-sap.m.CheckBox.prototype.setText = function(sText){
-	this._setLabelProperty("text", sText, true);
-};
-
 sap.m.CheckBox.prototype.setWidth = function(sWidth){
-	this._setLabelProperty("width", sWidth, true);
+	this.setProperty("width", sWidth, true);
+	if(this._oLabel){
+		this._oLabel.setWidth(this.getWidth());
+	}else{
+		this._createLabel("width", this.getWidth());
+	}
+	return this;
 };
 
 sap.m.CheckBox.prototype.setTextDirection = function(sDirection){
-	this._setLabelProperty("textDirection", sDirection);
+	this.setProperty("textDirection", sDirection, true);
+	if(this._oLabel){
+		this._oLabel.setTextDirection(this.getTextDirection());
+	}else{
+		this._createLabel("textDirection", this.getTextDirection());
+	}
+	return this;
 };
 
 sap.m.CheckBox.prototype.exit = function() {
@@ -478,6 +467,12 @@ sap.m.CheckBox.prototype.exit = function() {
 	if(this._oLabel){
 		this._oLabel.destroy();
 	}
+};
+
+sap.m.CheckBox.prototype._createLabel = function(prop, value){
+	this._oLabel = new sap.m.Label(this.getId() + "-label", {
+					}).addStyleClass("sapMCbLabel").setParent(this, null, true);
+	this._oLabel.setProperty(prop, value, false);
 };
 
 /**
@@ -495,33 +490,16 @@ sap.m.CheckBox.prototype.onsapspace = function(oEvent) {
 	}
 };
 
-/**
+/*
  * Sets the tab index of the control
  *
- * @param {int} iTabIndex  greater than or equal -1
+ * @param {Int} iTabIndex  greater than or equal -1
  * @return {sap.m.CheckBox}
  * @since 1.16
  * @protected
  */
 sap.m.CheckBox.prototype.setTabIndex = function(iTabIndex) {
 	this._iTabIndex = iTabIndex;
-	this.$("CbBg").attr("tabindex", iTabIndex);
+	jQuery.sap.byId(this.getId() + "-CbBg").attr("tabindex", iTabIndex);
 	return this;
 };
-
-
-
-/**
- * Gets the tab index of the control
- *
- * @return {integer} tabIndex for Checkbox
- * @since 1.22
- * @protected
- */
-sap.m.CheckBox.prototype.getTabIndex = function() {
-	if ( this.hasOwnProperty("_iTabIndex") ) {
-		return this._iTabIndex;
-	}
-	return this.getEnabled() ? 0 : -1 ;
-};
-

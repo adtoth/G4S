@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
- * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ * SAP UI development toolkit for HTML5 (SAPUI5)
+ * 
+ * (c) Copyright 2009-2013 SAP AG. All rights reserved
  */
 
 /* ----------------------------------------------------------------------------------
@@ -10,8 +10,9 @@
  * ---------------------------------------------------------------------------------- */
 
 // Provides control sap.ui.core.search.OpenSearchProvider.
-sap.ui.define(['sap/ui/core/library','./SearchProvider','jquery.sap.encoder'], function() {
-	"use strict";
+jQuery.sap.declare("sap.ui.core.search.OpenSearchProvider");
+jQuery.sap.require("sap.ui.core.library");
+jQuery.sap.require("sap.ui.core.search.SearchProvider");
 
 
 /**
@@ -56,7 +57,7 @@ sap.ui.define(['sap/ui/core/library','./SearchProvider','jquery.sap.encoder'], f
  * @extends sap.ui.core.search.SearchProvider
  *
  * @author  
- * @version 1.22.5
+ * @version 1.16.3
  *
  * @constructor   
  * @public
@@ -143,6 +144,7 @@ sap.ui.core.search.SearchProvider.extend("sap.ui.core.search.OpenSearchProvider"
 
 
 // Start of sap/ui/core/search/OpenSearchProvider.js
+jQuery.sap.require("jquery.sap.encoder");
 
 /**
  * Call this function to get suggest values from the search provider.
@@ -195,7 +197,3 @@ sap.ui.core.search.OpenSearchProvider.prototype.suggest = function(sValue, fCall
 		}
 	});
 };
-
-	return sap.ui.core.search.OpenSearchProvider;
-
-}, /* bExport = */ true);
