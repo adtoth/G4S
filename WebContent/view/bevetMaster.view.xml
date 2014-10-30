@@ -18,7 +18,7 @@
 							path: 'SzallitasStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
 						}"
-						icon="{path: 'Icon'}" />
+						icon="sap-icon://{Icon}"  />
 
 				</firstStatus> 
 				<attributes>
@@ -29,12 +29,20 @@
 
 			</ObjectListItem>
 		</List>
+		
+		<List id="listItems" select="" visible="false" items="{/Item}">
+			<ObjectListItem type="Active" press="handleListItemPress"
+				title="{From}"
+				icon="sap-icon://customer">
+
+			</ObjectListItem>
+		</List>
 		<footer>
 			<Bar>
-				<contentRight>
+<!-- 				<contentRight>
 					<Button type="Emphasized" text="Scan" press="scan"
 					 width="150px" icon="sap-icon://camera" />
-				</contentRight>
+				</contentRight> -->
 			</Bar>
 		</footer>
 	</Page>

@@ -1,12 +1,11 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 jQuery.sap.declare("sap.m.ListBaseRenderer");
 jQuery.sap.require("sap.ui.core.theming.Parameters");
-
 
 /**
  * @class List renderer.
@@ -35,6 +34,7 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 	rm.write("<div");
 	rm.addClass("sapMList");
 	rm.writeControlData(oControl);
+	rm.writeAttribute("tabindex", "-1");
 	if (oControl.getInset()) {
 		rm.addClass("sapMListInsetBG");
 	}
@@ -43,7 +43,7 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 	}
 
 	// background
-	if (oControl.setBackgroundDesign) {
+	if (oControl.getBackgroundDesign) {
 		rm.addClass("sapMListBG" + oControl.getBackgroundDesign());
 	}
 
@@ -54,35 +54,30 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 	rm.writeClasses();
 	rm.write(">");
 
+	// dummy before focusable area
+	rm.write("<div tabindex='-1'");
+	rm.writeAttribute("id", oControl.getId("before"));
+	rm.write("></div>");
+
 	// render header
 	var sHeaderText = oControl.getHeaderText();
 	var oHeaderTBar = oControl.getHeaderToolbar();
-	if (sHeaderText || oHeaderTBar) {
-		rm.write("<div");
-		rm.writeAttribute("id", oControl.getId() + "-header");
-		rm.addClass(oHeaderTBar ? "sapMTB-Transparent-CTX" : "sapMListHdr");
-		rm.writeClasses();
-		rm.write(">");
-
-		if (oHeaderTBar) {
-			rm.renderControl(oHeaderTBar);
-		} else {
-			rm.writeEscaped(sHeaderText);
-		}
-
+	if (oHeaderTBar) {
+		oHeaderTBar.setDesign(sap.m.ToolbarDesign.Transparent, true);
+		oHeaderTBar.addStyleClass("sapMListHdrTBar");
+		rm.renderControl(oHeaderTBar);
+	} else if (sHeaderText) {
+		rm.write("<div class='sapMListHdr'>");
+		rm.writeEscaped(sHeaderText);
 		rm.write("</div>");
 	}
 
 	// render info bar
 	var oInfoTBar = oControl.getInfoToolbar();
 	if (oInfoTBar) {
-		rm.write("<div");
-		rm.writeAttribute("id", oControl.getId() + "-infobar");
-		rm.addClass("sapMTB-Info-CTX");
-		rm.writeClasses();
-		rm.write(">");
+		oInfoTBar.setDesign(sap.m.ToolbarDesign.Info, true);
+		oInfoTBar.addStyleClass("sapMListInfoTBar");
 		rm.renderControl(oInfoTBar);
-		rm.write("</div>");
 	}
 
 	// run hook method to start building list
@@ -91,7 +86,7 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 	// list attributes
 	rm.addClass("sapMListUl");
 	rm.writeAttribute("tabindex", "-1");
-	rm.writeAttribute("id", oControl.getId() + "-listUl");
+	rm.writeAttribute("id", oControl.getId("listUl"));
 
 	// separators
 	rm.addClass("sapMListShowSeparators" + oControl.getShowSeparators());
@@ -100,11 +95,11 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 	rm.addClass("sapMListMode" + oControl.getMode());
 
 	// inset
-	if (oControl.getInset()) {
-		rm.addClass("sapMListInset");
-	}
+	oControl.getInset() && rm.addClass("sapMListInset");
 
+	// write inserted styles and classes
 	rm.writeClasses();
+	rm.writeStyles();
 	rm.write(">");
 
 	// run hook method to render list head attributes
@@ -112,23 +107,16 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 
 	// render child controls
 	var aItems = oControl.getItems();
-	var bRenderItems = this.shouldRenderItems(oControl);
+	var bRenderItems = oControl.shouldRenderItems();
 
 	//TODO: There should be a better way to set these private variables
-	if (bRenderItems) {
-		for (var i = 0; i < aItems.length; i++) {
-			oControl.applySettingsToItem(aItems[i]);
-			rm.renderControl(aItems[i]);
-		}
-	}
+	bRenderItems && aItems.forEach(function(oItem) {
+		oControl._applySettingsToItem(oItem, true);
+		rm.renderControl(oItem);
+	});
 
 	// render no-data if needed
 	if ((!bRenderItems || !aItems.length) && oControl.getShowNoData()) {
-		if (!oControl.getNoDataText()) {
-			var oRB = sap.ui.getCore().getLibraryResourceBundle("sap.m");
-			oControl.setNoDataText(oRB.getText("LIST_NO_DATA"));
-		}
-
 		// hook method to render no data
 		this.renderNoData(rm, oControl);
 	}
@@ -137,21 +125,23 @@ sap.m.ListBaseRenderer.render = function(rm, oControl) {
 	this.renderListEndAttributes(rm, oControl);
 
 	// render growing delegate if available
-	if (oControl.getGrowing() && oControl._oGrowingDelegate) {
+	if (bRenderItems && oControl._oGrowingDelegate) {
 		oControl._oGrowingDelegate.render(rm);
 	}
 
 	// footer
 	if (oControl.getFooterText()) {
-		rm.write("<footer");
-		rm.writeAttribute("id", oControl.getId() + "-listFooter");
-		rm.addClass("sapMListFtr");
-		rm.writeClasses();
-		rm.write(">");
+		rm.write("<footer class='sapMListFtr'>");
 		rm.writeEscaped(oControl.getFooterText());
 		rm.write("</footer>");
 	}
 
+	// dummy after focusable area
+	rm.write("<div tabindex='-1'");
+	rm.writeAttribute("id", oControl.getId("after"));
+	rm.write("></div>");
+
+	// done
 	rm.write("</div>");
 };
 
@@ -181,6 +171,7 @@ sap.m.ListBaseRenderer.renderListHeadAttributes = function(rm, oControl) {
  */
 sap.m.ListBaseRenderer.renderListStartAttributes = function(rm, oControl) {
 	rm.write("<ul");
+	oControl.addNavSection(oControl.getId("listUl"));
 };
 
 /**
@@ -200,16 +191,8 @@ sap.m.ListBaseRenderer.renderListEndAttributes = function(rm, oControl) {
  * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
  */
 sap.m.ListBaseRenderer.renderNoData = function(rm, oControl) {
-	rm.write("<li id='"+ oControl.getId() + "-listNoData' class='sapMLIB sapMListNoData'>");
-	rm.writeEscaped(oControl.getNoDataText());
-	rm.write("</li>");
-};
-
-/**
- * This hook method is called to determine whether items should render or not
- *
- * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
- */
-sap.m.ListBaseRenderer.shouldRenderItems = function(oControl) {
-	return true;
+	rm.write("<li id='" + oControl.getId("nodata") + "' class='sapMLIB sapMListNoData sapMLIBTypeInactive'>");
+	rm.write("<span id='" + oControl.getId("nodata-text") + "'>");
+	rm.writeEscaped(oControl.getNoDataText(true));
+	rm.write("</span></li>");
 };

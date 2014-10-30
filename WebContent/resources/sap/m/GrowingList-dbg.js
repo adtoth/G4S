@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ jQuery.sap.require("sap.m.List");
  * @extends sap.m.List
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -181,7 +181,7 @@ sap.m.List.extend("sap.m.GrowingList", { metadata : {
  */
 
 
-// Start of sap/m/GrowingList.js
+// Start of sap\m\GrowingList.js
 
 // checks if control is not compatible anymore
 sap.m.GrowingList.prototype._isIncompatible = function() {
@@ -190,6 +190,7 @@ sap.m.GrowingList.prototype._isIncompatible = function() {
 
 //sets growing property to true on init
 sap.m.GrowingList.prototype.init = function() {
+	sap.m.ListBase.prototype.init.call(this);
 	if (!this._isIncompatible()) {
 		this.setGrowing();
 	}

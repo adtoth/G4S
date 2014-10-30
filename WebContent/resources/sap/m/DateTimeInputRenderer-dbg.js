@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 jQuery.sap.require("sap.ui.core.Renderer");
 jQuery.sap.require("sap.m.InputBaseRenderer");
@@ -46,7 +46,5 @@ sap.m.DateTimeInputRenderer.addCursorClass = function(oRm, oControl) {
  * @param {sap.ui.core.Control} oControl an object representation of the control that should be rendered
  */
 sap.m.DateTimeInputRenderer.addOuterStyles = function(oRm, oControl) {
-	if (!oControl.getWidth()) {
-		oRm.addStyle("width", "100%");
-	}
+	oRm.addStyle("width", oControl.getWidth());
 };

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -367,7 +367,7 @@ sap.ui.core.Control.extend("sap.m.BusyIndicator", { metadata : {
  */
 
 
-// Start of sap/m/BusyIndicator.js
+// Start of sap\m\BusyIndicator.js
 jQuery.sap.require("sap.ui.core.theming.Parameters");
 
 sap.m.BusyIndicator.prototype.init = function(){
@@ -375,9 +375,9 @@ sap.m.BusyIndicator.prototype.init = function(){
 		// Blue crystal design: rotating arc
 		// bugs.webkit.org: id=82647, id=74801 dynamically created SVG does not animate
 		// do not use SVG in ios and android < 4.2 
-		if(jQuery.browser.chrome 
-				|| jQuery.os.blackberry
-				|| jQuery.os.android && jQuery.os.fVersion > 4.1){
+		if(sap.ui.Device.browser.chrome 
+				|| sap.ui.Device.os.blackberry
+				|| sap.ui.Device.os.android && sap.ui.Device.os.version > 4.1){
 			// Browsers with correct SMIL animation show SVG (crisp rendering)
 			this._bUseSvg = true;
 		} else {
@@ -385,7 +385,7 @@ sap.m.BusyIndicator.prototype.init = function(){
 			this._bUseCanvas = true;
 		}
 	}
-	this._bIosStyle = jQuery.os.ios;
+	this._bIosStyle = sap.ui.Device.os.ios;
 	this._sBColor = sap.ui.core.theming.Parameters.get("sapUiPageBG") || "rgba(0, 0, 0, 0)";
 };
 
@@ -471,7 +471,7 @@ sap.m.BusyIndicator.prototype._animateCanvas = function(){
 	
 	// clearRect does not clear canvas in Android browser 4.1, 
 	// workaround: draw a white circle underneath
-	if(jQuery.os.android && jQuery.os.fVersion == 4.1 && !jQuery.browser.chrome){
+	if(sap.ui.Device.os.android && sap.ui.Device.os.version == 4.1 && !sap.ui.Device.browser.chrome){
 		context.strokeStyle = this._sBColor; 
 		context.lineWidth = lineWidth + 2;
 		context.beginPath();
@@ -491,7 +491,7 @@ sap.m.BusyIndicator.prototype._animateCanvas = function(){
 // Start the canvas based animation
 // @private 
 sap.m.BusyIndicator.prototype._doCanvas = function(){
-	this.oCanvas = jQuery.sap.domById(this.getId()+"-canvas");
+	this.oCanvas = this.getDomRef("canvas");
 	this._fAnimateCallback = jQuery.proxy(this._animateCanvas, this);
 	this._animationId = this._requestAnimation(this._fAnimateCallback, this.oCanvas);
 };
@@ -556,17 +556,71 @@ sap.m.BusyIndicator.prototype._doPlatformDependent = function(){
 // Set the rotation speed of the image
 // @private 
 sap.m.BusyIndicator.prototype._setRotationSpeed = function(){
-	var self = this;
-	var sRotationSpeed = this.getCustomIconRotationSpeed() + "ms";
-	this.$().children('img')
-		.css("-webkit-animation-duration", sRotationSpeed)
-		.css("animation-duration", sRotationSpeed);
-	//Bug in Chrome: After changing height of image -> changing the rotationspeed will have no affect
-	//chrome needs a rerendering of this element.
-	this._iconImage.$().css("display", "none");
-	setTimeout(function() {
-		self._iconImage.$().css("display", "inline");
-	}, 0);
+
+	if(!this._iconImage) return;
+
+	if(jQuery.support.cssAnimations){
+		var $icon = this._iconImage.$();
+		var sRotationSpeed = this.getCustomIconRotationSpeed() + "ms";
+		$icon.css("-webkit-animation-duration", sRotationSpeed)
+			.css("animation-duration", sRotationSpeed);
+		//Bug in Chrome: After changing height of image -> changing the rotationspeed will have no affect
+		//chrome needs a rerendering of this element.
+		$icon.css("display", "none");
+		setTimeout(function() {
+			$icon.css("display", "inline");
+		}, 0);
+	} else { // IE9
+		this._rotateCustomIcon();
+	}
+};
+
+//Animate custom icon in IE9
+//@private
+sap.m.BusyIndicator.prototype._rotateCustomIcon = function(){
+
+	if(!this._iconImage){
+		return;
+	}
+	var $icon = this._iconImage.$();
+
+	// stop if the custom icon is not available or hidden:
+	if(!$icon[0] || !$icon[0].offsetWidth){
+		return;
+	}
+
+	var iRotationSpeed = this.getCustomIconRotationSpeed();
+	if(!iRotationSpeed) return;
+
+	if(!this._fnRotateCustomIcon){
+		this._fnRotateCustomIcon = jQuery.proxy(this._rotateCustomIcon, this);
+	}
+	var fnRotateCustomIcon = this._fnRotateCustomIcon;
+
+	if(!this._$CustomRotator){
+		this._$CustomRotator = jQuery({deg: 0});
+	}
+	var $rotator = this._$CustomRotator;
+
+	if($rotator.running){
+		return;
+	}
+
+	// restart animation
+	$rotator[0].deg = 0;
+
+	$rotator.animate({deg: 360}, {
+		duration: iRotationSpeed,
+		easing: "linear",
+		step: function(now) {
+			$rotator.running = true;
+			$icon.css("-ms-transform", 'rotate(' + now + 'deg)');
+		},
+		complete: function(){
+			$rotator.running = false;
+			window.setTimeout(fnRotateCustomIcon, 10);
+		}
+	});
 };
 
 sap.m.BusyIndicator.prototype.onBeforeRendering = function(){
@@ -603,11 +657,12 @@ sap.m.BusyIndicator.prototype.setCustomIcon = function(iSrc){
 };
 
 sap.m.BusyIndicator.prototype.setCustomIconRotationSpeed = function(iSpeed){
-	if(iSpeed){
-		if(iSpeed !== this.getCustomIconRotationSpeed()) {
-			this.setProperty("customIconRotationSpeed", iSpeed, true);
-			this._setRotationSpeed();
-		}
+	if(isNaN(iSpeed) || iSpeed < 0){
+		iSpeed = 0;
+	}
+	if(iSpeed !== this.getCustomIconRotationSpeed()) {
+		this.setProperty("customIconRotationSpeed", iSpeed, true);
+		this._setRotationSpeed();
 	}
 	return this;
 };
@@ -642,12 +697,12 @@ sap.m.BusyIndicator.prototype.setDesign = function(sDesign) {
  *
  * Default value is <code>true</code>
  *
+ * The default implementation of the "setVisible" function is enhanced 
+ * in order to toggle the "visibility:hidden;" attribute over the control.
+ *
  * @param {boolean} bVisible  new value for property <code>visible</code>
  * @return {sap.m.BusyIndicator} <code>this</code> to allow method chaining
  * @public
- *
- * The MessageBar.API.js "setVisible" function is enhanced in order to
- * toggle the "visibility:hidden;" attribute over the control.
  */
 sap.m.BusyIndicator.prototype.setVisible = function(bVisible){
 	var oDomRef = this.getDomRef();

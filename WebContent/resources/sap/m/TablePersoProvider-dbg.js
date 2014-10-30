@@ -1,7 +1,7 @@
 /*
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 // Provides TablePersoProvider
@@ -19,9 +19,8 @@ jQuery.sap.require("sap.ui.base.ManagedObject");
  * @extends sap.ui.base.ManagedObject
  * @abstract
  * @author SAP
- * @version 1.16.3
+ * @version 1.22.5
  * @name sap.m.TablePersoProvider
- * @experimental Since 1.15. API is not yet finished and might change completely.
  */
 sap.ui.base.ManagedObject.extend("sap.m.TablePersoProvider", /** @lends sap.m.TablePersoProvider */
 
@@ -85,6 +84,58 @@ sap.m.TablePersoProvider.prototype.setPersData = function(oBundle) {
 sap.m.TablePersoProvider.prototype.delPersData = function() {
 
 	jQuery.sap.log.debug("TablePersoProvider delPersData");
+
+};
+
+/**
+ * Callback function which can be used to determine the title of a given column
+ * within the TablePersoDialog. As a default, the column header controls are
+ * asked for their 'text' or 'title' property. This works in most cases, for example
+ * if the header control is a sap.m.Label (has 'text' property) or a sap.m.ObjectListItem
+ * (has 'title' property). 
+ * 
+ * If the header control used in a column has neither 'text' nor 'title' property, or if you would like to 
+ * display a modified column name for a certain column, this callback function can be used.
+ * 
+ * If the callback delivers null for a column (which is the default implementation), the default
+ * texts described above are displayed for that column in the TablePersoDialog. 
+ * 
+ * In case neither the callback delivers null and neither 'text' nor ' title' property are at hand,
+ * the TablePersoDialog will display the column id and a warning message is logged.
+ * 
+ * @param oColumn sap.m.Column control instance whose caption shall be determined
+ * @public
+ */
+sap.m.TablePersoProvider.prototype.getCaption = function(oColumn) {
+	return null;
+};
+
+/**
+ * Callback function which can be used to determine the group of a given column
+ * within the TablePersoDialog. As a default, the columns are not assigned to a group. 
+ * 
+ * This information is used to group the columns within the TablePersoDialog if the TablePersoController's
+ * 'group' flag is set, otherwise, the groups are ignored. 
+ * 
+ * @param oColumn sap.m.Column control instance whose group shall be determined
+ * @public
+ */
+sap.m.TablePersoProvider.prototype.getGroup = function(oColumn) {
+	return null;
+};
+
+
+/**
+* Resets user’s personalization for a given table so that ‘getPersData’ will
+* deliver its initial state. If no table is specified, all personalizations
+* of the currently logged on user are reset.
+*
+* This must return a jQuery promise (see http://api.jquery.com/promise/)
+ * @public
+*/
+sap.m.TablePersoProvider.prototype.resetPersData = function() {
+
+	jQuery.sap.log.debug("TablePersoProvider resetPersData");
 
 };
 

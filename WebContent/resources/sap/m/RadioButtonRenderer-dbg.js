@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 jQuery.sap.declare("sap.m.RadioButtonRenderer");
@@ -28,7 +28,6 @@ sap.m.RadioButtonRenderer.render = function(oRm, oRadioButton){
 
 	// get control properties
 	var bEnabled = oRadioButton.getEnabled();
-	var iTabIndex = bEnabled ? 0 : -1;
 	var bReadOnly = false;
 
 	// Radio Button style class
@@ -60,7 +59,6 @@ sap.m.RadioButtonRenderer.render = function(oRm, oRadioButton){
 	}
 
 	oRm.writeClasses();
-	oRm.writeAttribute("tabIndex", "-1");
 
 	var sTooltip = sap.ui.core.ValueStateSupport.enrichTooltip(oRadioButton, oRadioButton.getTooltip_AsString());
 	if (sTooltip) {
@@ -70,19 +68,28 @@ sap.m.RadioButtonRenderer.render = function(oRm, oRadioButton){
 	oRm.write(">");		// DIV element
 
 	oRm.write("<div class='sapMRbB'");
-	oRm.writeAttribute("tabindex", oRadioButton.hasOwnProperty("_iTabIndex") ? oRadioButton._iTabIndex : iTabIndex);
+
 	oRm.write(">");
 
-//	if(jQuery.os.android || jQuery.os.blackberry) {
-		oRm.write("<div");
-		oRm.addClass("sapMRbBOut");
-		oRm.writeClasses();
-		oRm.write(">");		// DIV element
-		oRm.write("<div");
-		oRm.addClass("sapMRbBInn");
-		oRm.writeClasses();
-		oRm.write(">");		// DIV element
-//	}
+	oRm.write("<div");
+	oRm.addClass("sapMRbBOut");
+
+	//set an id on this this to be able to focus it, on ApplyFocusInfo (rerenderAllUiAreas)
+	oRm.writeAttribute("id", oRadioButton.getId() + "-Button");
+
+	if(bEnabled) {
+		oRm.writeAttribute("tabindex", oRadioButton.hasOwnProperty("_iTabIndex") ? oRadioButton._iTabIndex : 0);
+	}
+	if(bEnabled && sap.ui.Device.system.desktop) {
+		oRm.addClass("sapMRbHoverable");
+	}
+
+	oRm.writeClasses();
+	oRm.write(">");		// DIV element
+	oRm.write("<div");
+	oRm.addClass("sapMRbBInn");
+	oRm.writeClasses();
+	oRm.write(">");		// DIV element
 
 	// Write the real - potentially hidden - HTML RadioButton element
 	oRm.write("<input type='radio' tabindex='-1'");
@@ -100,7 +107,7 @@ sap.m.RadioButtonRenderer.render = function(oRm, oRadioButton){
 		oRm.writeAttribute("disabled", "disabled");
 	}
 	oRm.write(" />");	// Close RadioButton-input-element
-//	if(jQuery.os.android || jQuery.os.blackberry) {
+//	if(sap.ui.Device.os.android || sap.ui.Device.os.blackberry) {
 		oRm.write("</div></div>");	// Control - DIVs close
 //	}
 	oRm.write("</div>");

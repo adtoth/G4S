@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 jQuery.sap.declare("sap.m.ColumnListItemRenderer");
@@ -28,6 +28,10 @@ sap.m.ColumnListItemRenderer = sap.ui.core.Renderer.extend(sap.m.ListItemBaseRen
  */
 sap.m.ColumnListItemRenderer.renderLIAttributes = function(rm, oLI) {
 	rm.addClass("sapMListTblRow");
+	var vAlign = oLI.getVAlign();
+	if (vAlign != sap.ui.core.VerticalAlign.Inherit) {
+		rm.addClass("sapMListTblRow" + vAlign);
+	}
 };
 
 
@@ -44,7 +48,7 @@ sap.m.ColumnListItemRenderer.renderLIContent = function(rm, oLI, oTable) {
 	if (!oTable) {
 		return;
 	}
-	
+
 	var aColumns = oTable.getColumns(true),
 		aCells = oLI.getCells();
 
@@ -68,7 +72,6 @@ sap.m.ColumnListItemRenderer.renderLIContent = function(rm, oLI, oTable) {
 
 		rm.write("<td");
 		rm.addClass("sapMListTblCell");
-		rm.writeAttribute("tabindex", "-1");
 		rm.writeAttribute("id", oLI.getId() + "_cell" + i);
 
 		// check column properties
@@ -78,11 +81,16 @@ sap.m.ColumnListItemRenderer.renderLIContent = function(rm, oLI, oTable) {
 
 			// merge duplicate cells
 			if (!oTable.hasPopin() && oColumn.getMergeDuplicates()) {
-				if (typeof oCell[oColumn.getMergeFunctionName()] != "function") {
+				var sFuncWithParam = oColumn.getMergeFunctionName(),
+					aFuncWithParam = sFuncWithParam.split("#"),
+					sFuncParam = aFuncWithParam[1],
+					sFuncName = aFuncWithParam[0];
+
+				if (typeof oCell[sFuncName] != "function") {
 					jQuery.sap.log.warning("mergeFunctionName property is defined on " + oColumn + " but this is not function of " + oCell);
 				} else {
 					var lastColumnValue = oColumn.getLastValue(),
-						cellValue = oCell[oColumn.getMergeFunctionName()]();
+						cellValue = oCell[sFuncName](sFuncParam);
 
 					if (lastColumnValue === cellValue) {
 						bRenderCell = false;
@@ -121,6 +129,7 @@ sap.m.ColumnListItemRenderer.renderPopin = function(rm, oLI, oTable) {
 	oLI._popinId = oLI.getId() + "-sub";
 	rm.write("<tr class='sapMListTblSubRow'");
 	rm.writeAttribute("id", oLI._popinId);
+	rm.writeAttribute("tabindex", -1);
 	rm.write("><td");
 	rm.writeAttribute("colspan", oTable.getColCount());
 	rm.write("><div class='sapMListTblSubCnt'>");

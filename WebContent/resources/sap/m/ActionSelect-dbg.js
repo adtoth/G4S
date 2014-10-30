@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -52,11 +52,11 @@ jQuery.sap.require("sap.m.Select");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * The action select control provides a list of predefined items that allows end users to choose options and additionaly trigger some actions.
+ * The ActionSelect control provides a list of predefined items that allows end users to choose options and additionally trigger some actions.
  * @extends sap.m.Select
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -129,13 +129,13 @@ sap.m.Select.extend("sap.m.ActionSelect", { metadata : {
  */
 
 	
-// Start of sap/m/ActionSelect.js
+// Start of sap\m\ActionSelect.js
 /* =========================================================== */
-/*             begin: internal methods and properties          */
+/* Internal methods and properties                             */
 /* =========================================================== */
 
 /* ----------------------------------------------------------- */
-/* private methods                                             */
+/* Private methods                                             */
 /* ----------------------------------------------------------- */
 
 /**
@@ -152,27 +152,21 @@ sap.m.ActionSelect.prototype.hasContent = function() {
 /**
  * Add additional content.
  *
- * @param {sap.m.Dialog | sap.m.Popover} [oPopup]
  * @override
  * @private
  * @name sap.m.ActionSelect#addContent
  */
-sap.m.ActionSelect.prototype.addContent = function(oPopup) {
+sap.m.ActionSelect.prototype.addContent = function() {
 	var oCore = sap.ui.getCore(),
-		oPopup = oPopup || this.getPopup()
+		oPopup = this.getPopup();
 
 	this.getButtons().forEach(function(sButtonId) {
 		oPopup.addContent(oCore.byId(sButtonId));
 	});
 };
 
-/* ========================================================== */
-/*              end: internal methods and properties          */
-/* ========================================================== */
-
-
 /* =========================================================== */
-/*                   begin: lifecycle methods                  */
+/* Lifecycle methods                                           */
 /* =========================================================== */
 
 /**
@@ -189,5 +183,53 @@ sap.m.ActionSelect.prototype.onAfterRenderingPopup = function() {
 };
 
 /* =========================================================== */
-/*                   end: lifecycle methods                    */
+/* API methods                                                 */
 /* =========================================================== */
+
+/* ----------------------------------------------------------- */
+/* Public methods                                              */
+/* ----------------------------------------------------------- */
+
+/**
+ * Button to be removed from the ActionSelect content.
+ *
+ * @param {int | string | sap.m.Button} vButton The button to remove or its index or id.
+ * @returns {string} The id of the removed button or null.
+ * @public
+ * @name sap.m.ActionSelect#removeButton
+ * @function
+ */
+sap.m.ActionSelect.prototype.removeButton = function(vButton) {
+	var oPopup = this.getPopup();
+
+	if (oPopup) {
+
+		if (typeof vButton === "number") {
+			vButton = this.getButtons()[vButton];
+		}
+
+		oPopup.removeContent(vButton);
+	}
+
+	return this.removeAssociation("buttons", vButton);
+};
+
+/**
+ * Remove all buttons from the ActionSelect.
+ *
+ * @returns {string[]} An array with the ids of the removed elements (might be empty).
+ * @public
+ * @name sap.m.ActionSelect#removeAllButtons
+ * @function
+ */
+sap.m.ActionSelect.prototype.removeAllButtons = function() {
+	var oPopup = this.getPopup();
+
+	if (oPopup) {
+		this.getButtons().forEach(function(sButtonId) {
+			oPopup.removeContent(sButtonId);
+		});
+	}
+
+	return this.removeAllAssociation("buttons");
+};

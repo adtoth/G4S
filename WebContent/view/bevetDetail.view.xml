@@ -13,7 +13,7 @@
 							path: 'SzallitasStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
 						}"
-						icon="{path: 'Icon'}" />
+						icon="sap-icon://{Icon}"  />
 
 				</firstStatus>
 				<attributes>
@@ -24,7 +24,7 @@
 
 		</ObjectHeader>
 
-		<Table headerText="Tételek" items="{Items}">
+		<Table headerText="Tételek" items="{Items}" >
 			<columns>
 				<Column>
 					<header>

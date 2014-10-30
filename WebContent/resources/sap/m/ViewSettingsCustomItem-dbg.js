@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -30,7 +30,8 @@ jQuery.sap.require("sap.m.ViewSettingsItem");
  * The supported settings are:
  * <ul>
  * <li>Properties
- * <ul></ul>
+ * <ul>
+ * <li>{@link #getFilterCount filterCount} : int (default: 0)</li></ul>
  * </li>
  * <li>Aggregations
  * <ul>
@@ -56,7 +57,7 @@ jQuery.sap.require("sap.m.ViewSettingsItem");
  * @extends sap.m.ViewSettingsItem
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -69,6 +70,9 @@ sap.m.ViewSettingsItem.extend("sap.m.ViewSettingsCustomItem", { metadata : {
 
 	// ---- control specific ----
 	library : "sap.m",
+	properties : {
+		"filterCount" : {type : "int", group : "Behavior", defaultValue : 0}
+	},
 	aggregations : {
     	"customControl" : {type : "sap.ui.core.Control", multiple : false}
 	}
@@ -93,6 +97,31 @@ sap.m.ViewSettingsItem.extend("sap.m.ViewSettingsCustomItem", { metadata : {
 
 
 /**
+ * Getter for property <code>filterCount</code>.
+ * The number of currently active filters for this custom filter item. It will be displayed in the filter list of the ViewSettingsDialog to represent the filter state of the custom control.
+ *
+ * Default value is <code>0</code>
+ *
+ * @return {int} the value of property <code>filterCount</code>
+ * @public
+ * @name sap.m.ViewSettingsCustomItem#getFilterCount
+ * @function
+ */
+
+/**
+ * Setter for property <code>filterCount</code>.
+ *
+ * Default value is <code>0</code> 
+ *
+ * @param {int} iFilterCount  new value for property <code>filterCount</code>
+ * @return {sap.m.ViewSettingsCustomItem} <code>this</code> to allow method chaining
+ * @public
+ * @name sap.m.ViewSettingsCustomItem#setFilterCount
+ * @function
+ */
+
+
+/**
  * Getter for aggregation <code>customControl</code>.<br/>
  * A custom control for the filter field. It can be used for complex filtering mechanisms.
  * 
@@ -105,7 +134,7 @@ sap.m.ViewSettingsItem.extend("sap.m.ViewSettingsCustomItem", { metadata : {
 
 /**
  * Setter for the aggregated <code>customControl</code>.
- * @param oCustomControl {sap.ui.core.Control}
+ * @param {sap.ui.core.Control} oCustomControl
  * @return {sap.m.ViewSettingsCustomItem} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.ViewSettingsCustomItem#setCustomControl
@@ -123,7 +152,7 @@ sap.m.ViewSettingsItem.extend("sap.m.ViewSettingsCustomItem", { metadata : {
  */
 
 
-// Start of sap/m/ViewSettingsCustomItem.js
+// Start of sap\m\ViewSettingsCustomItem.js
 /**
  * Destroys the control
  * @private
@@ -141,8 +170,8 @@ sap.m.ViewSettingsCustomItem.prototype.exit = function () {
  * because this control is sometimes aggregated in other controls like a popover or a dialog
  * @overwrite
  * @public
- * @param {sap.ui.core/Control} oControl a control used for filtering purposes
- * @return {sap.m/ViewSettingsCustomItem} this pointer for chaining 
+ * @param {sap.ui.core.Control} oControl a control used for filtering purposes
+ * @return {sap.m.ViewSettingsCustomItem} this pointer for chaining 
  */
 sap.m.ViewSettingsCustomItem.prototype.setCustomControl = function (oControl) {
 	this._control = oControl;
@@ -154,7 +183,7 @@ sap.m.ViewSettingsCustomItem.prototype.setCustomControl = function (oControl) {
  * because this control is sometimes aggregated in other controls like a popover or a dialog
  * @overwrite
  * @public
- * @return {sap.ui.core/Control} oControl a control used for filtering purposes
+ * @return {sap.ui.core.Control} oControl a control used for filtering purposes
  */
 sap.m.ViewSettingsCustomItem.prototype.getCustomControl = function () {
 	return this._control;

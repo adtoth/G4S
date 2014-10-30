@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -54,11 +54,11 @@ jQuery.sap.require("sap.ui.core.Control");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * Control displays number and number unit properties in the table cell.
+ * ObjectNumber displays number and number unit properties for an object. The number can be displayed using semantic colors to provide addition meaning about the object to the user.
  * @extends sap.ui.core.Control
  *
  * @author  
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -101,7 +101,7 @@ sap.ui.core.Control.extend("sap.m.ObjectNumber", { metadata : {
 
 /**
  * Getter for property <code>number</code>.
- * Number field
+ * Number field of the object number
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -157,7 +157,7 @@ sap.ui.core.Control.extend("sap.m.ObjectNumber", { metadata : {
 
 /**
  * Getter for property <code>visible</code>.
- * Invisible object number is not rendered.
+ * Indicates if object number is visible. Invisible object number is not rendered.
  *
  * Default value is <code>true</code>
  *
@@ -182,7 +182,7 @@ sap.ui.core.Control.extend("sap.m.ObjectNumber", { metadata : {
 
 /**
  * Getter for property <code>emphasized</code>.
- * Whether the ObjectNumber should appear emphasized
+ * Indicates if the object number should appear emphasized
  *
  * Default value is <code>true</code>
  *
@@ -257,7 +257,7 @@ sap.ui.core.Control.extend("sap.m.ObjectNumber", { metadata : {
  */
 
 
-// Start of sap/m/ObjectNumber.js
+// Start of sap\m\ObjectNumber.js
 ///**
 // * This file defines behavior for the control,
 // */

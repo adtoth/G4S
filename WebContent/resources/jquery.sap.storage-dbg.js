@@ -1,15 +1,15 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /*
  * Provides methods to store and retrieve data based on Web Storage API.
  */
-jQuery.sap.declare("jquery.sap.storage", false);
-
-(function() {
+sap.ui.define(['jquery.sap.global'],
+	function(jQuery) {
+	"use strict";
 
 	/**
 	 * Check whether the current environment supports JSON.parse and JSON stringify.
@@ -50,7 +50,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 	 * should be deleted the method {@link #removeAll} should be used.
 	 *
 	 * @author SAP AG
-	 * @version 1.16.3
+	 * @version 1.22.5
 	 * @since 0.11.0
 	 * @public
 	 * @name jQuery.sap.storage.Storage
@@ -60,7 +60,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 	 * 
 	 * Constructor for an instance of jQuery.sap.storage.Storage
 	 *
-	 * @param {jQuery.sap.storage.Type || Storage} [pStorage=jQuery.sap.storage.Type.session] the type this storage should be of or an Object implementing the typical Storage API for direct usage.
+	 * @param {jQuery.sap.storage.Type | Storage} [pStorage=jQuery.sap.storage.Type.session] the type this storage should be of or an Object implementing the typical Storage API for direct usage.
 	 * @param {string} [sStorageKeyPrefix='state.key_'] the prefix to use in this storage.
 	 * 
 	 * @private
@@ -234,7 +234,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 
 		/**
 		 * Returns the type of the storage.
-		 * @returns {jQuery.sap.storage.Type || string} the type of the storage or "unknown"
+		 * @returns {jQuery.sap.storage.Type | string} the type of the storage or "unknown"
 		 * @public
 		 */
 		this.getType = function(){
@@ -266,7 +266,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 	 * @param {string} [sIdPrefix] Prefix used for the Ids. If not set a default prefix is used.    
 	 * @returns {jQuery.sap.storage.Storage}
 	 * 
-	 * @version 1.16.3
+	 * @version 1.22.5
 	 * @since 0.11.0
 	 * @namespace
 	 * @public
@@ -277,6 +277,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 	 * @borrows jQuery.sap.storage.Storage.clear as clear
 	 * @borrows jQuery.sap.storage.Storage.getType as getType
 	 * @borrows jQuery.sap.storage.Storage.removeAll as removeAll
+	 * @function
 	 */
 	jQuery.sap.storage = function(oStorage, sIdPrefix){
 		// if nothing or the default was passed in, simply return ourself
@@ -303,7 +304,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 	 * @class
 	 * @static
 	 * @public
-	 * @version 1.16.3
+	 * @version 1.22.5
 	 * @since 0.11.0
 	 */
 	jQuery.sap.storage.Type = {
@@ -327,6 +328,7 @@ jQuery.sap.declare("jquery.sap.storage", false);
 	// ensure the storage constructor applied to our storage object
 	fnStorage.apply(jQuery.sap.storage);
 	mStorages[jQuery.sap.storage.Type.session] = jQuery.sap.storage;
-
-// end of anonymous function creating the storage instance and its methods
-}());
+	
+	return jQuery;
+	
+}, /* bExport= */ false);

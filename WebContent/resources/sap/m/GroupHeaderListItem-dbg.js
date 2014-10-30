@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ jQuery.sap.require("sap.m.ListItemBase");
  * @extends sap.m.ListItemBase
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -179,7 +179,7 @@ sap.m.ListItemBase.extend("sap.m.GroupHeaderListItem", { metadata : {
  */
 
 
-// Start of sap/m/GroupHeaderListItem.js
+// Start of sap\m\GroupHeaderListItem.js
 
 // GroupHeaderListItem is not selectable
 sap.m.GroupHeaderListItem.prototype.isSelectable = function() {
@@ -190,23 +190,12 @@ sap.m.GroupHeaderListItem.prototype.shouldClearLastValue = function() {
 	return true;
 };
 
-// no tap functionality needed
-sap.m.GroupHeaderListItem.prototype.ontap = function(oEvent) {
-};
-
-sap.m.GroupHeaderListItem.prototype.ontouchstart = function(oEvent) {
-	oEvent.originalEvent._sapui_handledByControl = true;
-};
-
 sap.m.GroupHeaderListItem.prototype.onBeforeRendering = function() {
 	var oParent = this.getParent();
-	if (oParent && oParent.constructor === sap.m.Table) {
+	if (oParent && sap.m.Table && oParent instanceof sap.m.Table) {
 		// clear column last value to reset cell merging
 		oParent.getColumns().forEach(function(oColumn) {
-			oColumn.setLastValue(NaN);
+			oColumn.clearLastValue();
 		});
-	}
-	if (sap.m.ListItemBase.prototype.onBeforeRendering) {
-		sap.m.ListItemBase.prototype.onBeforeRendering.call(this);
 	}
 };

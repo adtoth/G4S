@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ jQuery.sap.require("sap.m.FlexBox");
  * @extends sap.m.FlexBox
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -90,4 +90,4 @@ sap.m.FlexBox.extend("sap.m.HBox", { metadata : {
  */
 
 
-// Start of sap/m/HBox.js
+// Start of sap\m\HBox.js

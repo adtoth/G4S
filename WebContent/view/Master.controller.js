@@ -10,5 +10,19 @@ sap.ui.controller("sap.ui.demo.myFiori.view.Master", {
 		var context = evt.getSource().getBindingContext();
 		this.nav.to("szallitasiMaster", context);
 	},
+	
+	handleAktualisPress : function (evt) {
+		var context = evt.getSource().getBindingContext();
+		this.nav.to("aktualis", context);
+	},
+	
+	handleUtanvetPress : function (evt) {
+		var context = evt.getSource().getBindingContext();
+		this.nav.to("utanvet", context);
+	},
+	
+	onInit: function(){
+		super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+	}
 
 });

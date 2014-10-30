@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 jQuery.sap.declare("sap.m.SegmentedButtonRenderer");
@@ -35,6 +35,7 @@ sap.m.SegmentedButtonRenderer.render = function(rm, oControl){
 	rm.write("<ul");
 	rm.addClass("sapMSegB");
 	rm.addClass("sapMSegBHide");
+
 	rm.writeClasses();
 	if (oControl.getWidth() && oControl.getWidth() !== '') {
 		rm.addStyle('width', oControl.getWidth());
@@ -88,7 +89,7 @@ sap.m.SegmentedButtonRenderer.render = function(rm, oControl){
 			}
 			rm.renderControl(oImage);	
 
-		} else {
+		} else if(oItem.getIcon() !== '' && oItem.getText() !== '' ){
 			jQuery.sap.log.error("SEGMENTED: "+oItem.getId()+": Icon and Label is not allowed");
 		}
 		rm.write("</li>");

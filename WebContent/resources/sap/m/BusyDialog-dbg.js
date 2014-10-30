@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -92,7 +92,8 @@ sap.ui.core.Control.extend("sap.m.BusyDialog", { metadata : {
 	aggregations : {
     	"_busyLabel" : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}, 
     	"_busyIndicator" : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}, 
-    	"_busyButton" : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}
+    	"_toolbar" : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}, 
+    	"_cancelButton" : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}
 	},
 	events : {
 		"close" : {}
@@ -372,7 +373,7 @@ sap.m.BusyDialog.M_EVENTS = {'close':'close'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.BusyDialog</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.BusyDialog</code>.<br/> itself.
  *
  * @return {sap.m.BusyDialog} <code>this</code> to allow method chaining
  * @public
@@ -397,7 +398,7 @@ sap.m.BusyDialog.M_EVENTS = {'close':'close'};
 
 /**
  * Fire event close to attached listeners.
-
+ *
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.BusyDialog} <code>this</code> to allow method chaining
  * @protected
@@ -428,7 +429,7 @@ sap.m.BusyDialog.M_EVENTS = {'close':'close'};
  */
 
 
-// Start of sap/m/BusyDialog.js
+// Start of sap\m\BusyDialog.js
 ///**
 // * This file defines behavior for the control,
 // */
@@ -448,7 +449,7 @@ sap.m.BusyDialog.prototype.init = function(){
 	
 	this.iOldWinHeight = 0;
 	this._oPopup = new sap.ui.core.Popup();
-	(jQuery.os.ios && this._isPlatformDependent) ? this._oPopup.setShadow(true): this._oPopup.setShadow(false);
+	(sap.ui.Device.os.ios && this._isPlatformDependent) ? this._oPopup.setShadow(true): this._oPopup.setShadow(false);
 	this._oPopup.setModal(true, 'sapMDialogBLyInit');
 	this._oPopup.setAnimations(this.openAnimation, this.closeAnimation);
 
@@ -463,7 +464,7 @@ sap.m.BusyDialog.prototype.init = function(){
 		sap.ui.core.Popup.prototype._showBlockLayer.call(this);
 		var $BlockRef = jQuery("#sap-ui-blocklayer-popup"), $BlockBarRef;
 		$BlockRef.toggleClass("sapMDialogBLyInit", true);
-		if (!jQuery.os.ios && this._isPlatformDependent) {
+		if (!sap.ui.Device.os.ios && this._isPlatformDependent) {
 			$BlockBarRef = jQuery("#sap-ui-blocklayer-popup-bar");
 			$BlockRef.css('top', '48px');
 			if($BlockBarRef.length === 0){
@@ -494,7 +495,6 @@ sap.m.BusyDialog.prototype.init = function(){
 		/*$BlockRef.toggleClass('sapMDialogBLyShown', false);*/
 		
 	};
-	
 	//keyboard support for desktop environments
 	if(sap.ui.Device.system.desktop) {
 		var fnOnEscape = jQuery.proxy(function(oEvent) {
@@ -503,14 +503,12 @@ sap.m.BusyDialog.prototype.init = function(){
 				oEvent.stopPropagation();
 		}, this);
 		//use pseudo event 'onsapescape' to implement keyboard-trigger for closing this dialog
-		//had to implement this onthe popup instance because it did not work
-		//on the dialog prototype
 		this._oPopup.onsapescape = fnOnEscape;
 	}
 };
 
 sap.m.BusyDialog.prototype.openAnimation = function($Ref, iRealDuration, fnOpened) {
-	if(jQuery.os.ios && this._isPlatformDependent) {
+	if(sap.ui.Device.os.ios && this._isPlatformDependent) {
 		$Ref.css('display', 'block');
 		$Ref.bind("webkitAnimationEnd animationend", function(){
 		jQuery(this).unbind("webkitAnimationEnd animationend");
@@ -554,7 +552,7 @@ sap.m.BusyDialog.prototype.open = function(){
 	}
 	// Open popup
 	oPopup.setContent(this);
-	oPopup.attachEvent(sap.ui.core.Popup.M_EVENTS.opened, this._handleOpened, this);
+	oPopup.attachOpened(this._handleOpened, this);
 	oPopup.setPosition("center center", "center center", document, "0 0", "fit");
 
 	this._bOpenRequested = true;
@@ -591,7 +589,7 @@ sap.m.BusyDialog.prototype.close = function(){
 
 	var eOpenState = this._oPopup.getOpenState();
 	if(!(eOpenState === sap.ui.core.OpenState.CLOSED || eOpenState === sap.ui.core.OpenState.CLOSING)){
-		oPopup.attachEvent(sap.ui.core.Popup.M_EVENTS.closed, this._handleClosed, this);
+		oPopup.attachClosed(this._handleClosed, this);
 		jQuery.sap.log.debug("sap.m.BusyDialog.close called at " + new Date().getTime());
 		oPopup.close();
 		this.fireClose();
@@ -662,7 +660,7 @@ sap.m.BusyDialog.prototype._createCancelButton = function(){
 		if(!this._isPlatformDependent) {
 			sButtonStyle = sap.m.ButtonType.Transparent;
 		} else {
-			sButtonStyle = (jQuery.os.ios) ? sap.m.ButtonType.Unstyled : sap.m.ButtonType.Default;
+			sButtonStyle = (sap.ui.Device.os.ios) ? sap.m.ButtonType.Unstyled : sap.m.ButtonType.Default;
 		}
 		this._oButton = new sap.m.Button(this.getId() + 'busyCancelBtn', {
 				text: sButtonText,
@@ -671,7 +669,19 @@ sap.m.BusyDialog.prototype._createCancelButton = function(){
 					self.close();
 				}
 		}).addStyleClass("sapMDialogBtn");
-		this.setAggregation("_busyButton", this._oButton, true);
+
+		if (sap.ui.Device.system.phone) {
+			this._oButton.addStyleClass("sapMDialogBtnPhone");
+			this.setAggregation("_cancelButton", this._oButton, true);
+		} else {
+			this._oButtonToolBar = new sap.m.Toolbar(this.getId() + "-toolbar", {
+				content: [
+					new sap.m.ToolbarSpacer(this.getId() + "-toolbarspacer"),
+					this._oButton
+				]
+			}).addStyleClass("sapMTBNoBorders").applyTagAndContextClassFor("footer");
+			this.setAggregation("_toolbar", this._oButtonToolBar, true);
+		}		
 	}
 };
 
@@ -685,7 +695,7 @@ sap.m.BusyDialog.prototype._reposition = function() {
 };
 
 sap.m.BusyDialog.prototype._handleOpened = function(){
-	this._oPopup.detachEvent(sap.ui.core.Popup.M_EVENTS.opened, this._handleOpened, this);
+	this._oPopup.detachOpened(this._handleOpened, this);
 	// bind to window resize
 	// In android, the orientationchange fires before the size of the window changes
 	//  that's why the resize event is used here.
@@ -693,13 +703,13 @@ sap.m.BusyDialog.prototype._handleOpened = function(){
 };
 
 sap.m.BusyDialog.prototype._handleClosed = function(){
-	this._oPopup.detachEvent(sap.ui.core.Popup.M_EVENTS.closed, this._handleClosed, this);
+	this._oPopup.detachClosed(this._handleClosed, this);
 	this._$window.unbind("resize", this._fOrientationChange);
 };
 
 sap.m.BusyDialog.prototype._setDimensions = function() {
 	// Derive width and height from viewport
-	var iWindowHeight = (jQuery.os.ios || !this._isPlatformDependent) ? this._$window.height() : ( this._$window.height() - 50);
+	var iWindowHeight = (sap.ui.Device.os.ios || !this._isPlatformDependent) ? this._$window.height() : ( this._$window.height() - 50);
 	var $this = this.$();;
 	//reset
 	$this.css({
@@ -720,18 +730,18 @@ sap.m.BusyDialog.prototype._setDimensions = function() {
 	if(this.iOldWinHeight == 0) {
 		this._checkSize(iWindowHeight);
 	}
-	this.iOldWinHeight = (jQuery.os.ios || !this._isPlatformDependent) ? this._$window.height() : (this._$window.height() - 50);
+	this.iOldWinHeight = (sap.ui.Device.os.ios || !this._isPlatformDependent) ? this._$window.height() : (this._$window.height() - 50);
 };
 
 sap.m.BusyDialog.prototype._checkSize = function(iWindowHeight) {
 	if(iWindowHeight < this.$()[0].scrollHeight) {
 		this.$().toggleClass("sapMBsyDSmall", true);
-		if(!jQuery.os.ios && this._isPlatformDependent) {
+		if(!sap.ui.Device.os.ios && this._isPlatformDependent) {
 			this.$().css("width", this._$window.width() * 0.7);
 		}
 	} else {
 		this.$().toggleClass("sapMBsyDSmall", false);
-		if(!jQuery.os.ios && !this._isPlatformDependent) {
+		if(!sap.ui.Device.os.ios && !this._isPlatformDependent) {
 			this.$().css("width", "18.75em");
 		}
 	}

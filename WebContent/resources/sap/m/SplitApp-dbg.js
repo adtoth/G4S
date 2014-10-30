@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ jQuery.sap.require("sap.m.SplitContainer");
  * @extends sap.m.SplitContainer
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -168,7 +168,7 @@ sap.m.SplitApp.M_EVENTS = {'orientationChange':'orientationChange'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.SplitApp</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.SplitApp</code>.<br/> itself.
  *
  * @return {sap.m.SplitApp} <code>this</code> to allow method chaining
  * @public
@@ -207,7 +207,7 @@ sap.m.SplitApp.M_EVENTS = {'orientationChange':'orientationChange'};
  */
 
 
-// Start of sap/m/SplitApp.js
+// Start of sap\m\SplitApp.js
 jQuery.sap.require("sap.m.SplitContainer");
 
 /**************************************************************
@@ -262,7 +262,7 @@ sap.m.SplitApp.prototype.exit = function() {
 **************************************************************/
 
 sap.m.SplitApp.prototype._fireOrientationChange = function() {
-	var isLandscape = jQuery.device.is.landscape;
+	var isLandscape = sap.ui.Device.orientation.landscape;
 	if (this._oldIsLandscape !== isLandscape) {
 		this.fireOrientationChange({landscape: isLandscape});
 	}

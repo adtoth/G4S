@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 jQuery.sap.declare("sap.m.StandardListItemRenderer");jQuery.sap.require("sap.ui.core.Renderer");jQuery.sap.require("sap.m.ListItemBaseRenderer");sap.m.StandardListItemRenderer=sap.ui.core.Renderer.extend(sap.m.ListItemBaseRenderer);
 sap.m.StandardListItemRenderer.renderLIAttributes=function(r,l){r.addClass("sapMSLI");if(l._showSeparators==sap.m.ListSeparators.None&&!l.getIconInset()){r.addClass("sapMSLIShowSeparatorNone")}if(l.getIcon())r.addClass("sapMSLIIcon");if(!l.getIconInset())r.addClass("sapMSLIIconThumb");if((l.getDescription()||!l.getAdaptTitleSize())&&l.getIcon()&&l.getIconInset())r.addClass("sapMSLIDescIcon");if((l.getDescription()||!l.getAdaptTitleSize())&&!l.getIcon())r.addClass("sapMSLIDescNoIcon");if(!l.getDescription()&&l.getIcon())r.addClass("sapMSLINoDescIcon");if(l.getType()==sap.m.ListType.Detail||l.getType()==sap.m.ListType.DetailAndActive)r.addClass("sapMSLIDetail")};

@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 // Provides default renderer for control sap.m.Text
@@ -16,25 +16,19 @@ jQuery.sap.require("sap.ui.core.Renderer");
 sap.m.TextRenderer = {};
 
 /**
- * Dummy inheritance of static methods/functions.
- * @see sap.ui.core.Renderer.getTextAlign
- * @private
- */
-sap.m.TextRenderer.getTextAlign = sap.ui.core.Renderer.getTextAlign;
-
-/**
  * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
  * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
- * @param {sap.ui.core.Control} oText An object representation of the control that should be rendered.
+ * @param {sap.m.Text} oText An object representation of the control that should be rendered.
  */
 sap.m.TextRenderer.render = function(oRm, oText) {
-	// Return immediately if control is invisible
+	// return immediately if control is invisible
 	if (!oText.getVisible()) {
 		return;
 	}
 
 	// get control values
 	var sWidth = oText.getWidth(),
+		sText = oText.getText(true),
 		sTextDir = oText.getTextDirection(),
 		sTooltip = oText.getTooltip_AsString(),
 		nMaxLines = oText.getMaxLines(),
@@ -46,24 +40,22 @@ sap.m.TextRenderer.render = function(oRm, oText) {
 	oRm.writeControlData(oText);
 	oRm.addClass("sapMText");
 
-	// add class for wrapping
+	// set classes for wrapping
 	if (!bWrapping || nMaxLines == 1) {
 		oRm.addClass("sapMTextNoWrap");
-	} else if (bWrapping && nMaxLines > 1) {
-		if (sap.m.Text.hasNativeLineClamp) {
-			oRm.addClass("sapMTextLineClamp");
-			oRm.addStyle("-webkit-line-clamp", nMaxLines);
-		} else {
-			oRm.addClass("sapMTextMaxLine");
+	} else if (bWrapping) {
+		// no space text must break
+		if (!/\s/.test(sText)) {
+			oRm.addClass("sapMTextBreakWord");
 		}
 	}
 
 	// write style and attributes
-	sWidth && oRm.addStyle("width", sWidth);
-	sTextDir && oRm.writeAttribute("dir", sTextDir);
-	sTooltip &&	oRm.writeAttributeEscaped("title", sTooltip);
+	sWidth ? oRm.addStyle("width", sWidth) : oRm.addClass("sapMTextMaxWidth");
+	sTextDir && oRm.addStyle("direction", sTextDir.toLowerCase());
+	sTooltip && oRm.writeAttributeEscaped("title", sTooltip);
 	if (sTextAlign) {
-		sTextAlign = this.getTextAlign(sTextAlign, sTextDir);
+		sTextAlign = sap.ui.core.Renderer.getTextAlign(sTextAlign, sTextDir);
 		if (sTextAlign) {
 			oRm.addStyle("text-align", sTextAlign);
 		}
@@ -73,6 +65,47 @@ sap.m.TextRenderer.render = function(oRm, oText) {
 	oRm.writeClasses();
 	oRm.writeStyles();
 	oRm.write(">");
-	oRm.writeEscaped(oText.getText(), bWrapping);
+
+	// handle max lines
+	if (oText.hasMaxLines()) {
+		this.renderMaxLines(oRm, oText);
+	} else {
+		this.renderText(oRm, oText);
+	}
+
+	// finalize
 	oRm.write("</span>");
+};
+
+/**
+ * Renders the max lines inner wrapper
+ * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.m.Text} oText An object representation of the control that should be rendered.
+ */
+sap.m.TextRenderer.renderMaxLines = function(oRm, oText) {
+	oRm.write("<div");
+	oRm.writeAttribute("id", oText.getId() + "-inner");
+	oRm.addClass("sapMTextMaxLine");
+
+	// check native line clamp support
+	if (oText.canUseNativeLineClamp()) {
+		oRm.addClass("sapMTextLineClamp");
+		oRm.addStyle("-webkit-line-clamp", oText.getMaxLines());
+	}
+
+	oRm.writeClasses();
+	oRm.writeStyles();
+	oRm.write(">");
+	this.renderText(oRm, oText);
+	oRm.write("</div>");
+};
+
+/**
+ * Renders the normalized text property.
+ * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.
+ * @param {sap.m.Text} oText An object representation of the control that should be rendered.
+ */
+sap.m.TextRenderer.renderText = function(oRm, oText) {
+	var sText = oText.getText(true);
+	oRm.writeEscaped(sText);
 };

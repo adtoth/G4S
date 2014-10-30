@@ -15,13 +15,7 @@
 
     <gap:plugin name="com.phonegap.plugins.barcodescanner"/>
 
-    <feature name="http://api.phonegap.com/1.0/device" />
-    <feature name="debug-server" required="true">
-       <param name="domain" value="http://debug.phonegap.com"/>
-       <param name="key" value="willoughby"/>
-    </feature>
-
-    <preference name="phonegap-version" value="3.5.0" />
+    <preference name="phonegap-version" value="3.6.3" />
     <preference name="orientation"      value="default" />
     <preference name="target-device"    value="universal" />
     <preference name="fullscreen"       value="false" />
@@ -52,6 +46,7 @@
     <gap:splash src="res/screen/ios/screen-ipad-portrait.png"      gap:platform="ios"     width="768" height="1024" />
     <gap:splash src="res/screen/ios/screen-ipad-landscape.png"     gap:platform="ios"     width="1024" height="768" />
     <gap:splash src="res/screen/windows-phone/screen-portrait.jpg" gap:platform="winphone" />
+	<access origin="*" />
 
     <!-- content src="http://www.w3.org/2010/05/video/mediaevents.html" / -->
 </widget>

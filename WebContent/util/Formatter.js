@@ -10,7 +10,19 @@ sap.ui.demo.myFiori.util.Formatter = {
 		"M" : "Warning",
 		"A" : "Success",
 		"R" : "Success",
-		"C" : "Error"
+		"S" : "Success",
+		"C" : "Error",
+		"1"	: "Error",
+		"2"	: "Error",
+		"3"	: "Error",
+		"4"	: "Error",
+		"5"	: "Error",
+		"6"	: "Error",
+		"7"	: "Error",
+		"8"	: "Error",
+		"9"	: "Error",
+		"10": "Error"
+		
 	},
 
 	statusText :  function (value) {

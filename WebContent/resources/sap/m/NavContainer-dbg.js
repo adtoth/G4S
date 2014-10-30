@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getPages pages} : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getPages pages} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul>
@@ -62,7 +62,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -73,7 +73,7 @@ sap.ui.core.Control.extend("sap.m.NavContainer", { metadata : {
 	// ---- object ----
 	publicMethods : [
 		// methods
-		"to", "back", "backToPage", "backToTop", "getPage", "getCurrentPage", "getPreviousPage", "addCustomTransition", "insertPreviousPage"
+		"to", "back", "backToPage", "backToTop", "getPage", "getCurrentPage", "getPreviousPage", "addCustomTransition", "insertPreviousPage", "currentPageIsTopPage"
 	],
 
 	// ---- control specific ----
@@ -225,6 +225,7 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * 
  * These aggregated controls will receive navigation events like {@link sap.m.NavContainerChild#beforeShow beforeShow}, they are documented in the pseudo interface {@link sap.m.NavContainerChild sap.m.NavContainerChild}
  * 
+ * <strong>Note</strong>: this is the default aggregation for NavContainer.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.m.NavContainer#getPages
@@ -368,7 +369,7 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.NavContainer</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.NavContainer</code>.<br/> itself.
  *
  * @return {sap.m.NavContainer} <code>this</code> to allow method chaining
  * @public
@@ -397,7 +398,7 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * Fire event navigate to attached listeners.
  *
  * Listeners may prevent the default action of this event using the preventDefault-method on the event object.
- * * 
+ * 
  * Expects following event parameters:
  * <ul>
  * <li>'from' of type <code>sap.ui.core.Control</code> The page which was shown before the current navigation.</li>
@@ -456,7 +457,7 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.NavContainer</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.NavContainer</code>.<br/> itself.
  *
  * @return {sap.m.NavContainer} <code>this</code> to allow method chaining
  * @public
@@ -510,6 +511,8 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
 /**
  * Navigates to the next page (with drill-down semantic) with the given (or default) animation. This creates a new history item inside the NavContainer and allows going back.
  * 
+ * Note that any modifications to the target page (like setting its title, or anything else that could cause a re-rendering) should be done BEFORE calling to(), in order to avoid unwanted side effects, e.g. related to the page animation.
+ * 
  * Available transitions currently include "slide" (default), "fade", "flip", and "show". None of these is currently making use of any given transitionParameters.
  * 
  * Calling this navigation method triggers first the (cancelable) "navigate" event on the NavContainer, then the "beforeHide" pseudo event on the source page and "beforeFirstShow" (if applicable) and"beforeShow" on the target page. Later - after the transition has completed - the "afterShow" pseudo event is triggered on the target page and "afterHide" on the page which has been left. The given data object is available in the "beforeFirstShow", "beforeShow" and "afterShow" event object as "data" property.
@@ -522,26 +525,24 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * @param {string} 
  *         sTransitionName
  *         The type of the transition/animation to apply. This parameter can be omitted; then the default is "slide" (horizontal movement from the right).
- * Other options are: "fade", "flip", and "show" and the names of any registered custom transitions.
+ *         Other options are: "fade", "flip", and "show" and the names of any registered custom transitions.
  * 
- * None of the standard transitions is currently making use of any given transition parameters.
+ *         None of the standard transitions is currently making use of any given transition parameters.
  * @param {object} 
  *         oData
-
- * @since 1.7.1 *         This optional object can carry any payload data which should be made available to the target page. The "beforeShow" event on the target page will contain this data object as "data" property.
+ *         Since version 1.7.1. This optional object can carry any payload data which should be made available to the target page. The "beforeShow" event on the target page will contain this data object as "data" property.
  * 
- * Use case: in scenarios where the entity triggering the navigation can or should not directly initialize the target page, it can fill this object and the target page itself (or a listener on it) can take over the initialization, using the given data.
+ *         Use case: in scenarios where the entity triggering the navigation can or should not directly initialize the target page, it can fill this object and the target page itself (or a listener on it) can take over the initialization, using the given data.
  * 
- * When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
+ *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
  * @param {object} 
  *         oTransitionParameters
-
- * @since 1.7.1 *         This optional object can contain additional information for the transition function, like the DOM element which triggered the transition or the desired transition duration.
+ *         Since version 1.7.1. This optional object can contain additional information for the transition function, like the DOM element which triggered the transition or the desired transition duration.
  * 
- * For a proper parameter order, the "data" parameter must be given when the "transitionParameters" parameter is used. (it can be given as "null")
+ *         For a proper parameter order, the "data" parameter must be given when the "transitionParameters" parameter is used. (it can be given as "null")
  * 
- * NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
- * The "show", "slide" and "fade" transitions do not use any parameter.
+ *         NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
+ *         The "show", "slide" and "fade" transitions do not use any parameter.
 
  * @type sap.m.NavContainer
  * @public
@@ -557,22 +558,20 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * @function
  * @param {object} 
  *         oBackData
-
- * @since 1.7.1 *         This optional object can carry any payload data which should be made available to the target page of the back navigation. The event on the target page will contain this data object as "backData" property. (The original data from the "to()" navigation will still be available as "data" property.)
+ *         Since version 1.7.1. This optional object can carry any payload data which should be made available to the target page of the back navigation. The event on the target page will contain this data object as "backData" property. (The original data from the "to()" navigation will still be available as "data" property.)
  * 
- * In scenarios where the entity triggering the navigation can or should not directly initialize the target page, it can fill this object and the target page itself (or a listener on it) can take over the initialization, using the given data.
- * For back navigation this can be used e.g. when returning from a detail page to transfer any settings done there.
+ *         In scenarios where the entity triggering the navigation can or should not directly initialize the target page, it can fill this object and the target page itself (or a listener on it) can take over the initialization, using the given data.
+ *         For back navigation this can be used e.g. when returning from a detail page to transfer any settings done there.
  * 
- * When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
+ *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
  * @param {object} 
  *         oTransitionParameters
-
- * @since 1.7.1 *         This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
- * The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
+ *         Since version 1.7.1. This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
+ *         The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
  * 
- * In order to use the "transitionParameters" property, the "data" property must be used (at least "null" must be given) for a proper parameter order.
+ *         In order to use the "transitionParameters" property, the "data" property must be used (at least "null" must be given) for a proper parameter order.
  * 
- * NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
+ *         NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
 
  * @type sap.m.NavContainer
  * @public
@@ -589,20 +588,20 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * @function
  * @param {string} 
  *         sPageId
- *         The ID of the screen to which back navigation should happen. The nearest page with this ID among the previous pages in the history stack will be used.
+ *         The ID of the screen to which back navigation should happen. The ID or the control itself can be given. The nearest such page among the previous pages in the history stack will be used.
  * @param {object} 
  *         oBackData
  *         This optional object can carry any payload data which should be made available to the target page of the "backToPage" navigation. The event on the target page will contain this data object as "backData" property.
  * 
- * When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
+ *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
  * @param {object} 
  *         oTransitionParameters
  *         This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
- * The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
+ *         The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
  * 
- * In order to use the "transitionParameters" property, the "data" property must be used (at least "null" must be given) for a proper parameter order.
+ *         In order to use the "transitionParameters" property, the "data" property must be used (at least "null" must be given) for a proper parameter order.
  * 
- * NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
+ *         NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
 
  * @type sap.m.NavContainer
  * @public
@@ -622,15 +621,15 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  *         oBackData
  *         This optional object can carry any payload data which should be made available to the target page of the "backToTop" navigation. The event on the target page will contain this data object as "backData" property.
  * 
- * When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
+ *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
  * @param {object} 
  *         oTransitionParameters
  *         This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
- * The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
+ *         The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
  * 
- * In order to use the "transitionParameters" property, the "data" property must be used (at least "null" must be given) for a proper parameter order.
+ *         In order to use the "transitionParameters" property, the "data" property must be used (at least "null" must be given) for a proper parameter order.
  * 
- * NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
+ *         NOTE: it depends on the transition function how the object should be structured and which parameters are actually used to influence the transition.
 
  * @type sap.m.NavContainer
  * @public
@@ -709,17 +708,17 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  *         sName
  *         The name of the transition. This name can be used by the application to choose this transition when navigating "to()" or "back()": the "transitionName" parameter of "NavContainer.to()" corresponds to this name, the back() navigation will automatically use the same transition.
  * 
- * Make sure to only use names that will not collide with transitions which may be added to the NavContainer later. A suggestion is to use the prefix "c_" or "_" for your custom transitions to ensure this.
+ *         Make sure to only use names that will not collide with transitions which may be added to the NavContainer later. A suggestion is to use the prefix "c_" or "_" for your custom transitions to ensure this.
  * @param {object} 
  *         oTo
  *         The function which will be called by the NavContainer when the application navigates "to()", using this animation's name. The NavContainer instance is the "this" context within the animation function.
  * 
- * See the documentation of NavContainer.addCustomTransitions for more details about this function.
+ *         See the documentation of NavContainer.addCustomTransitions for more details about this function.
  * @param {object} 
  *         oBack
  *         The function which will be called by the NavContainer when the application navigates "back()" from a page where it had navigated to using this animation's name. The NavContainer instance is the "this" context within the animation function.
  * 
- * See the documentation of NavContainer.addCustomTransitions for more details about this function.
+ *         See the documentation of NavContainer.addCustomTransitions for more details about this function.
 
  * @type sap.m.NavContainer
  * @public
@@ -739,7 +738,7 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  * @param {string} 
  *         sTransitionName
  *         The type of the transition/animation which would have been used to navigate from the (inserted) previous page to the current page. When navigating back, the inverse animation will be applied.
- * This parameter can be omitted; then the default is "slide" (horizontal movement from the right).
+ *         This parameter can be omitted; then the default is "slide" (horizontal movement from the right).
  * @param {object} 
  *         oData
  *         This optional object can carry any payload data which would have been given to the inserted previous page if the user would have done a normal forward navigation to it.
@@ -750,18 +749,27 @@ sap.m.NavContainer.M_EVENTS = {'navigate':'navigate','afterNavigate':'afterNavig
  */
 
 
-// Start of sap/m/NavContainer.js
-sap.m.NavContainer._fnDefaultAfterTransition = function(){
-	jQuery.sap.log.info("NavContainer: empty transition callback called");
-};
+/**
+ * Returns whether the current page is the top/initial page.
+ * 
+ * Note: going to the initial page again with a row of "to" navigations causes the initial page to be displayed again, but logically one is not at the top level, so this method returns "false" in this case.
+ *
+ * @name sap.m.NavContainer.prototype.currentPageIsTopPage
+ * @function
 
+ * @type boolean
+ * @public
+ */
+
+
+// Start of sap\m\NavContainer.js
 sap.m.NavContainer.prototype.init = function() {
 	this._pageStack = [];
 	this._aQueue = [];
 	this._mVisitedPages = {};
 	this._iTransitionsCompleted = 0; // to track proper callback at the end of transitions
 	this._bNeverRendered = true;
-	this._fnAfterTransition = sap.m.NavContainer._fnDefaultAfterTransition;
+	this._bNavigating = false;
 };
 
 
@@ -835,10 +843,6 @@ sap.m.NavContainer.prototype.onAfterRendering = function() {
 		oEvent.backData = {};
 		pageToRenderFirst._handleEvent(oEvent);
 	}
-	
-	// Rerendering may have happened while a transition was ongoing! DOM elements are then replaced, so the after-transition-callback would not be called.
-	// When no animation is ongoing, this function is just a dummy function doing nothing. (dummy function instead of undefined to avoid callbacks from animations to an undefined function)
-	this._fnAfterTransition();
 };
 
 /**
@@ -877,7 +881,7 @@ sap.m.NavContainer.prototype.getPage = function(pageId) {
 sap.m.NavContainer.prototype.getDefaultTransitionName = function() {
 	var sName = this.getProperty("defaultTransitionName");
 	if (!sName) {
-		sName = jQuery.os.winphone ? "door" : "slide";
+		sName = sap.ui.Device.os.windows_phone ? "door" : "slide";
 	}
 	return sName;
 };
@@ -918,6 +922,11 @@ sap.m.NavContainer.prototype.getPreviousPage = function() {
 	}
 };
 
+sap.m.NavContainer.prototype.currentPageIsTopPage = function() {
+	var stack = this._ensurePageStackInitialized();
+	return (stack.length === 1);
+};
+
 
 sap.m.NavContainer.prototype.insertPreviousPage = function(pageId, transitionName, data) {
 	var stack = this._ensurePageStackInitialized();
@@ -955,8 +964,7 @@ sap.m.NavContainer.prototype._afterTransitionCallback = function(oNavInfo, oData
 	// TODO: destroy HTML? Remember to destroy ALL HTML of several pages when backToTop has been called
 	
 	jQuery.sap.log.info(this + ": _afterTransitionCallback called, to: " + oNavInfo.toId);
-	this._fnAfterTransition = sap.m.NavContainer._fnDefaultAfterTransition; // add a dummy just in case the callback will still be called (e.g. by afterRendering)
-	
+
 	if (this._aQueue.length > 0) {
 		var fnNavigate = this._aQueue.shift();
 		fnNavigate();
@@ -981,12 +989,7 @@ sap.m.NavContainer.prototype.to = function(pageId, transitionName, data, oTransi
 	// make sure the initial page is on the stack
 	this._ensurePageStackInitialized();
 
-	var oFromPage = this.getCurrentPage();
-	if (oFromPage && (oFromPage.getId() === pageId)) { // cannot navigate to the page that is already current
-		jQuery.sap.log.warning(this.toString() + ": Cannot navigate to page " + pageId + " because this is the current page.");
-		return this;
-	}
-	
+	//add to the queue before checking the current page, because this might change
 	if (this._bNavigating) {
 		jQuery.sap.log.info(this.toString() + ": Cannot navigate to page " + pageId + " because another navigation is already in progress. - navigation will be executed after the previous one");
 		
@@ -996,7 +999,13 @@ sap.m.NavContainer.prototype.to = function(pageId, transitionName, data, oTransi
 		
 		return this;
 	}
-	
+
+	var oFromPage = this.getCurrentPage();
+	if (oFromPage && (oFromPage.getId() === pageId)) { // cannot navigate to the page that is already current
+		jQuery.sap.log.warning(this.toString() + ": Cannot navigate to page " + pageId + " because this is the current page.");
+		return this;
+	}
+
 	var oToPage = this.getPage(pageId);
 
 	if (oToPage) {
@@ -1015,7 +1024,9 @@ sap.m.NavContainer.prototype.to = function(pageId, transitionName, data, oTransi
 		};
 		var bContinue = this.fireNavigate(oNavInfo);
 		if (bContinue) { // ok, let's do the navigation
-		
+
+			sap.m.closeKeyboard();
+
 			// TODO: let one of the pages also cancel navigation?
 			var oEvent = jQuery.Event("BeforeHide", oNavInfo);
 			oEvent.srcControl = this; // store the element on the event (aligned with jQuery syntax)
@@ -1047,7 +1058,8 @@ sap.m.NavContainer.prototype.to = function(pageId, transitionName, data, oTransi
 	
 			// render the page that should get visible
 			var oToPageDomRef;
-			if (!(oToPageDomRef = oToPage.getDomRef()) || sap.ui.core.RenderManager.isPreservedContent(oToPageDomRef)) {
+			
+			if (!(oToPageDomRef = oToPage.getDomRef()) || oToPageDomRef.parentNode != this.getDomRef() || sap.ui.core.RenderManager.isPreservedContent(oToPageDomRef)) {
 				oToPage.addStyleClass("sapMNavItemRendering");
 				jQuery.sap.log.debug("Rendering 'to' page '" + oToPage.toString() + "' for 'to' navigation");
 				var rm = sap.ui.getCore().createRenderManager();
@@ -1068,9 +1080,8 @@ sap.m.NavContainer.prototype.to = function(pageId, transitionName, data, oTransi
 			}, 5000);
 	
 			this._bNavigating = true;
-			this._fnAfterTransition = jQuery.proxy(function(){this._afterTransitionCallback(oNavInfo, data);}, this);
-			oTransition.to.call(this, oFromPage, oToPage, this._fnAfterTransition, oTransitionParameters); // trigger the transition
-			
+			oTransition.to.call(this, oFromPage, oToPage, jQuery.proxy(function(){this._afterTransitionCallback(oNavInfo, data);}, this), oTransitionParameters); // trigger the transition
+
 		} else {
 			jQuery.sap.log.info("Navigation to page with ID '" + pageId + "' has been aborted by the application");
 		}
@@ -1099,6 +1110,17 @@ sap.m.NavContainer.prototype.backToTop = function(backData, oTransitionParameter
 
 
 sap.m.NavContainer.prototype._backTo = function(sType, backData, oTransitionParameters, sRequestedPageId) {
+	if (this._bNavigating) {
+		jQuery.sap.log.warning(this.toString() + ": Cannot navigate back because another navigation is already in progress. - navigation will be executed after the previous one");
+		
+
+		this._aQueue.push(jQuery.proxy( function() {
+			this._backTo(sType, backData, oTransitionParameters, sRequestedPageId);
+		},this));
+		
+		return this;
+	}
+
 	if (this._pageStack.length <= 1) {
 		// there is no place to go back
 
@@ -1109,15 +1131,9 @@ sap.m.NavContainer.prototype._backTo = function(sType, backData, oTransitionPara
 		return this;
 
 	} else { // normal back navigation
-		if (this._bNavigating) {
-			jQuery.sap.log.warning(this.toString() + ": Cannot navigate back because another navigation is already in progress. - navigation will be executed after the previous one");
-			
-
-			this._aQueue.push(jQuery.proxy( function() {
-				this._backTo(sType, backData, oTransitionParameters, sRequestedPageId);
-			},this));
-			
-			return this;
+		
+		if (sRequestedPageId instanceof sap.ui.core.Control) {
+			sRequestedPageId = sRequestedPageId.getId();
 		}
 		
 		var oFromPageInfo = this._pageStack[this._pageStack.length-1];
@@ -1171,7 +1187,9 @@ sap.m.NavContainer.prototype._backTo = function(sType, backData, oTransitionPara
 		};
 		var bContinue = this.fireNavigate(oNavInfo);
 		if (bContinue) { // ok, let's do the navigation
-			
+
+			sap.m.closeKeyboard();
+
 			var oEvent = jQuery.Event("BeforeHide", oNavInfo);
 			oEvent.srcControl = this; // store the element on the event (aligned with jQuery syntax)
 			// no data needed for hiding
@@ -1225,7 +1243,7 @@ sap.m.NavContainer.prototype._backTo = function(sType, backData, oTransitionPara
 			
 			// make sure the to-page is rendered
 			var oToPageDomRef;
-			if (!(oToPageDomRef = oToPage.getDomRef()) || sap.ui.core.RenderManager.isPreservedContent(oToPageDomRef)) {
+			if (!(oToPageDomRef = oToPage.getDomRef()) || oToPageDomRef.parentNode != this.getDomRef() || sap.ui.core.RenderManager.isPreservedContent(oToPageDomRef)) {
 				oToPage.addStyleClass("sapMNavItemRendering");
 				jQuery.sap.log.debug("Rendering 'to' page '" + oToPage.toString() + "' for back navigation");
 				var rm = sap.ui.getCore().createRenderManager();
@@ -1244,8 +1262,7 @@ sap.m.NavContainer.prototype._backTo = function(sType, backData, oTransitionPara
 			}
 			
 			// trigger the transition
-			this._fnAfterTransition = jQuery.proxy(function(){this._afterTransitionCallback(oNavInfo, oToPageData, backData);}, this);
-			oTransition.back.call(this, oFromPage, oToPage, this._fnAfterTransition, oTransitionParameters); // trigger the transition
+			oTransition.back.call(this, oFromPage, oToPage, jQuery.proxy(function(){this._afterTransitionCallback(oNavInfo, oToPageData, backData);}, this), oTransitionParameters); // trigger the transition
 		}
 	}
 	return this;
@@ -1300,6 +1317,7 @@ if (jQuery.support.cssTransitions) {
 				window.setTimeout(function(){
 					
 					var bOneTransitionFinished = false;
+					var bTransitionEndPending = true;
 					var fAfterTransition = null; // make Eclipse aware that this variable is defined
 					fAfterTransition = function() {
 						jQuery(this).unbind("webkitTransitionEnd transitionend");
@@ -1308,6 +1326,7 @@ if (jQuery.support.cssTransitions) {
 							bOneTransitionFinished = true;
 						} else {
 							// the second transition now also finished => clean up the style classes
+							bTransitionEndPending = false;
 							oToPage.removeStyleClass("sapMNavItemSliding").removeStyleClass("sapMNavItemCenter");
 							oFromPage.removeStyleClass("sapMNavItemSliding").addStyleClass("sapMNavItemHidden").removeStyleClass("sapMNavItemLeft");
 		
@@ -1322,7 +1341,14 @@ if (jQuery.support.cssTransitions) {
 					// set the new style classes that represent the end state (and thus start the transition)
 					oToPage.addStyleClass("sapMNavItemSliding").addStyleClass("sapMNavItemCenter").removeStyleClass("sapMNavItemRight");
 					oFromPage.addStyleClass("sapMNavItemSliding").removeStyleClass("sapMNavItemCenter").addStyleClass("sapMNavItemLeft");
-		
+			
+					window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+						if (bTransitionEndPending) {
+							bOneTransitionFinished = true;
+							fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
+						}
+					}, 400);
+					
 				}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 			
 			},0); // iPhone seems to need a zero timeout here, otherwise the to page is black (and may suddenly become visible when the DOM is touched)
@@ -1338,6 +1364,7 @@ if (jQuery.support.cssTransitions) {
 			window.setTimeout(function() {
 				
 				var bOneTransitionFinished = false;
+				var bTransitionEndPending = true;
 				var fAfterTransition = null; // make Eclipse aware that this variable is defined
 				fAfterTransition = function() {
 					jQuery(this).unbind("webkitTransitionEnd transitionend");
@@ -1346,6 +1373,7 @@ if (jQuery.support.cssTransitions) {
 						bOneTransitionFinished = true;
 					} else {
 						// the second transition now also finished => clean up the style classes
+						bTransitionEndPending = false;
 						oToPage.removeStyleClass("sapMNavItemSliding").removeStyleClass("sapMNavItemCenter");
 						oFromPage.removeStyleClass("sapMNavItemSliding").addStyleClass("sapMNavItemHidden").removeStyleClass("sapMNavItemRight");
 	
@@ -1359,7 +1387,7 @@ if (jQuery.support.cssTransitions) {
 				
 				// workaround for bug in current webkit versions: in slided-in elements the z-order may be wrong and will be corrected once a re-layout is enforced 
 				// see http://code.google.com/p/chromium/issues/detail?id=246965
-				if (jQuery.browser.webkit) {
+				if (sap.ui.Device.browser.webkit) {
 					window.setTimeout(function(){
 						oToPage.$().css("box-shadow", "0em 1px 0em rgba(128, 128, 1280, 0.1)"); // add box-shadow
 						window.setTimeout(function(){
@@ -1371,7 +1399,14 @@ if (jQuery.support.cssTransitions) {
 				// set the new style classes that represent the end state (and thus start the transition)
 				oToPage.addStyleClass("sapMNavItemSliding").addStyleClass("sapMNavItemCenter").removeStyleClass("sapMNavItemLeft"); // transition from left position to normal/center position starts now
 				oFromPage.addStyleClass("sapMNavItemSliding").removeStyleClass("sapMNavItemCenter").addStyleClass("sapMNavItemRight"); // transition from normal position to right position starts now
-	
+				
+				window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+					if (bTransitionEndPending) {
+						bOneTransitionFinished = true;
+						fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
+					}
+				}, 400);
+				
 			}, 100); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 		}
 	};
@@ -1424,9 +1459,11 @@ if (jQuery.support.cssTransitions) {
 					
 					// the code to be executed after the new page has completed fading in
 					var fAfterTransition = null; // make Eclipse aware that this variable is defined
+					var bTransitionEndPending = true;
 					fAfterTransition = function() {
 						jQuery(this).unbind("webkitTransitionEnd transitionend");
 						// clean up the style classes
+						bTransitionEndPending = false;
 						oFromPage.addStyleClass("sapMNavItemHidden");
 						oToPage.removeStyleClass("sapMNavItemFading").removeStyleClass("sapMNavItemOpaque");
 	
@@ -1438,6 +1475,12 @@ if (jQuery.support.cssTransitions) {
 					
 					// set the new style classes that represent the end state (and thus start the transition)
 					oToPage.addStyleClass("sapMNavItemFading").removeStyleClass("sapMNavItemTransparent").addStyleClass("sapMNavItemOpaque");
+					
+					window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+						if (bTransitionEndPending) {
+							fAfterTransition.apply(oToPage.$());
+						}
+					}, 600);
 					
 				}, 10);
 			},
@@ -1452,9 +1495,11 @@ if (jQuery.support.cssTransitions) {
 					
 					// the code to be executed after the new page has completed fading in
 					var fAfterTransition = null; // make Eclipse aware that this variable is defined
+					var bTransitionEndPending = true;
 					fAfterTransition = function() {
 						jQuery(this).unbind("webkitTransitionEnd transitionend");
 						// clean up the style classes
+						bTransitionEndPending = false;
 						oFromPage.removeStyleClass("sapMNavItemFading").addStyleClass("sapMNavItemHidden"); // TODO: destroy HTML?
 						oFromPage.removeStyleClass("sapMNavItemTransparent");
 	
@@ -1467,6 +1512,12 @@ if (jQuery.support.cssTransitions) {
 					// set the new style classes that represent the end state (and thus start the transition)
 					oFromPage.addStyleClass("sapMNavItemFading").removeStyleClass("sapMNavItemOpaque");
 					oFromPage.addStyleClass("sapMNavItemTransparent");
+					
+					window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+						if (bTransitionEndPending) {
+							fAfterTransition.apply(oToPage.$());
+						}
+					}, 600);
 	
 				}, 10);
 			}
@@ -1508,7 +1559,7 @@ if (jQuery.support.cssTransitions) {
 			var that = this;
 			window.setTimeout(function(){ // iPhone seems to need a zero timeout here, otherwise the to page is black (and may suddenly become visible when the DOM is touched)
 				
-				var isAndroid23 = (jQuery.os.android && jQuery.os.fVersion === 2.3);
+				var isAndroid23 = (sap.ui.Device.os.android && sap.ui.Device.os.version === 2.3);
 				
 				// if not Android2.3 then add perspective styles to NavContainer
 				!isAndroid23 && that.$().addClass("sapMNavFlip");
@@ -1521,6 +1572,7 @@ if (jQuery.support.cssTransitions) {
 				window.setTimeout(function(){
 					
 					var bOneTransitionFinished = false;
+					var bTransitionEndPending = true;
 					var fAfterTransition = null; // make Eclipse aware that this variable is defined
 					fAfterTransition = function() {
 						jQuery(this).unbind("webkitTransitionEnd transitionend");
@@ -1529,6 +1581,7 @@ if (jQuery.support.cssTransitions) {
 							bOneTransitionFinished = true;
 						} else {
 							// the second transition now also finished => clean up the style classes
+							bTransitionEndPending = false;
 							oToPage.removeStyleClass("sapMNavItemFlipping");
 							oFromPage.removeStyleClass("sapMNavItemFlipping").addStyleClass("sapMNavItemHidden").removeStyleClass("sapMNavItemFlipPrevious");
 							!isAndroid23 && that.$().removeClass("sapMNavFlip");
@@ -1544,6 +1597,13 @@ if (jQuery.support.cssTransitions) {
 					// set the new style classes that represent the end state (and thus start the transition)
 					oToPage.addStyleClass("sapMNavItemFlipping").removeStyleClass("sapMNavItemFlipNext");
 					oFromPage.addStyleClass("sapMNavItemFlipping").addStyleClass("sapMNavItemFlipPrevious");
+					
+					window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+						if (bTransitionEndPending) {
+							bOneTransitionFinished = true;
+							fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
+						}
+					}, 600);
 		
 				}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few#
 			}, 0);
@@ -1551,7 +1611,7 @@ if (jQuery.support.cssTransitions) {
 	
 		back: function(oFromPage, oToPage, fCallback /*, oTransitionParameters is unused */) {
 			var that = this,
-				isAndroid23 = (jQuery.os.android && jQuery.os.fVersion === 2.3);
+				isAndroid23 = (sap.ui.Device.os.android && sap.ui.Device.os.version === 2.3);
 			
 			// if not Android2.3 then add perspective styles to NavContainer
 			!isAndroid23 && that.$().addClass("sapMNavFlip");
@@ -1564,6 +1624,7 @@ if (jQuery.support.cssTransitions) {
 			window.setTimeout(function() {
 				
 				var bOneTransitionFinished = false;
+				var bTransitionEndPending = true;
 				var fAfterTransition = null; // make Eclipse aware that this variable is defined
 				fAfterTransition = function() {
 					jQuery(this).unbind("webkitTransitionEnd transitionend");
@@ -1572,6 +1633,7 @@ if (jQuery.support.cssTransitions) {
 						bOneTransitionFinished = true;
 					} else {
 						// the second transition now also finished => clean up the style classes
+						bTransitionEndPending = false;
 						oToPage.removeStyleClass("sapMNavItemFlipping");
 						oFromPage.removeStyleClass("sapMNavItemFlipping").addStyleClass("sapMNavItemHidden").removeStyleClass("sapMNavItemFlipNext");
 						!isAndroid23 && that.$().removeClass("sapMNavFlip");
@@ -1588,6 +1650,13 @@ if (jQuery.support.cssTransitions) {
 				oToPage.addStyleClass("sapMNavItemFlipping").removeStyleClass("sapMNavItemFlipPrevious"); // transition from left position to normal/center position starts now
 				oFromPage.addStyleClass("sapMNavItemFlipping").addStyleClass("sapMNavItemFlipNext"); // transition from normal position to right position starts now
 	
+				window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+					if (bTransitionEndPending) {
+						bOneTransitionFinished = true;
+						fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
+					}
+				}, 600);
+				
 			}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 		}
 	};
@@ -1606,7 +1675,7 @@ if (jQuery.support.cssTransitions) {
 			var that = this;
 			window.setTimeout(function(){ // iPhone seems to need a zero timeout here, otherwise the to page is black (and may suddenly become visible when the DOM is touched)
 				
-				var isAndroid23 = (jQuery.os.android && jQuery.os.fVersion === 2.3);
+				var isAndroid23 = (sap.ui.Device.os.android && sap.ui.Device.os.version === 2.3);
 				
 				// if not Android2.3 then add perspective styles to NavContainer
 				!isAndroid23 && that.$().addClass("sapMNavDoor");
@@ -1619,6 +1688,7 @@ if (jQuery.support.cssTransitions) {
 				window.setTimeout(function(){
 					
 					var bOneTransitionFinished = false;
+					var bTransitionEndPending = true;
 					var fAfterTransition = null; // make Eclipse aware that this variable is defined
 					fAfterTransition = function() {
 						jQuery(this).unbind("webkitAnimationEnd animationend");
@@ -1627,6 +1697,7 @@ if (jQuery.support.cssTransitions) {
 							bOneTransitionFinished = true;
 						} else {
 							// the second transition now also finished => clean up the style classes
+							bTransitionEndPending = false;
 							oToPage.removeStyleClass("sapMNavItemDooring").removeStyleClass("sapMNavItemDoorInNext");
 							oFromPage.removeStyleClass("sapMNavItemDooring").addStyleClass("sapMNavItemHidden").removeStyleClass("sapMNavItemDoorInPrevious");
 							!isAndroid23 && that.$().removeClass("sapMNavDoor");
@@ -1642,6 +1713,13 @@ if (jQuery.support.cssTransitions) {
 					// set the new style classes that represent the end state (and thus start the transition)
 					oToPage.addStyleClass("sapMNavItemDooring");
 					oFromPage.addStyleClass("sapMNavItemDooring").addStyleClass("sapMNavItemDoorInPrevious");
+					
+					window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+						if (bTransitionEndPending) {
+							bOneTransitionFinished = true;
+							fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
+						}
+					}, 1000);
 		
 				}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few#
 			}, 0);
@@ -1649,7 +1727,7 @@ if (jQuery.support.cssTransitions) {
 	
 		back: function(oFromPage, oToPage, fCallback /*, oTransitionParameters is unused */) {
 			var that = this,
-				isAndroid23 = (jQuery.os.android && jQuery.os.fVersion === 2.3);
+				isAndroid23 = (sap.ui.Device.os.android && sap.ui.Device.os.version === 2.3);
 			
 			// if not Android2.3 then add perspective styles to NavContainer
 			!isAndroid23 && that.$().addClass("sapMNavDoor");
@@ -1662,6 +1740,7 @@ if (jQuery.support.cssTransitions) {
 			window.setTimeout(function() {
 				
 				var bOneTransitionFinished = false;
+				var bTransitionEndPending = true;
 				var fAfterTransition = null; // make Eclipse aware that this variable is defined
 				fAfterTransition = function() {
 					jQuery(this).unbind("webkitAnimationEnd animationend");
@@ -1670,6 +1749,7 @@ if (jQuery.support.cssTransitions) {
 						bOneTransitionFinished = true;
 					} else {
 						// the second transition now also finished =>  clean up the style classes
+						bTransitionEndPending = false;
 						oToPage.removeStyleClass("sapMNavItemDooring").removeStyleClass("sapMNavItemDoorOutNext");
 						oFromPage.removeStyleClass("sapMNavItemDooring").addStyleClass("sapMNavItemHidden").removeStyleClass("sapMNavItemDoorOutPrevious");
 						!isAndroid23 && that.$().removeClass("sapMNavDoor");
@@ -1686,6 +1766,13 @@ if (jQuery.support.cssTransitions) {
 				oToPage.addStyleClass("sapMNavItemDooring"); // transition from left position to normal/center position starts now
 				oFromPage.addStyleClass("sapMNavItemDooring").addStyleClass("sapMNavItemDoorOutPrevious"); // transition from normal position to right position starts now
 	
+				window.setTimeout(function(){ // in case rerendering prevented the fAfterTransition call
+					if (bTransitionEndPending) {
+						bOneTransitionFinished = true;
+						fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
+					}
+				}, 1000);
+				
 			}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 		}
 	};
@@ -1751,13 +1838,48 @@ sap.m.NavContainer.prototype.invalidate = function(oSource) {
 	}
 };
 
+sap.m.NavContainer.prototype.removePage = function(oPage) {
+	oPage = this.removeAggregation("pages", oPage);
+	
+	if (oPage) {
+		oPage.removeStyleClass("sapMNavItemHidden");
+		oPage.removeStyleClass("sapMNavItem");
+	}
+	
+	return oPage;
+};
+
+
+sap.m.NavContainer.prototype.removeAllPages = function() {
+	var aPages = this.getPages();
+	if (!aPages)	{
+		return [];
+	}
+	
+	for (var i = 0; i < aPages.length; i++) {
+		aPages[i].removeStyleClass("sapMNavItemHidden");
+		aPages[i].removeStyleClass("sapMNavItem");
+	}
+
+	return this.removeAllAggregation("pages");
+};
+
 sap.m.NavContainer.prototype.addPage = function(oPage) {
-	oPage.addStyleClass("sapMNavItem");
-	var iPreviousPageCount = this.getPages().length;
+	var aPages = this.getPages();
+	// Routing often adds an already existing page. ManagedObject would remove and re-add it because the order is affected, 
+	// but here the order does not matter, so just ignore the call in this case.
+	if (jQuery.inArray(oPage, aPages) > -1) {
+		return this;
+	}
 	
 	this.addAggregation("pages", oPage, true);
+
+	// sapMNavItem must be added after addAggregation is called because addAggregation can lead
+	// to a removePage-call where the class is removed again.
+	oPage.addStyleClass("sapMNavItem"); 
+	var iPreviousPageCount = aPages.length;
 	
-	if (iPreviousPageCount === 0 && this.getPages().length === 1 && this.getDomRef()) { // the added page is the first and only page and has been newly added
+	if (iPreviousPageCount === 0 && /* get the NEW pages count */ this.getPages().length === 1 && this.getDomRef()) { // the added page is the first and only page and has been newly added
 		this._ensurePageStackInitialized();
 		this.rerender();
 	}
@@ -1766,10 +1888,12 @@ sap.m.NavContainer.prototype.addPage = function(oPage) {
 };
 
 sap.m.NavContainer.prototype.insertPage = function(oPage, iIndex) {
+	this.insertAggregation("pages", oPage, iIndex, true);
+
+	// sapMNavItem must be added after addAggregation is called because addAggregation can lead
+	// to a removePage-call where the class is removed again.
 	oPage.addStyleClass("sapMNavItem");
 	var iPreviousPageCount = this.getPages().length;
-	
-	this.insertAggregation("pages", oPage, iIndex, true);
 	
 	if (iPreviousPageCount === 0 && this.getPages().length === 1 && this.getDomRef()) { // the added page is the first and only page and has been newly added
 		this._ensurePageStackInitialized();

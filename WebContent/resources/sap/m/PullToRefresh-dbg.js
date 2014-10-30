@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -262,7 +262,7 @@ sap.m.PullToRefresh.M_EVENTS = {'refresh':'refresh'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.PullToRefresh</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.PullToRefresh</code>.<br/> itself.
  *
  * @return {sap.m.PullToRefresh} <code>this</code> to allow method chaining
  * @public
@@ -287,7 +287,7 @@ sap.m.PullToRefresh.M_EVENTS = {'refresh':'refresh'};
 
 /**
  * Fire event refresh to attached listeners.
-
+ *
  * @param {Map} [mArguments] the arguments to pass along with the event.
  * @return {sap.m.PullToRefresh} <code>this</code> to allow method chaining
  * @protected
@@ -307,11 +307,11 @@ sap.m.PullToRefresh.M_EVENTS = {'refresh':'refresh'};
  */
 
 
-// Start of sap/m/PullToRefresh.js
+// Start of sap\m\PullToRefresh.js
 jQuery.sap.require("sap.ui.core.theming.Parameters");
 
 sap.m.PullToRefresh.prototype.init = function(){
-	this._bTouchMode = jQuery.support.touch || jQuery.sap.simulateMobileOnDesktop; // FIXME: plus fakeOS mode
+	this._bTouchMode = sap.ui.Device.support.touch || jQuery.sap.simulateMobileOnDesktop; // FIXME: plus fakeOS mode
 	this._bPltfDpndnt = sap.ui.core.theming.Parameters.get("sapMPlatformDependent") == "true"; 
 	
 	this._iState = 0; // 0 - normal; 1 - release to refresh; 2 - loading
@@ -339,7 +339,9 @@ sap.m.PullToRefresh.prototype.onBeforeRendering = function(){
 		jQuery(window).off("resize.sapMP2R", this.calculateTopTrigger);
 		var oParent = this.getParent();
 		this._oScroller = oParent && oParent.getScrollDelegate? oParent.getScrollDelegate() : null;
-		if(this._oScroller){
+
+		if (this._oScroller) {
+			this._oScroller.setBounce(true);
 			this._oScroller.setPullDown(this.getVisible() ? this : null);
 		}
 	}
@@ -351,7 +353,7 @@ sap.m.PullToRefresh.prototype.calculateTopTrigger = function(){
 	if(this._oDomRef && this._oDomRef.parentNode && this._oDomRef.parentNode.parentNode &&
 			this._oDomRef.parentNode.parentNode.offsetHeight < this._oDomRef.offsetHeight * 1.5){
 		// if there is no place to pull to show the image, pull only until the top line of text
-		this._iTopTrigger = jQuery.sap.domById(this.getId() + "-T").offsetTop;
+		this._iTopTrigger = this.getDomRef("T").offsetTop;
 	}
 };
 
@@ -363,7 +365,7 @@ sap.m.PullToRefresh.prototype.onAfterRendering = function(){
 		if(this._oScroller){
 			this._oScroller.refresh();
 		}
-		if(this.getVisible()){
+		if(this.getVisible() && this._oScroller && this._oScroller._bIScroll){
 			// recalculate top pull offset by resize
 			jQuery(window).on("resize.sapMP2R", jQuery.proxy(this.calculateTopTrigger, this));
 			this.calculateTopTrigger();
@@ -372,7 +374,7 @@ sap.m.PullToRefresh.prototype.onAfterRendering = function(){
 };
 
 sap.m.PullToRefresh.prototype.exit = function(){
-	if (this._bTouchMode) {
+	if (this._bTouchMode  && this._oScroller && this._oScroller._bIScroll) {
 		jQuery(window).off("resize.sapMP2R", this.calculateTopTrigger);
 	}
 	if(this._oScroller) {
@@ -391,14 +393,26 @@ sap.m.PullToRefresh.prototype.exit = function(){
 
 // ScrollEnablement callback functions
 sap.m.PullToRefresh.prototype.doScrollMove = function(){
+	//callback for iScroll
 	if(!this._oScroller){ return; }
+	
+	var domRef = this._oDomRef;
+
 	var _scroller = this._oScroller._scroller;
 	if(_scroller.y > -this._iTopTrigger && this._iState < 1 ){
 		this.setState(1);
 		_scroller.minScrollY = 0;
 	} else if (_scroller.y < -this._iTopTrigger && this._iState == 1){
 		this.setState(0);
-		_scroller.minScrollY = -this._oDomRef.offsetHeight;
+		_scroller.minScrollY = -domRef.offsetHeight;
+	}
+};
+
+sap.m.PullToRefresh.prototype.doPull = function(posY){
+	// callback native scrolling, pull
+	if(this._bTouchMode && this._iState < 2){
+		// switch pull down state: rotate its arrow
+		this.setState(posY >= - 1 ? 1: 0);
 	}
 };
 
@@ -499,10 +513,10 @@ sap.m.PullToRefresh.prototype.onkeydown = function(event) {
 
 // API implementation
 sap.m.PullToRefresh.prototype.hide = function(){
-	if (this._bTouchMode && this._oScroller){
-		this._oScroller.refresh(); 
-	}
 	this.setState(0);
+	if (this._oScroller){
+		this._oScroller.refresh();
+	}
 };
 
 /*

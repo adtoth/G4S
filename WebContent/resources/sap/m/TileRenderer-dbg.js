@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 // Provides default renderer for control sap.m.Text
@@ -25,7 +25,11 @@ sap.m.TileRenderer.render = function(rm, oControl) {
 	rm.writeControlData(oControl);
 	rm.addClass("sapMTile");
 	rm.addClass("sapMPointer");
-    rm.writeClasses();
+	rm.writeClasses();
+	if(oControl._invisible){
+		rm.addStyle("visibility", "hidden");
+		rm.writeStyles();
+	}
 	var sTooltip = oControl.getTooltip_AsString();
 	if (sTooltip) {
 		rm.writeAttributeEscaped("title", sTooltip);

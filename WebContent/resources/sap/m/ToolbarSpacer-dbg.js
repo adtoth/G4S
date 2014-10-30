@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -50,10 +50,11 @@ jQuery.sap.require("sap.ui.core.Control");
  *
  * @class
  * This control can be used to add horizontal space between toolbar items.
+ * Note: ToolbarLayoutData should not be used with this control.
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -116,7 +117,7 @@ sap.ui.core.Control.extend("sap.m.ToolbarSpacer", { metadata : {
  */
 
 
-// Start of sap/m/ToolbarSpacer.js
+// Start of sap\m\ToolbarSpacer.js
 /**
  * Flexible Spacer Class Name
  * @protected

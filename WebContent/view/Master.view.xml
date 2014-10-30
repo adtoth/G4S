@@ -4,7 +4,7 @@
 	<!-- 	 <List     >
     <ActionListItem text="Bevételezés" press="handleBevetelezesPress" />
     <ActionListItem text="Szállítási lista" press="handleSzallitasiPress"/>
-    <ActionListItem text="Aktuális szállítás" press="handleListItemPress"/>
+    <ActionListItem text="Aktuális szállítás" press="handleAktualisPress"/>
     <ActionListItem text="Utánvét" press="handleListItemPress"/>
   </List>  -->    
      
@@ -21,13 +21,14 @@
         <StandardTile
         icon="sap-icon://shipping-status"
         title="Aktuális szállítás"
-        press=""
+        press="handleAktualisPress"
         />
         <StandardTile
         icon="sap-icon://payment-approval"
         title="Utánvét"
-        press=""
+        press="handleUtanvetPress"
         /> 
+            
   
 		<footer>
 			<Bar>

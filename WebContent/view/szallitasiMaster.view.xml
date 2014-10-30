@@ -18,14 +18,15 @@
 				<firstStatus>
 					<ObjectStatus
 						text="{
-							path: 'SzallitasStatus',
+							path: 'DelStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusText'
 						}"
 						state="{
-							path: 'SzallitasStatus',
+							path: 'DelStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
 						}"
-						icon="sap-icon://{Icon}" />
+					
+						/>
 
 				</firstStatus>
 
@@ -38,7 +39,7 @@
 						type="Default" selectedKey="None" autoAdjustWidth="true">
 						<core:Item key="None" text="Nincs csoportosítás" />
 						<core:Item key="PicType" text="Típus szerint" />
-						<core:Item key="SzallitasStatus" text="Státusz szerint" />
+						<core:Item key="Delstatus" text="Státusz szerint" />
 					</Select>
 				</contentRight>
 			</Bar>

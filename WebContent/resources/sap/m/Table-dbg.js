@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -31,7 +31,9 @@ jQuery.sap.require("sap.m.ListBase");
  * <ul>
  * <li>Properties
  * <ul>
- * <li>{@link #getBackgroundDesign backgroundDesign} : sap.m.BackgroundDesign (default: sap.m.BackgroundDesign.Translucent)</li></ul>
+ * <li>{@link #getBackgroundDesign backgroundDesign} : sap.m.BackgroundDesign (default: sap.m.BackgroundDesign.Translucent)</li>
+ * <li>{@link #getFixedLayout fixedLayout} : boolean (default: true)</li>
+ * <li>{@link #getShowOverlay showOverlay} : boolean (default: false)</li></ul>
  * </li>
  * <li>Aggregations
  * <ul>
@@ -53,11 +55,12 @@ jQuery.sap.require("sap.m.ListBase");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * Table control provides a set of sophisticated and comfort functions for responsive table design.
+ * The Table control provides a set of sophisticated and convenience functions for responsive table design.
+ * For mobile devices, the recommended limit of table rows is 100(based on 4 columns) to assure proper performance. To improve initial rendering on large tables, use the "growing" feature. Please refer to the SAPUI5 Developer Guide for more information
  * @extends sap.m.ListBase
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -71,7 +74,9 @@ sap.m.ListBase.extend("sap.m.Table", { metadata : {
 	// ---- control specific ----
 	library : "sap.m",
 	properties : {
-		"backgroundDesign" : {type : "sap.m.BackgroundDesign", group : "Appearance", defaultValue : sap.m.BackgroundDesign.Translucent}
+		"backgroundDesign" : {type : "sap.m.BackgroundDesign", group : "Appearance", defaultValue : sap.m.BackgroundDesign.Translucent},
+		"fixedLayout" : {type : "boolean", group : "Behavior", defaultValue : true},
+		"showOverlay" : {type : "boolean", group : "Appearance", defaultValue : false}
 	},
 	aggregations : {
     	"columns" : {type : "sap.m.Column", multiple : true, singularName : "column"}
@@ -117,6 +122,66 @@ sap.m.ListBase.extend("sap.m.Table", { metadata : {
  * @return {sap.m.Table} <code>this</code> to allow method chaining
  * @public
  * @name sap.m.Table#setBackgroundDesign
+ * @function
+ */
+
+
+/**
+ * Getter for property <code>fixedLayout</code>.
+ * Defines the algorithm to be used to layout the table cells, rows, and columns.
+ * 
+ * If you set this property to false, then table is rendered with "auto" layout algorithm. This means, the width of the table and its cells depends on the content thereof. The column width is set by the widest unbreakable content in the cells. This can make the rendering slow, since the browser needs to read through all the content in the table, before determining the final layout.
+ * Note: Since table does not have own scroll container, setting fixedLayout to false can force the table to overflow and this can cause visual problems. So, we highly suggest to use this property when table has a few columns in wide screens or horizontal scroll container(e.g Dialog, Popover) to handle overflow.
+ * Please note that with "auto" layout mode Column width property is taken into account as minimum width.
+ * 
+ * By default, table is rendered with "fixed" layout algorithm. This means the horizontal layout only depends on the table's width and the width of the columns, not the contents of the cells. Cells in subsequent rows do not affect column widths. This allows a browser to layout the table faster than the auto table layout since the browser can begin to display the table once the first row has been analyzed.
+ *
+ * Default value is <code>true</code>
+ *
+ * @return {boolean} the value of property <code>fixedLayout</code>
+ * @public
+ * @since 1.22
+ * @name sap.m.Table#getFixedLayout
+ * @function
+ */
+
+/**
+ * Setter for property <code>fixedLayout</code>.
+ *
+ * Default value is <code>true</code> 
+ *
+ * @param {boolean} bFixedLayout  new value for property <code>fixedLayout</code>
+ * @return {sap.m.Table} <code>this</code> to allow method chaining
+ * @public
+ * @since 1.22
+ * @name sap.m.Table#setFixedLayout
+ * @function
+ */
+
+
+/**
+ * Getter for property <code>showOverlay</code>.
+ * Setting this property to true will show an overlay on top of the Table content and users cannot click anymore on the Table content.
+ *
+ * Default value is <code>false</code>
+ *
+ * @return {boolean} the value of property <code>showOverlay</code>
+ * @public
+ * @since 1.22.1
+ * @name sap.m.Table#getShowOverlay
+ * @function
+ */
+
+/**
+ * Setter for property <code>showOverlay</code>.
+ *
+ * Default value is <code>false</code> 
+ *
+ * @param {boolean} bShowOverlay  new value for property <code>showOverlay</code>
+ * @return {sap.m.Table} <code>this</code> to allow method chaining
+ * @public
+ * @since 1.22.1
+ * @name sap.m.Table#setShowOverlay
  * @function
  */
 
@@ -202,49 +267,58 @@ sap.m.ListBase.extend("sap.m.Table", { metadata : {
  */
 
 
-// Start of sap/m/Table.js
+// Start of sap\m\Table.js
 sap.m.Table.prototype.init = function() {
-	if (sap.m.ListBase.prototype.init) {
-		sap.m.ListBase.prototype.init.call(this);
-	}
-
 	this._hasPopin = false;
 	this._selectAllCheckBox = null;
+	sap.m.ListBase.prototype.init.call(this);
 };
 
 sap.m.Table.prototype.onBeforeRendering = function() {
-	if (sap.m.ListBase.prototype.onBeforeRendering) {
-		sap.m.ListBase.prototype.onBeforeRendering.call(this);
-	}
-	if (this.getDomRef()) {
-		this._notifyColumns("ItemsRemoved");
-	}
+	this.getDomRef() && this._notifyColumns("ItemsRemoved");
+	sap.m.ListBase.prototype.onBeforeRendering.call(this);
+	this._navRenderedBy = "";
 };
 
 sap.m.Table.prototype.onAfterRendering = function() {
-	if (sap.m.ListBase.prototype.onAfterRendering) {
-		sap.m.ListBase.prototype.onAfterRendering.call(this);
-	}
+	sap.m.ListBase.prototype.onAfterRendering.call(this);
 
 	// table root
 	var $table = jQuery(this.getTableDomRef());
 
 	// if any item has navigation, add required class
-	if (this.hasOwnProperty("_navRenderedBy")) {
-		$table.addClass("sapMListTblHasNav");
-	}
+	this._navRenderedBy && $table.addClass("sapMListTblHasNav");
 
 	// notify columns after rendering
 	this._notifyColumns("ColumnRendered", $table);
 
 	// update select-all
 	this.updateSelectAllCheckbox();
+
+	// render the overlay if necessary
+	this._renderOverlay();
+};
+
+sap.m.Table.prototype._renderOverlay = function() {
+	var $this = this.$(),
+	    $overlay = $this.find(".sapMTableOverlay"),
+	    bShowOverlay = this.getShowOverlay();
+	if (bShowOverlay && $overlay.length === 0) {
+		$overlay = jQuery("<div>").addClass("sapUiOverlay sapMTableOverlay").css("z-index", "1");
+		$this.append($overlay);
+	} else if (!bShowOverlay) {
+		$overlay.remove();
+	}
+};
+
+sap.m.Table.prototype.setShowOverlay = function(bShow) {
+	this.setProperty("showOverlay", bShow, true);
+	this._renderOverlay();
+	return this;
 };
 
 sap.m.Table.prototype.exit = function () {
-	if (sap.m.ListBase.prototype.exit) {
-		sap.m.ListBase.prototype.exit.call(this);
-	}
+	sap.m.ListBase.prototype.exit.call(this);
 	if (this._selectAllCheckBox) {
 		this._selectAllCheckBox.destroy();
 		this._selectAllCheckBox = null;
@@ -253,14 +327,12 @@ sap.m.Table.prototype.exit = function () {
 
 sap.m.Table.prototype.destroyAggregation = function(sAggregationName) {
 	sAggregationName == "items" && this._notifyColumns("ItemsRemoved");
-	sap.ui.base.ManagedObject.prototype.destroyAggregation.apply(this, arguments);
-	return this;
+	return sap.m.ListBase.prototype.destroyAggregation.apply(this, arguments);
 };
 
 sap.m.Table.prototype.removeAllAggregation = function(sAggregationName) {
 	sAggregationName == "items" && this._notifyColumns("ItemsRemoved");
-	sap.ui.base.ManagedObject.prototype.removeAllAggregation.apply(this, arguments);
-	return this;
+	return sap.m.ListBase.prototype.removeAllAggregation.apply(this, arguments);
 };
 
 sap.m.Table.prototype.removeSelections = function() {
@@ -275,6 +347,19 @@ sap.m.Table.prototype.selectAll = function () {
 	return this;
 };
 
+sap.m.Table.prototype.setFixedLayout = function (bFixed) {
+	this.setProperty("fixedLayout", bFixed, true);
+	this.$("listUl").css("table-layout", this.getFixedLayout() ? "fixed" : "auto");
+	return this;
+};
+
+/**
+ * Getter for aggregation columns.
+ *
+ * @param {Boolean} [bSort] set true to get the columns in an order that respects personalization settings
+ * @returns {sap.m.Column[]} columns of the Table
+ * @public
+ */
 sap.m.Table.prototype.getColumns = function(bSort) {
 	var aColumns = this.getAggregation("columns", []);
 	if (bSort) {
@@ -291,7 +376,18 @@ sap.m.Table.prototype.getColumns = function(bSort) {
  */
 sap.m.Table.prototype.onAfterPageLoaded = function() {
 	this.updateSelectAllCheckbox();
+	this._navRenderedBy && jQuery(this.getTableDomRef()).addClass("sapMListTblHasNav");
 	sap.m.ListBase.prototype.onAfterPageLoaded.apply(this, arguments);
+};
+
+/*
+ * This hook method is called from renderer to determine whether items should render or not
+ * @overwrite
+ */
+sap.m.Table.prototype.shouldRenderItems = function() {
+	return this.getColumns().some(function(oColumn) {
+		return oColumn.getVisible();
+	});
 };
 
 /*
@@ -300,44 +396,69 @@ sap.m.Table.prototype.onAfterPageLoaded = function() {
  */
 sap.m.Table.prototype.onItemSetSelected = function(oItem, bSelect) {
 	sap.m.ListBase.prototype.onItemSetSelected.apply(this, arguments);
-	this.updateSelectAllCheckbox();
+	jQuery.sap.delayedCall(0, this, function() {
+		this.updateSelectAllCheckbox();
+	});
 };
 
-/**
- * Handle pop-in touch events for active feedback
- */
+// Handle pop-in touch start events for active feedback
 sap.m.Table.prototype.ontouchstart = function(oEvent) {
-	if (sap.m.ListBase.prototype.ontouchstart) {
-		sap.m.ListBase.prototype.ontouchstart.call(this, oEvent);
-	}
-	if (this._hasPopin) {
-		sap.m.ColumnListItem.handleEvents(oEvent, "touchstart", this.getDomRef());
-	}
+	sap.m.ListBase.prototype.ontouchstart.call(this, oEvent);
+	this._handlePopinEvent(oEvent);
 };
 
-/**
- * Handle pop-in touch events for active feedback
- */
+// Handle pop-in touch end events for active feedback
+sap.m.Table.prototype.ontouchend = function(oEvent) {
+	this._handlePopinEvent(oEvent);
+};
+
+// Android cancels touch events by native scrolling, deactivate popin
+sap.m.Table.prototype.ontouchcancel = sap.m.Table.prototype.ontouchend;
+
+// Handle pop-in touch move events for active feedback
+sap.m.Table.prototype.ontouchmove = function(oEvent) {
+	this._handlePopinEvent(oEvent);
+};
+
+// Handle pop-in tap events for active feedback
 sap.m.Table.prototype.ontap = function(oEvent) {
-	if (this._hasPopin) {
-		sap.m.ColumnListItem.handleEvents(oEvent, "tap", this.getDomRef());
-	}
+	this._handlePopinEvent(oEvent);
 };
 
+/*
+ * Returns the <table> DOM reference
+ * @protected
+ */
 sap.m.Table.prototype.getTableDomRef = function() {
-	return jQuery.sap.domById(this.getId() + "-listUl");
+	return this.getDomRef("listUl");
 };
 
 /*
  * Returns items container DOM reference
  * @protected
- * @overwrite
  */
 sap.m.Table.prototype.getItemsContainerDomRef = function() {
-	var oContainer = this.getTableDomRef();
-	if (oContainer) {
-		return oContainer.querySelector("tbody");
+	return this.getDomRef("tblBody");
+};
+
+/*
+ * Determines for growing feature to handle all data from scratch
+ * if column merging and growing feature are active at the same time
+ * it is complicated to remerge or demerge columns when we
+ * insert or delete items from the table with growing diff logic
+ *
+ * @protected
+ */
+sap.m.Table.prototype.checkGrowingFromScratch = function() {
+	// no merging for popin case
+	if (this.hasPopin()) {
+		return false;
 	}
+
+	// check visibility and merge feature of columns
+	return this.getColumns().some(function(oColumn) {
+		return oColumn.getVisible() && oColumn.getMergeDuplicates();
+	});
 };
 
 /*
@@ -347,7 +468,7 @@ sap.m.Table.prototype.getItemsContainerDomRef = function() {
 sap.m.Table.prototype.onColumnResize = function(oColumn) {
 	// if list did not have pop-in and will not have pop-in
 	// then we do not need re-render, we can just change display of column
-	if (!this._hasPopin && !this._mutex) {
+	if (!this.hasPopin() && !this._mutex) {
 		var hasPopin = this.getColumns().some(function(col) {
 			return col.isPopin();
 		});
@@ -401,6 +522,9 @@ sap.m.Table.prototype.setTableHeaderVisibility = function(bColVisible) {
 		$firstVisibleCol.width($firstVisibleCol.attr("data-sap-orig-width"));
 	}
 
+	// update GroupHeader colspan according to visible column count
+	$table.find(".sapMGHLICell").attr("colspan", aVisibleColumns.length);
+
 	// remove or show column header row(thead) according to column visibility value
 	if (!bColVisible && bHeaderVisible) {
 		$headRow[0].className = "sapMListTblRow sapMListTblHeader";
@@ -416,6 +540,21 @@ sap.m.Table.prototype._notifyColumns = function(action, param) {
 	});
 };
 
+// pass pop-in events to ColumnListItem
+sap.m.Table.prototype._handlePopinEvent = function(oEvent, bRowOnly) {
+	if (oEvent.isMarked()) {
+		return;
+	}
+
+	if (bRowOnly && !sap.m.ColumnListItem.isPopinFocused()) {
+		return;
+	}
+
+	if (this.hasPopin()) {
+		sap.m.ColumnListItem.handleEvents(oEvent, this.getItemsContainerDomRef());
+	}
+};
+
 /**
  * This method takes care of the select all checkbox for table lists. It
  * will automatically be created on demand and returned when needed
@@ -424,7 +563,7 @@ sap.m.Table.prototype._notifyColumns = function(action, param) {
  * @return {sap.m.CheckBox} reference to the internal select all checkbox
  */
 sap.m.Table.prototype._getSelectAllCheckbox = function() {
-	return this._selectAllCheckBox || (this._selectAllCheckBox = new sap.m.CheckBox(this.getId() + "-sa", {
+	return this._selectAllCheckBox || (this._selectAllCheckBox = new sap.m.CheckBox(this.getId("sa"), {
 		activeHandling : false,
 	}).setParent(this, null, true).attachSelect(function () {
 		if (this._selectAllCheckBox.getSelected()) {
@@ -432,7 +571,7 @@ sap.m.Table.prototype._getSelectAllCheckbox = function() {
 		} else {
 			this.removeSelections(false, true);
 		}
-	}, this));
+	}, this).setTabIndex(-1));
 };
 
 /*
@@ -444,19 +583,14 @@ sap.m.Table.prototype._getSelectAllCheckbox = function() {
 sap.m.Table.prototype.updateSelectAllCheckbox = function () {
 	// checks if the list is in multi select mode and has selectAll checkbox
 	if (this._selectAllCheckBox && this.getMode() === "MultiSelect") {
-		var items = this.getItems(),
-			selectableItemCount = items.length,
-			selectedItemCount = this.getSelectedItems().length;
-
-		// find selectable item count
-		items.forEach(function(oItem) {
-			if (!oItem.isSelectable()) {
-				selectableItemCount--;
-			}
-		});
+		var aItems = this.getItems(),
+			iSelectedItemCount = this.getSelectedItems().length,
+			iSelectableItemCount = aItems.filter(function(oItem) {
+				return oItem.isSelectable();
+			}).length;
 
 		// set state of the checkbox by comparing item length and selected item length
-		this._selectAllCheckBox.setSelected(!!items.length && selectedItemCount == selectableItemCount);
+		this._selectAllCheckBox.setSelected(aItems.length > 0 && iSelectedItemCount == iSelectableItemCount);
 	}
 };
 
@@ -486,4 +620,31 @@ sap.m.Table.prototype.getColCount = function() {
  */
 sap.m.Table.prototype.hasPopin = function() {
 	return !!this._hasPopin;
+};
+
+// keyboard handling
+sap.m.Table.prototype.onsapspace = function(oEvent) {
+	if (oEvent.isMarked()) {
+		return;
+	}
+
+	// toggle select all header checkbox and fire its event
+	if (oEvent.target === this.getDomRef("tblHeader") && this._selectAllCheckBox) {
+		this._selectAllCheckBox.setSelected(!this._selectAllCheckBox.getSelected()).fireSelect();
+		oEvent.preventDefault();
+		oEvent.setMarked();
+	}
+
+	// handle space event for pop-in
+	this._handlePopinEvent(oEvent, true);
+};
+
+// Handle enter event for pop-in
+sap.m.Table.prototype.onsapenter = function(oEvent) {
+	this._handlePopinEvent(oEvent, true);
+};
+
+// Handle delete event for pop-in
+sap.m.Table.prototype.onsapdelete = function(oEvent) {
+	this._handlePopinEvent(oEvent, true);
 };

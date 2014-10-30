@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -36,7 +36,10 @@ jQuery.sap.require("sap.ui.core.Control");
  * <li>{@link #getVisible visible} : boolean (default: true)</li>
  * <li>{@link #getTarget target} : string</li>
  * <li>{@link #getWidth width} : sap.ui.core.CSSSize</li>
- * <li>{@link #getHref href} : sap.ui.core.URI</li></ul>
+ * <li>{@link #getHref href} : sap.ui.core.URI</li>
+ * <li>{@link #getWrapping wrapping} : boolean (default: false)</li>
+ * <li>{@link #getSubtle subtle} : boolean (default: false)</li>
+ * <li>{@link #getEmphasized emphasized} : boolean (default: false)</li></ul>
  * </li>
  * <li>Aggregations
  * <ul></ul>
@@ -59,7 +62,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -78,7 +81,10 @@ sap.ui.core.Control.extend("sap.m.Link", { metadata : {
 		"visible" : {type : "boolean", group : "Appearance", defaultValue : true},
 		"target" : {type : "string", group : "Behavior", defaultValue : null},
 		"width" : {type : "sap.ui.core.CSSSize", group : "Dimension", defaultValue : null},
-		"href" : {type : "sap.ui.core.URI", group : "Data", defaultValue : null}
+		"href" : {type : "sap.ui.core.URI", group : "Data", defaultValue : null},
+		"wrapping" : {type : "boolean", group : "Appearance", defaultValue : false},
+		"subtle" : {type : "boolean", group : "Behavior", defaultValue : false},
+		"emphasized" : {type : "boolean", group : "Behavior", defaultValue : false}
 	},
 	events : {
 		"press" : {allowPreventDefault : true}
@@ -256,6 +262,85 @@ sap.m.Link.M_EVENTS = {'press':'press'};
 
 
 /**
+ * Getter for property <code>wrapping</code>.
+ * Whether the link text is allowed to wrap when tehre is not sufficient space.
+ *
+ * Default value is <code>false</code>
+ *
+ * @return {boolean} the value of property <code>wrapping</code>
+ * @public
+ * @name sap.m.Link#getWrapping
+ * @function
+ */
+
+/**
+ * Setter for property <code>wrapping</code>.
+ *
+ * Default value is <code>false</code> 
+ *
+ * @param {boolean} bWrapping  new value for property <code>wrapping</code>
+ * @return {sap.m.Link} <code>this</code> to allow method chaining
+ * @public
+ * @name sap.m.Link#setWrapping
+ * @function
+ */
+
+
+/**
+ * Getter for property <code>subtle</code>.
+ * Subtle link is only to be used to help with visual hierarchy between large data lists of important and less important links. Subtle links should not be used in any other usecase
+ *
+ * Default value is <code>false</code>
+ *
+ * @return {boolean} the value of property <code>subtle</code>
+ * @public
+ * @since 1.22
+ * @name sap.m.Link#getSubtle
+ * @function
+ */
+
+/**
+ * Setter for property <code>subtle</code>.
+ *
+ * Default value is <code>false</code> 
+ *
+ * @param {boolean} bSubtle  new value for property <code>subtle</code>
+ * @return {sap.m.Link} <code>this</code> to allow method chaining
+ * @public
+ * @since 1.22
+ * @name sap.m.Link#setSubtle
+ * @function
+ */
+
+
+/**
+ * Getter for property <code>emphasized</code>.
+ * Set this property to true if the link should appear emphasized.
+ *
+ * Default value is <code>false</code>
+ *
+ * @return {boolean} the value of property <code>emphasized</code>
+ * @public
+ * @since 1.22
+ * @name sap.m.Link#getEmphasized
+ * @function
+ */
+
+/**
+ * Setter for property <code>emphasized</code>.
+ *
+ * Default value is <code>false</code> 
+ *
+ * @param {boolean} bEmphasized  new value for property <code>emphasized</code>
+ * @return {sap.m.Link} <code>this</code> to allow method chaining
+ * @public
+ * @since 1.22
+ * @name sap.m.Link#setEmphasized
+ * @function
+ */
+
+
+/**
  * Event is fired when the user triggers the link control. 
  *
  * @name sap.m.Link#press
@@ -279,7 +364,7 @@ sap.m.Link.M_EVENTS = {'press':'press'};
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.Link</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.Link</code>.<br/> itself.
  *
  * @return {sap.m.Link} <code>this</code> to allow method chaining
  * @public
@@ -315,11 +400,19 @@ sap.m.Link.M_EVENTS = {'press':'press'};
  */
 
 
-// Start of sap/m/Link.js
+// Start of sap\m\Link.js
 
 jQuery.sap.require("sap.ui.core.EnabledPropagator");
 
 sap.ui.core.EnabledPropagator.call(sap.m.Link.prototype);
+
+/**
+ * Also trigger link activation when space is pressed on the focused control
+ */
+sap.m.Link.prototype.onsapspace = function(oEvent) {
+	sap.m.Link.prototype._handlePress.apply(this, arguments);
+};
+
 
 /**
  * Function is called when Link is triggered.
@@ -337,7 +430,7 @@ sap.m.Link.prototype._handlePress = function(oEvent) {
 	}
 };
 
-if (jQuery.support.touch) {
+if (sap.ui.Device.support.touch) {
 	sap.m.Link.prototype.ontap = sap.m.Link.prototype._handlePress;
 } else {
 	sap.m.Link.prototype.onclick = sap.m.Link.prototype._handlePress;
@@ -347,4 +440,66 @@ if (jQuery.support.touch) {
 sap.m.Link.prototype.ontouchstart = function(oEvent) {
 	// for controls which need to know whether they should handle events bubbling from here
 	oEvent.originalEvent._sapui_handledByControl = true;
+};
+
+sap.m.Link.prototype.setText = function(sText){
+	this.setProperty("text", sText, true);
+	sText = this.getProperty("text");
+	this.$().text(sText);
+	return this;
+};
+
+sap.m.Link.prototype.setHref = function(sUri){
+	this.setProperty("href", sUri, true);
+	sUri = this.getProperty("href");
+	this.$().attr("href", sUri);
+	return this;
+};
+
+sap.m.Link.prototype.setSubtle = function(bSubtle){
+	this.setProperty("subtle", bSubtle, true);
+	this.$().toggleClass("sapMLnkSubtle", bSubtle);
+	return this;
+};
+
+sap.m.Link.prototype.setEmphasized = function(bEmphasized){
+	this.setProperty("emphasized", bEmphasized, true);
+	this.$().toggleClass("sapMLnkEmphasized", bEmphasized);
+	return this;
+};
+
+sap.m.Link.prototype.setWrapping = function(bWrapping){
+	this.setProperty("wrapping", bWrapping, true);
+	this.$().toggleClass("sapMLnkWrapping", bWrapping);
+	return this;
+};
+
+sap.m.Link.prototype.setEnabled = function(bEnbabled){
+	this.setProperty("enabled", bEnbabled, true);
+	this.$().toggleClass("sapMLnkDsbl", !bEnbabled);
+	if(bEnbabled){
+		this.$().attr("disabled", false);
+		this.$().attr("tabindex", "0");
+	} else {
+		this.$().attr("disabled", true);
+		this.$().attr("tabindex", "-1");
+	}
+	return this;
+};
+
+sap.m.Link.prototype.setWidth = function(sWidth){
+	this.setProperty("width", sWidth, true);
+	this.$().toggleClass("sapMLnkMaxWidth", !sWidth);
+	this.$().css("width", sWidth);
+	return this;
+};
+
+sap.m.Link.prototype.setTarget = function(sTarget){
+	this.setProperty("target", sTarget, true);
+	if(!sTarget){
+		this.$().removeAttr("target");
+	} else {
+		this.$().attr("target", sTarget);
+	}
+	return this;
 };

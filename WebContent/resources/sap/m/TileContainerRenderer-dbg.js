@@ -1,8 +1,8 @@
 
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 jQuery.sap.declare("sap.m.TileContainerRenderer");
@@ -28,16 +28,20 @@ sap.m.TileContainerRenderer.render = function(rm, oControl) {
 	rm.writeControlData(oControl);
 	rm.addStyle("height",oControl.getHeight());
 	rm.addStyle("width",oControl.getWidth());
-	rm.addStyle("visibility","hidden");
 	rm.writeStyles();
 	rm.addClass("sapMTC");
 	rm.writeClasses();
 	rm.write(" >");
-	rm.write("<div id=\""+ id+"-scrl\" class=\"sapMTCScrl\" style=\"overflow:hidden;height:0px\" >");
+	rm.write("<div id=\""+ id+"-scrl\" class=\"sapMTCScrl\" style=\"height:0px;");
+	if(!oControl.bRtl){ 
+		rm.write(" overflow: hidden;");
+	}
+	rm.write("\">");
 	rm.write("<div id=\""+ id+"-blind\" class=\"sapMTCBlind\"></div>");
-	rm.write("<div id=\""+ id+"-cnt\" class=\"sapMTCCnt sapMTCAnim\" style=\"height:0px\">");
+	rm.write("<div id=\""+ id+"-cnt\" class=\"sapMTCCnt sapMTCAnim\" style=\"height:0px; width:0px;\">");
 	var aTiles = oControl.getTiles();
 	for (var i=0;i<aTiles.length;i++) {
+		aTiles[i]._setVisible(false);
 		rm.renderControl(aTiles[i]);
 	}
 	rm.write("</div>");

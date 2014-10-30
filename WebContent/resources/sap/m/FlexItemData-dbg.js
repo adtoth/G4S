@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ jQuery.sap.require("sap.ui.core.LayoutData");
  * @extends sap.ui.core.LayoutData
  *
  * @author  
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -201,7 +201,7 @@ sap.ui.core.LayoutData.extend("sap.m.FlexItemData", { metadata : {
  */
 
 
-// Start of sap/m/FlexItemData.js
+// Start of sap\m\FlexItemData.js
 jQuery.sap.require("sap.m.FlexBoxStylingHelper");
 
 sap.m.FlexItemData.prototype.setAlignSelf = function(sValue) {

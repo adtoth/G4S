@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -32,6 +32,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * <li>Properties
  * <ul>
  * <li>{@link #getVisible visible} : boolean (default: true)</li>
+ * <li>{@link #getTitle title} : string</li>
  * <li>{@link #getText text} : string</li>
  * <li>{@link #getActive active} : boolean</li></ul>
  * </li>
@@ -52,11 +53,11 @@ jQuery.sap.require("sap.ui.core.Control");
  * @param {object} [mSettings] initial settings for the new control
  *
  * @class
- * This object holds value and fire action event if the text is active and clicked
+ * ObjectAttribute displays a text field that can be normal or active. Object attribute fires a press event when the user selects active text.
  * @extends sap.ui.core.Control
  *
  * @author  
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -71,8 +72,12 @@ sap.ui.core.Control.extend("sap.m.ObjectAttribute", { metadata : {
 	library : "sap.m",
 	properties : {
 		"visible" : {type : "boolean", group : "Appearance", defaultValue : true},
+		"title" : {type : "string", group : "Misc", defaultValue : null},
 		"text" : {type : "string", group : "Misc", defaultValue : null},
 		"active" : {type : "boolean", group : "Misc", defaultValue : null}
+	},
+	aggregations : {
+    	"_textControl" : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}
 	},
 	events : {
 		"press" : {}
@@ -101,7 +106,7 @@ sap.m.ObjectAttribute.M_EVENTS = {'press':'press'};
 
 /**
  * Getter for property <code>visible</code>.
- * Invisible object attribute is not rendered.
+ * Indicates if the object attribute is visible. An invisible object attribute is not rendered.
  *
  * Default value is <code>true</code>
  *
@@ -125,8 +130,33 @@ sap.m.ObjectAttribute.M_EVENTS = {'press':'press'};
 
 
 /**
+ * Getter for property <code>title</code>.
+ * The object attribute title.
+ *
+ * Default value is empty/<code>undefined</code>
+ *
+ * @return {string} the value of property <code>title</code>
+ * @public
+ * @name sap.m.ObjectAttribute#getTitle
+ * @function
+ */
+
+/**
+ * Setter for property <code>title</code>.
+ *
+ * Default value is empty/<code>undefined</code> 
+ *
+ * @param {string} sTitle  new value for property <code>title</code>
+ * @return {sap.m.ObjectAttribute} <code>this</code> to allow method chaining
+ * @public
+ * @name sap.m.ObjectAttribute#setTitle
+ * @function
+ */
+
+
+/**
  * Getter for property <code>text</code>.
- * The text of the attribute
+ * The object attribute text.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -151,7 +181,7 @@ sap.m.ObjectAttribute.M_EVENTS = {'press':'press'};
 
 /**
  * Getter for property <code>active</code>.
- * Indicates that the text is clickable
+ * Indicates if the object attribute text is selectable by the user.
  *
  * Default value is empty/<code>undefined</code>
  *
@@ -175,7 +205,7 @@ sap.m.ObjectAttribute.M_EVENTS = {'press':'press'};
 
 
 /**
- * Event is fired when the text is active and the user taps or clicks on it 
+ * Event is fired when the user clicks active text 
  *
  * @name sap.m.ObjectAttribute#press
  * @event
@@ -192,14 +222,14 @@ sap.m.ObjectAttribute.M_EVENTS = {'press':'press'};
  * When called, the context of the event handler (its <code>this</code>) will be bound to <code>oListener<code> if specified
  * otherwise to this <code>sap.m.ObjectAttribute</code>.<br/> itself. 
  *  
- * Event is fired when the text is active and the user taps or clicks on it 
+ * Event is fired when the user clicks active text 
  *
  * @param {object}
  *            [oData] An application specific payload object, that will be passed to the event handler along with the event object when firing the event.
  * @param {function}
  *            fnFunction The function to call, when the event occurs.  
  * @param {object}
- *            [oListener=this] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectAttribute</code>.<br/> itself.
+ *            [oListener] Context object to call the event handler with. Defaults to this <code>sap.m.ObjectAttribute</code>.<br/> itself.
  *
  * @return {sap.m.ObjectAttribute} <code>this</code> to allow method chaining
  * @public
@@ -238,17 +268,42 @@ sap.m.ObjectAttribute.M_EVENTS = {'press':'press'};
  */
 
 
-// Start of sap/m/ObjectAttribute.js
+// Start of sap\m\ObjectAttribute.js
 ///**
 // * This file defines behavior for the control,
 // */
+
+
+
+/**
+ *  Initialize member variables
+ * 
+ * @private
+ */
+sap.m.ObjectAttribute.prototype.init = function() {
+	this.setAggregation('_textControl', new sap.m.Text());
+};
+
+/**
+ * Delivers text control wiht updated title, text and maxLines property
+ * 
+ * @private
+ */
+sap.m.ObjectAttribute.prototype._getUpdatedTextControl = function(){
+	var oTextControl = this.getAggregation('_textControl');
+	oTextControl.setProperty('text', (this.getTitle() ? this.getTitle() + ": " : "") + this.getText(), true);
+	//if attribute is used inside responsive ObjectHeader only 1 line
+	oTextControl.setProperty('maxLines', (this.getParent() && this.getParent() instanceof sap.m.ObjectHeader && this.getParent().getResponsive()) ? 1 : 2, true);
+	return oTextControl;
+};
 
 /**
  * @private
  */
 sap.m.ObjectAttribute.prototype.ontap = function(oEvent) {
-	if(!!this.getActive()) {
-		this.firePress({domRef: jQuery.sap.domById(this.getId())});
+	//event should only be fired if the click is on the text
+	if(!!this.getActive() && (oEvent.target.id != this.getId())) {
+		this.firePress({domRef: this.getDomRef()});
 	}
 };
 
@@ -256,8 +311,22 @@ sap.m.ObjectAttribute.prototype.ontap = function(oEvent) {
  * See 'return'.
  * 
  * @private
- * @returns {Boolean} true if attribute's text is empty or only consists of whitespaces.
+ * @returns {boolean} true if attribute's text is empty or only consists of whitespaces.
  */
 sap.m.ObjectAttribute.prototype._isEmpty = function() {
-	return !this.getText().trim();
+	return !(this.getText().trim() || this.getTitle().trim());
 };
+
+/**
+ * Function is called when the control is touched.  
+ *
+ * @private
+ */
+sap.m.ObjectAttribute.prototype.ontouchstart = function(oEvent) {
+	if(!!this.getActive()) {
+		// for control who need to know if they should handle events from the ObjectAttribute control
+		oEvent.originalEvent._sapui_handledByControl = true;
+	}
+};
+
+	

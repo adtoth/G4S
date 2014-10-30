@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ jQuery.sap.require("sap.ui.core.Element");
  * @implements sap.m.IconTab
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -149,7 +149,7 @@ sap.ui.core.Element.extend("sap.m.IconTabSeparator", { metadata : {
  */
 
 
-// Start of sap/m/IconTabSeparator.js
+// Start of sap\m\IconTabSeparator.js
 /**
  * Lazy load feed icon image.
  *
@@ -163,7 +163,7 @@ sap.m.IconTabSeparator.prototype._getImageControl = function(aCssClasses, oParen
 		densityAware : this.getIconDensityAware()
 	};
 	
-	this._oImageControl = sap.m.ImageHelper.getImageControl(null, this._oImageControl, oParent, mProperties, aCssClasses);
+	this._oImageControl = sap.m.ImageHelper.getImageControl(this.getId() + "-icon", this._oImageControl, oParent, mProperties, aCssClasses);
 	
 	return this._oImageControl;
 };

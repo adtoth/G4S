@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 jQuery.sap.declare("sap.m.RatingIndicatorRenderer");
 jQuery.sap.require("sap.ui.core.theming.Parameters");
@@ -36,7 +36,10 @@ sap.m.RatingIndicatorRenderer.render = function (oRm, oControl) {
 		oIconSel,
 		oIconUnsel,
 		oIconHov,
-		i = 0;
+		i = 0,
+		sTooltip = oControl.getTooltip_AsString(),
+		// gradients in combination with background-clip: text are not supported by ie, android < 4.2 or blackberry
+		bUseGradient = sap.ui.Device.browser.chrome || sap.ui.Device.browser.safari;
 
 	// return immediately if control is invisible
 	if (!oControl.getVisible()) {
@@ -63,10 +66,19 @@ sap.m.RatingIndicatorRenderer.render = function (oRm, oControl) {
 		oRm.addClass("sapMRIDisabled");
 	}
 	oRm.writeClasses();
+	// add tooltip if available
+	if (sTooltip) {
+		oRm.writeAttributeEscaped("title", sTooltip);
+	}	
 	oRm.write(">");
+	
 
 	// render selected items div
-	oRm.write("<div class='sapMRISel'");
+	oRm.write("<div class='sapMRISel");
+	if(bUseGradient){
+		oRm.write(" sapMRIGrd");
+	}
+	oRm.write("'");
 	oRm.writeAttribute("id", oControl.getId() + "-sel");
 	oRm.writeAttribute("style", "width: " + iSelectedWidth + sIconSizeMeasure);
 	oRm.write(">");
@@ -91,7 +103,11 @@ sap.m.RatingIndicatorRenderer.render = function (oRm, oControl) {
 	oRm.writeAttribute("id", oControl.getId() + "-unsel-wrapper");
 	oRm.writeAttribute("style", "width: " + (iWidth - iSelectedWidth) + sIconSizeMeasure);
 	oRm.write(">");
-	oRm.write("<div class='sapMRIUnsel' id='" + oControl.getId() + "-unsel'>");
+	oRm.write("<div class='sapMRIUnsel");
+	if(bUseGradient && oControl.getEnabled()){ // see the specification for read only rating indicator
+		oRm.write(" sapMRIGrd");
+	}
+	oRm.write("' id='" + oControl.getId() + "-unsel'>");
 	// for defined count of icons, create unselected icons with oControl._getIcon(1)
 	for (i = 0; i < iSymbolCount; i++) {
 		oIconUnsel = oControl._getIcon(1);

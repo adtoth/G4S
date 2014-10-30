@@ -1,7 +1,7 @@
 /*!
- * SAP UI development toolkit for HTML5 (SAPUI5)
- * 
- * (c) Copyright 2009-2013 SAP AG. All rights reserved
+ * SAP UI development toolkit for HTML5 (SAPUI5/OpenUI5)
+ * (c) Copyright 2009-2014 SAP AG or an SAP affiliate company. 
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
 /* ----------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * </li>
  * <li>Aggregations
  * <ul>
- * <li>{@link #getContent content} : sap.ui.core.Control[]</li></ul>
+ * <li>{@link #getContent content} <strong>(default aggregation)</strong> : sap.ui.core.Control[]</li></ul>
  * </li>
  * <li>Associations
  * <ul></ul>
@@ -60,7 +60,7 @@ jQuery.sap.require("sap.ui.core.Control");
  * @extends sap.ui.core.Control
  *
  * @author SAP AG 
- * @version 1.16.3
+ * @version 1.22.5
  *
  * @constructor   
  * @public
@@ -243,6 +243,7 @@ sap.ui.core.Control.extend("sap.m.ScrollContainer", { metadata : {
  * Getter for aggregation <code>content</code>.<br/>
  * The content of the ScrollContainer.
  * 
+ * <strong>Note</strong>: this is the default aggregation for ScrollContainer.
  * @return {sap.ui.core.Control[]}
  * @public
  * @name sap.m.ScrollContainer#getContent
@@ -329,24 +330,24 @@ sap.ui.core.Control.extend("sap.m.ScrollContainer", { metadata : {
  * @param {int} 
  *         iX
  *         The horizontal pixel position to scroll to.
- * Scrolling to the right happens with positive values.
- * If only vertical scrolling is enabled, give 0 as value.
+ *         Scrolling to the right happens with positive values.
+ *         If only vertical scrolling is enabled, give 0 as value.
  * @param {int} 
  *         iY
  *         The vertical pixel position to scroll to.
- * Scrolling down happens with positive values.
- * If only horizontal scrolling is enabled, give 0 as value.
+ *         Scrolling down happens with positive values.
+ *         If only horizontal scrolling is enabled, give 0 as value.
  * @param {int} 
  *         iTime
  *         The duration of animated scrolling.
- * To scroll immediately without animation, give 0 as value. 0 is also the default value, when this optional parameter is omitted.
+ *         To scroll immediately without animation, give 0 as value. 0 is also the default value, when this optional parameter is omitted.
 
  * @type sap.m.ScrollContainer
  * @public
  */
 
 
-// Start of sap/m/ScrollContainer.js
+// Start of sap\m\ScrollContainer.js
 
 /*
  * Better nested scrolling capabilities can be added to iScroll like this (in the _move method).
