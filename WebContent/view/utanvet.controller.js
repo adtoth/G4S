@@ -5,7 +5,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.utanvet", {
 	
 	onInit: function(){
 		super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	}
+	},
 
 	handleNavButtonPress : function(evt) {
 		this.nav.back("Master");

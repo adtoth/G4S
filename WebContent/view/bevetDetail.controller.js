@@ -5,7 +5,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.bevetDetail", {
 	
 	onInit: function(){
 		super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	}
+	},
 
 	handleNavButtonPress : function(evt) {
 		this.nav.back("bevetMaster");

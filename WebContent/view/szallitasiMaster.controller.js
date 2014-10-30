@@ -5,7 +5,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiMaster", {
 	
 	onInit: function(){
 		super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	}
+	},
 
 	handleListItemPress : function(evt) {
 		var context = evt.getSource().getBindingContext();
