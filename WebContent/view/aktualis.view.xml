@@ -2,7 +2,7 @@
 	xmlns="sap.m" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
 	<Page title="Aktuális szállítás" class="sapUiFioriObjectPage"
 		showNavButton="true" navButtonPress="handleNavButtonPress">
-				<IconTabBar  class="iconTabBarPaddingTop" id="idIconTabBarMulti"
+				<IconTabBar select="signee" class="iconTabBarPaddingTop" id="idIconTabBarMulti"
 			expanded="true">
 			<items>
 				<IconTabFilter icon="sap-icon://home" text="Cím">
@@ -45,7 +45,7 @@
 						<RadioButton groupName="GroupB" id="grpB08" select="onSelectOther" text="Nem tudja igazolni magát" />
 						<RadioButton groupName="GroupB" id="grpB09" select="onSelectOther" text="Nem beazonosítható" />
 						<RadioButton groupName="GroupB" id="grpB10" select="onSelectOther" text="Egyéb" />
-    									
+    					<TextArea placeholder="Egyéb szöveges ok" id ="otherText" visible = "false"  rows="8"  />					
 					</VBox>
 				</IconTabFilter>
 				<IconTabFilter icon="sap-icon://database" text="Csomag">
@@ -73,28 +73,52 @@
 			</ColumnListItem>
 		</Table>
 				</IconTabFilter>
-				<IconTabFilter icon="sap-icon://signature" text="Aláírás">
+				<IconTabFilter icon="sap-icon://signature" key="sig" text="Aláírás">
 					
 <l:VerticalLayout
 		class="marginVerticalContent"
 		width="90%">
 		<l:content>
-			<core:HTML content='&lt;div id=&quot;signature&quot; /&gt;'>
-			</core:HTML>
+			 <core:HTML content='&lt;div style=&quot;width: 600px; height: 200px; -ms-touch-action: none;&quot; id=&quot;signature&quot;&gt;&lt;/div&gt;'>
+		      </core:HTML>
 		</l:content>
 	</l:VerticalLayout>
 
 				</IconTabFilter>
-				<IconTabFilter icon="sap-icon://payment-approval"
-					text="Utánvét">
-					
-					<l:VerticalLayout
-    class="marginVerticalContent"
-    width="100%">
-    <l:content>
-      <TextArea placeholder="Egyéb szöveges ok" id ="otherText" visible = "false"  rows="8"  />
-    </l:content>
-  </l:VerticalLayout>
+				<IconTabFilter icon="sap-icon://payment-approval" text="Utánvét">
+					<Table headerText="Tételek" items="{Items}">
+						<columns>
+							<Column>
+								<header>
+									<Label text="Tétel ID" demandPopin="true" />
+								</header>
+							</Column>
+							
+								<Column hAlign="Right">
+								<header>
+									<Label text="Utánvét?" />
+								</header>
+							</Column>
+
+							<Column hAlign="Right">
+								<header>
+									<Label text="Utánvét összeg" />
+								</header>
+							</Column>
+						</columns>
+						<ColumnListItem>
+							<cells>
+								<ObjectIdentifier title="{ProductId}" />
+																<ObjectNumber
+									number="{path: 'COD', formatter:'sap.ui.demo.myFiori.util.Formatter.CODText' }"
+									state="{path: 'COD', formatter:'sap.ui.demo.myFiori.util.Formatter.CODState' }"/>
+							</cells>
+								<ObjectIdentifier title="{Price}" />
+
+						</ColumnListItem>
+						
+					</Table>
+					<ObjectHeader id="total_id"  title="Totál: "  number="" />
 				</IconTabFilter>
 			</items>
 		</IconTabBar>
@@ -103,7 +127,9 @@
 		<footer>
 			<Bar>
 				<contentRight>
-					<Button type="Emphasized" text="Lezár" press="close" width="150px"
+					<Button type="Emphasized" text="Lezár" id="cls" press="close" width="150px"
+						icon="sap-icon://sys-cancel" />
+					<Button type="Emphasized" text="Töröl" id="clr" visible="false" press="clear" width="150px"
 						icon="sap-icon://sys-cancel" />
 				</contentRight>
 			</Bar>

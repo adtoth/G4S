@@ -18,11 +18,11 @@
         title="Szállítási Lista"
         press="handleSzallitasiPress"
         />
-        <StandardTile
-        icon="sap-icon://shipping-status"
-        title="Aktuális szállítás"
-        press="handleAktualisPress"
-        />
+         <!-- <StandardTile 
+         icon="sap-icon://shipping-status" 
+         title="Aktuális szállítás" 
+        press="handleAktualisPress" 
+         />   -->
         <StandardTile
         icon="sap-icon://payment-approval"
         title="Utánvét"

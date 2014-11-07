@@ -1,4 +1,3 @@
-jQuery.sap.declare("Signature");
 /*************************************************
 
  Signsend - The signature capture webapp sample using HTML5 Canvas
@@ -31,10 +30,10 @@ jQuery.sap.declare("Signature");
 
  **************************************************/
 
-function signatureCapture() {
+function signatureCapture(myview) {
 
-	var parent = document.getElementById("canvas");
-	parent.childNodes[0].nodeValue = "";
+	//var parent = myview.byId("canvas");
+	//parent.childNodes[0].nodeValue = "";
 
 	var canvasArea = document.createElement("canvas");
 	canvasArea.setAttribute("id", "newSignature");

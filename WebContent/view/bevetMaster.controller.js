@@ -1,9 +1,7 @@
 jQuery.sap.require("sap.ui.demo.myFiori.util.Formatter");
+jQuery.sap.require("sap.ui.demo.myFiori.util.Grouper");
 sap.ui.controller("sap.ui.demo.myFiori.view.bevetMaster", {
 	
-	onInit: function(){
-		super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	},
 
 	handleListItemPress : function(evt) {
 		var context = evt.getSource().getBindingContext();
@@ -135,25 +133,25 @@ sap.ui.controller("sap.ui.demo.myFiori.view.bevetMaster", {
 					
 					
 			});
-			
-			
-			/*var talalt = "3455997"
-			sap.ui.getCore().getModel().read(a.sPath, null, {
-				"$expand" : "Items"
-			}, true, function(response) {
-				for(var i = 0; i < response.Items.results.length; i++){
-					if(response.Items.results[i].ProductId === talalt){
-						alert(response.Items.results[i].ProductId);
-						sap.ui.getCore().getModel().setProperty("/Item(" + response.Items.results[i].Id + ")/PickupStatus", 'A');
-						//sap.ui.getCore().getModel().setProperty("/Item(9)/PickupStatus", 'M');
-						sap.ui.getCore().getModel().submitChanges();
-						sap.ui.getCore().getModel().updateBindings(true);
-						sap.ui.getCore().getModel().forceNoCache(true);
-					}
-				}
-					
-			});*/
 
-},
+	},
+	
+	handleGroup : function(evt) {
+
+		// compute sorters
+		var sorters = [];
+		var item = evt.getParameter("selectedItem");
+		var key = (item) ? item.getKey() : null;
+		if ("SzallitasStatus" === key) {
+			sap.ui.demo.myFiori.util.Grouper.bundle = this.getView().getModel("i18n").getResourceBundle();
+			var grouper = sap.ui.demo.myFiori.util.Grouper[key];
+			sorters.push(new sap.ui.model.Sorter(key, false, grouper));
+		}
+
+		// update binding
+		var list = this.getView().byId("list");
+		var oBinding = list.getBinding("items");
+		oBinding.sort(sorters);
+	},
 
 });

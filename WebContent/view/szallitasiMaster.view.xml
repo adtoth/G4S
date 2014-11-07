@@ -2,7 +2,7 @@
 	xmlns="sap.m" xmlns:core="sap.ui.core">
 	<Page showNavButton="true" navButtonPress="handleNavButtonPress"
 		title="Szállítási Lista">
-		<List id="list" select="handleListSelect" items="{/Address}">
+		<List id="list" select="handleListSelect" items="{/Address?$orderby=DelStatus desc}" growing="true" growingTriggerText="Több" noDataText="Nincs kapcsolat a szerverrel">
 			<ObjectListItem type="Active" press="handleListItemPress"
 			
 				title="{From}" icon="sap-icon://toaster-{IconPic}" number="{path: 'PicType',
@@ -39,7 +39,7 @@
 						type="Default" selectedKey="None" autoAdjustWidth="true">
 						<core:Item key="None" text="Nincs csoportosítás" />
 						<core:Item key="PicType" text="Típus szerint" />
-						<core:Item key="Delstatus" text="Státusz szerint" />
+						<core:Item key="DelStatus" text="Státusz szerint" />
 					</Select>
 				</contentRight>
 			</Bar>

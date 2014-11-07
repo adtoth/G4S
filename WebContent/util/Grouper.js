@@ -13,6 +13,15 @@ sap.ui.demo.myFiori.util.Grouper = {
 		};
 	},
 	
+	DelStatus : function (oContext) {
+		var status = oContext.getProperty("DelStatus");
+		var text = sap.ui.demo.myFiori.util.Grouper.bundle.getText("StatusText" + status, "?");
+		return {
+			key: status,
+			text: text
+		};
+	},
+	
 	SzallitasStatus : function (oContext) {
 		var status = oContext.getProperty("SzallitasStatus");
 		var text = sap.ui.demo.myFiori.util.Grouper.bundle.getText("StatusText" + status, "?");

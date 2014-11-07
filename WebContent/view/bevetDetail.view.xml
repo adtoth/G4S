@@ -53,7 +53,7 @@
 			<Bar>
 				<contentRight>
 
-					<Button type="Emphasized" text="Scan" press="scan_debug"
+					<Button type="Emphasized" text="Scan" press="scan"
 					 width="150px" icon="sap-icon://camera" />
 				</contentRight>
 

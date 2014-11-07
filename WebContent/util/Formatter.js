@@ -6,11 +6,11 @@ sap.ui.demo.myFiori.util.Formatter = {
 	
 	_statusStateMap : {
 		"1" : "Warning",
-		"N" : "Warning",
+		"111" : "Warning", // még nincs szállítva
 		"M" : "Warning",
 		"A" : "Success",
 		"R" : "Success",
-		"S" : "Success",
+		"222" : "Success", // sikeres
 		"C" : "Error",
 		"1"	: "Error",
 		"2"	: "Error",
@@ -21,8 +21,13 @@ sap.ui.demo.myFiori.util.Formatter = {
 		"7"	: "Error",
 		"8"	: "Error",
 		"9"	: "Error",
-		"10": "Error"
+		"10": "Error",
+		"999" : "Success" // akítv
 		
+	},
+	_CODStateMap :{
+		'0' : 'Success',
+		'1' : 'Warning'
 	},
 
 	statusText :  function (value) {
@@ -30,8 +35,18 @@ sap.ui.demo.myFiori.util.Formatter = {
 		return bundle.getText("StatusText" + value, "?");
 	},
 	
+	CODText :  function (value) {
+		var bundle = this.getModel("i18n").getResourceBundle();
+		return bundle.getText("CODText" + value, "?");
+	},
+	
 	statusState :  function (value) {
 		var map = sap.ui.demo.myFiori.util.Formatter._statusStateMap;
+		return (value && map[value]) ? map[value] : "None";
+	},
+	
+	CODState :  function (value) {
+		var map = sap.ui.demo.myFiori.util.Formatter._CODStateMap;
 		return (value && map[value]) ? map[value] : "None";
 	},
 	

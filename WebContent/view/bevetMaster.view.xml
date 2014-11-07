@@ -3,7 +3,7 @@
 	<Page showNavButton="true" navButtonPress="handleNavButtonPress"
 		title="Bevételezés">
 
-		<List id="list" select="handleListSelect" items="{/Address}">
+		<List id="list" select="handleListSelect" items="{/Address?$filter=PicType eq 'D'}" growing="true" growingTriggerText="Több" noDataText="Nincs kapcsolat a szerverrel">
 			<ObjectListItem type="Active" press="handleListItemPress"
 				title="{From}"
 				icon="sap-icon://customer">
@@ -18,7 +18,7 @@
 							path: 'SzallitasStatus',
 							formatter: 'sap.ui.demo.myFiori.util.Formatter.statusState'
 						}"
-						icon="sap-icon://{Icon}"  />
+						  />
 
 				</firstStatus> 
 				<attributes>
@@ -30,19 +30,28 @@
 			</ObjectListItem>
 		</List>
 		
-		<List id="listItems" select="" visible="false" items="{/Item}">
+<!-- 		<List id="listItems" select="" visible="false" items="{/Item}">
 			<ObjectListItem type="Active" press="handleListItemPress"
 				title="{From}"
 				icon="sap-icon://customer">
 
 			</ObjectListItem>
-		</List>
+		</List> -->
 		<footer>
 			<Bar>
+				<contentRight>
+					<Select id="groupSelect" name="Csoportosít" change="handleGroup" icon="sap-icon://group-2"
+						type="Default" selectedKey="None" autoAdjustWidth="true">
+						<core:Item key="none" text="Nincs rendezés" />
+						<core:Item key="SzallitasStatus" text="Státus szerint" />
+					</Select>
+				</contentRight>
 <!-- 				<contentRight>
 					<Button type="Emphasized" text="Scan" press="scan"
 					 width="150px" icon="sap-icon://camera" />
 				</contentRight> -->
+				
+				
 			</Bar>
 		</footer>
 	</Page>

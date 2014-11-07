@@ -21,8 +21,5 @@ sap.ui.controller("sap.ui.demo.myFiori.view.Master", {
 		this.nav.to("utanvet", context);
 	},
 	
-	onInit: function(){
-		super.appView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-	}
 
 });
