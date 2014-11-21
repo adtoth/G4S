@@ -36,7 +36,8 @@ sap.ui.controller("sap.ui.demo.myFiori.view.App", {
 	 * Navigates back to a previous page
 	 * @param {string} pageId The id of the next page
 	 */
-	back : function (pageId) {
+	back : function (pageId) {	
 		this.getView().app.backToPage(pageId);
+		
 	}
 });

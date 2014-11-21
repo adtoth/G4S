@@ -4,9 +4,6 @@ jQuery.sap.require("sap.ui.demo.myFiori.util.Formatter");
 jQuery.sap.require("jSignature");
 sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
 	
-	onInit: function(){
-		
-	},
 
 	handleNavButtonPress : function(evt) {
 		this.nav.back("szallitasiMaster");
@@ -76,7 +73,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
 
 	//},
 	
-	close : function(evt) {
+	/*close : function(evt) {
 		var a = evt.getSource().getBindingContext();
 		var myView = this.getView();
 		var bundle = this.getView().getModel("i18n").getResourceBundle();
@@ -182,7 +179,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
 					sap.ui.getCore().getModel().setProperty(a.sPath + "/DelStatus", "222");
 					//sap.ui.getCore().getModel().setProperty(a.sPath + "/Active", null);
 					sap.ui.getCore().getModel().setProperty(a.sPath + "/Signature", $("#signature").jSignature("getData","svgbase64"));
-					sap.ui.getCore().getModel().setProperty(a.sPath + "/UtanvetOsszeg", this.getView.byId("uv01").getSelected());
+					sap.ui.getCore().getModel().setProperty(a.sPath + "/COD_Collected", this.getView.byId("uv01").getSelected());
 					sap.ui.getCore().getModel().submitChanges();
 					sap.ui.getCore().getModel().updateBindings(true);
 					sap.ui.getCore().getModel().refresh(true);
@@ -199,7 +196,7 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
 		   bundle.getText("CloseDialogTitle")
 			);
 		}
-		 },
+		 },*/
 		
 
 	
@@ -249,20 +246,26 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
 	},
 	
 	signee: function(evt) {
+		 var a = evt.getSource().getBindingContext();
+	     var total = 0;
+	     var myView = this.getView();
+	     
         $("#signature").jSignature();
+        $("#signature").jSignature("reset");
+        var sigdata = sap.ui.getCore().getModel().getProperty(a.sPath + "/Signature");
+        if(sigdata != null){
+        $("#signature").jSignature("importData", sigdata);
+        }
         if(this.getView().byId("idIconTabBarMulti").getSelectedKey() == "sig"){
         	this.getView().byId("cls").setVisible(false);
-        	this.getView().byId("clr").setVisible(true);
+        	
         }
         else{
         	this.getView().byId("cls").setVisible(true);
-        	this.getView().byId("clr").setVisible(false);
         }
         
         // totál utánvét összeg számítás
-        var a = evt.getSource().getBindingContext();
-     	var total = 0;
-     	var myView = this.getView();
+      
     	sap.ui.getCore().getModel().read(a.sPath, null, {
 			"$expand" : "Items"
 		}, true, function(response) {
@@ -285,6 +288,219 @@ sap.ui.controller("sap.ui.demo.myFiori.view.szallitasiDetail", {
     clear: function(){
     	 $("#signature").jSignature("reset");
     	 
+    },
+    
+    sync: function(evt){
+		var a = evt.getSource().getBindingContext();
+		var myView = this.getView();
+		var model = sap.ui.getCore().getModel();
+		//$("#signature").jSignature("disable");
+        var sigdata = model.getProperty(a.sPath + "/Signature");
+        if(sigdata != null){
+        $("#signature").jSignature("importData", sigdata);
+        }
+		
+		if(model.getProperty(a.sPath + "/DelStatus") == '222'){
+			this.getView().byId("grpA01").setSelected(true);
+			this.getView().byId("grpB").setVisible(false);
+		}
+		else if(model.getProperty(a.sPath + "/COD_Collected") == '1'){
+			this.getView().byId("grpA01").setSelected(true);
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '1'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setSelected(true);
+			this.getView().byId("grpB01").setVisible(true);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '2'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setSelected(true);
+			this.getView().byId("grpB02").setVisible(true);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '3'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setSelected(true);
+			this.getView().byId("grpB03").setVisible(true);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '4'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setSelected(true);
+			this.getView().byId("grpB04").setVisible(true);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '5'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setSelected(true);
+			this.getView().byId("grpB05").setVisible(true);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '6'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setSelected(true);
+			this.getView().byId("grpB06").setVisible(true);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '7'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setSelected(true);
+			this.getView().byId("grpB07").setVisible(true);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '8'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(true);
+			this.getView().byId("grpB08").setSelected(true);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '9'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setSelected(true);
+			this.getView().byId("grpB09").setVisible(true);
+			this.getView().byId("grpB10").setVisible(false);
+			this.getView().byId("otherText").setVisible(false);
+			
+		}
+		
+		else if(model.getProperty(a.sPath + "/DelStatus") == '10'){
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(true);
+			this.getView().byId("grpB").setVisible(true);
+			this.getView().byId("grpB01").setVisible(false);
+			this.getView().byId("grpB02").setVisible(false);
+			this.getView().byId("grpB03").setVisible(false);
+			this.getView().byId("grpB04").setVisible(false);
+			this.getView().byId("grpB05").setVisible(false);
+			this.getView().byId("grpB06").setVisible(false);
+			this.getView().byId("grpB07").setVisible(false);
+			this.getView().byId("grpB08").setVisible(false);
+			this.getView().byId("grpB09").setVisible(false);
+			this.getView().byId("grpB10").setSelected(true);
+			this.getView().byId("grpB10").setVisible(true);
+			this.getView().byId("otherText").setVisible(true);
+			this.getView().byId("otherText").setValue(model.getProperty(a.sPath + "/Comment"));
+		}
+		
+		else{
+			this.getView().byId("grpB").setVisible(false);
+			this.getView().byId("otherText").setVisible(false);
+			this.getView().byId("grpA01").setSelected(false);
+			this.getView().byId("grpA02").setSelected(false);
+				if(model.getProperty(a.sPath + "/DelStatus") == '999'){
+					this.getView().byId("setActive").setText("Folytat");
+				}
+			this.getView().byId("setActive").setText("Aktivál");
+		}
+
     },
     
 	
